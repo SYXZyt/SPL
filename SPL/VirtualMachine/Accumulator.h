@@ -1,0 +1,79 @@
+#pragma once
+#include "../../Stack.h"
+#include "VariableData.h"
+
+namespace SPL
+{
+	namespace VirtualMachine
+	{
+		/// <summary>
+		/// Class storing methods to assist the virtual processor with maths operations
+		/// </summary>
+		class Accumulator final
+		{
+		private:
+			Stack<VariableData*>* stack;
+
+		public:
+			/// <summary>
+			/// Calculate addition and push the result
+			/// </summary>
+			void CalculateAddition();
+
+			/// <summary>
+			/// Calculate subtraction and push the result
+			/// </summary>
+			void CalculateSubtraction();
+
+			/// <summary>
+			/// Calculate multiplication and push the result
+			/// </summary>
+			void CalculateMultiplication();
+
+			/// <summary>
+			/// Calculate  division and push the result
+			/// </summary>
+			/// <returns>False if the division could not be calculated</returns>
+			bool CalculateDivision();
+
+			/// <summary>
+			/// Calculate power and push the result
+			/// </summary>
+			void CalculatePower();
+
+			/// <summary>
+			/// Calculate a concatenation and push the result
+			/// </summary>
+			void CalculateConcatenation();
+
+			/// <summary>
+			/// Cast a value to string
+			/// </summary>
+			void CastToString();
+
+			/// <summary>
+			/// Cast a value to floating point, and push the result
+			/// </summary>
+			/// <returns>False if the cast failed</returns>
+			bool CastToFloat();
+
+			/// <summary>
+			/// Cast a value to an integer, and push the result
+			/// </summary>
+			/// <returns>False if the cast failed</returns>
+			bool CastToInt();
+
+			/// <summary>
+			/// Create a new accumulator
+			/// </summary>
+			Accumulator();
+			Accumulator(const Accumulator&) = delete;
+
+			/// <summary>
+			/// Create a new accumulator
+			/// </summary>
+			/// <param name="stack">The stack to push and pop from</param>
+			Accumulator(Stack<VariableData*>& stack);
+		};
+	}
+}
