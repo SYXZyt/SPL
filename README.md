@@ -82,4 +82,4 @@ E.g.
 Currently this is **SPL 1.0** and it is missing a few basic features such as conditions and user input.\
 **SPL 1.1** plans to add user input and condition branches. Add proper error codes. E.g. SPL1027 - Illegal character '^'\
 **SPL 1.2** plans to add more advanced to more advanced console control, such as moving the cursor and coloured text. Both _British_ and _American_ spellings of "Colour" will be supported\
-**SPL 1.2** is planned to be the final officially supported version of SPL, as my focus will move onto a much larger and more advanced language framework. The code will remain open source if anyones want to update the language
+**SPL 1.2** is planned to be the final officially supported version of SPL, as my focus will move onto a much larger and more advanced language framework. The code will remain open source if anyone wants to update the language
