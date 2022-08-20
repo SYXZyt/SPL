@@ -21,6 +21,13 @@ void SPL::Compiler::Tokenisation::Lexer::Advance()
 	}
 }
 
+char SPL::Compiler::Tokenisation::Lexer::Peek()
+{
+	if (static_cast<size_t>(pos + 1) >= input.length()) return '\0';
+
+	return input[static_cast<size_t>(pos + 1)];
+}
+
 Vector2 SPL::Compiler::Tokenisation::Lexer::Pos()
 {
 	return Vector2(posOnLine, line);
@@ -213,6 +220,73 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 			tokens.push_back(t);
 			Advance();
 		}
+		else if (currentChar == '>')
+		{
+			//Check if the next character is =, as that changes the token type
+			TokenType type = TokenType::GREATER;
+			std::string lexeme = ">";
+			Vector2 pos = Pos();
+
+			if (Peek() == '=')
+			{
+				type = TokenType::GREATER_EQ;
+				lexeme += '=';
+				Advance();
+			}
+
+			Advance();
+			Token t = Token(lexeme, type, pos, inputName);
+			tokens.push_back(t);
+		}
+		else if (currentChar == '<')
+		{
+			//Check if the next character is =, as that changes the token type
+			TokenType type = TokenType::LOWER;
+			std::string lexeme = ">";
+			Vector2 pos = Pos();
+
+			if (Peek() == '=')
+			{
+				type = TokenType::LOWER_EQ;
+				lexeme += '=';
+				Advance();
+			}
+
+			Advance();
+			Token t = Token(lexeme, type, pos, inputName);
+			tokens.push_back(t);
+		}
+		else if (currentChar == '=')
+		{
+			//Since '=' is not used in SPL for assignment, we just wanna check that two characters was provided
+			Vector2 pos = Pos();
+			Advance();
+
+			if (currentChar != '=')
+			{
+				Token t(std::string(1, currentChar), TokenType::IDENTIFIER, Pos(), inputName);
+				std::string params[]{"="};
+				Error(SPL_ILLEGAL_CHARACTER, t, GetMessageWithParams(ErrorMessages[SPL_ILLEGAL_CHARACTER], 1, params), "Lexer.cpp");
+			}
+
+			Advance();
+			Token t("==", TokenType::EQUALS, pos, inputName);
+		}
+		else if (currentChar == '!')
+		{
+			Vector2 pos = Pos();
+			Advance();
+
+			if (currentChar != '=')
+			{
+				Token t(std::string(1, currentChar), TokenType::IDENTIFIER, Pos(), inputName);
+				std::string params[]{ "=" };
+				Error(SPL_ILLEGAL_CHARACTER, t, GetMessageWithParams(ErrorMessages[SPL_ILLEGAL_CHARACTER], 1, params), "Lexer.cpp");
+			}
+
+			Advance();
+			Token t("==", TokenType::EQUALS, pos, inputName);
+		}
 		else if (currentChar == ';') //In order to handle comments, we will skip every char until either end of line or end of file
 		{
 			while (currentChar != '\n' && currentChar != '\0')
@@ -222,7 +296,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 		}
 		else
 		{
-			Token t = Token(std::to_string(currentChar), TokenType::IDENTIFIER, Pos(), inputName);
+			Token t = Token(std::string(1, currentChar), TokenType::IDENTIFIER, Pos(), inputName);
 			std::string params[]{std::string(1, currentChar)};
 			std::string message = GetMessageWithParams(ErrorMessages[SPL_ILLEGAL_CHARACTER], 1, params);
 			Error(SPL_ILLEGAL_CHARACTER, t, message, "Lexer.cpp");

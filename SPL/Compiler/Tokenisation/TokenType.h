@@ -19,8 +19,15 @@ namespace SPL
 				FLOAT,
 				STRING,
 				COLON,
-				BUILTIN,
 				_NULL,
+
+				//Conditions
+				EQUALS,
+				GREATER,
+				GREATER_EQ,
+				LOWER,
+				LOWER_EQ,
+				NEQ,
 			};
 		}
 	}
@@ -32,8 +39,6 @@ static std::string TokenTypeToString(SPL::Compiler::Tokenisation::TokenType t)
 
 	switch (t)
 	{
-		case TokenType::BUILTIN:
-			return "(BUILTIN)";
 		case TokenType::COLON:
 			return "(COLON)";
 		case TokenType::FLOAT:
@@ -48,6 +53,8 @@ static std::string TokenTypeToString(SPL::Compiler::Tokenisation::TokenType t)
 			return "(MINUS)";
 		case TokenType::STRING:
 			return "(STRING)";
+		case TokenType::_NULL:
+			return "(NULL)";
 		default:
 			return "(UNKNOWN)";
 	}

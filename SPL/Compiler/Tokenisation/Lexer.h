@@ -41,6 +41,8 @@ namespace SPL
 				/// </summary>
 				void Advance();
 
+				char Peek();
+
 				/// <summary>
 				/// Generate a vector at the current position in the input text
 				/// </summary>

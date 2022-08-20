@@ -3,6 +3,7 @@
 
 # SPL
 _spl_cache_/
+*.[sS][pP][lL]
 
 # User-specific files
 *.rsuser
