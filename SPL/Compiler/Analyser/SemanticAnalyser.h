@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "../../../Stack.h"
+#include "../../../SPLErrors.h"
 #include "../../../ErrorStream.h"
 #include "../Parsing/Nodes/Let.h"
 #include "../Parsing/Nodes/Node.h"

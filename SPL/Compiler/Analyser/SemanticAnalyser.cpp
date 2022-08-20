@@ -12,7 +12,7 @@ int SPL::Compiler::Analyser::SemanticAnalyser::GetNodeIndexFromLine(Node* nodeRe
 		}
 	}
 
-	Error(*nodeRequesting, "Tried to find code that is outside of the file", filename);
+	Error(SPL_OUT_OF_FILE, *nodeRequesting, ErrorMessages[SPL_OUT_OF_FILE], filename);
 	return 0;
 }
 
@@ -32,7 +32,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 	int nodeIndex = 0;
 	while (nodeIndex < nodes.size())
 	{
-		if (callstack.size() >= callstackMaxSize) Error("Stack overflow!");
+		if (callstack.size() >= callstackMaxSize) Error(SPL_STACKOVERFLOW, ErrorMessages[SPL_STACKOVERFLOW]);
 
 		//This dynamic cast will return null if the current node is not that type, so by checking it in an if, we can select the specific object type
 		if (dynamic_cast<Let*>(nodes[nodeIndex].node))
@@ -49,13 +49,13 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 			{
 				if (!variables[varName].hasBeenReferenced)
 				{
-					Warning(*let, "Variable has been reassigned, despite not being referenced. Try removing the original assignment", filename);
+					Warning(WSPL_UNUSED_VAR, *let, ErrorMessages[WSPL_UNUSED_VAR], filename);
 				}
 
 
 				if (!variables[varName].isMutable)
 				{
-					Error(*let, "Tried to overwrite a constant value", filename);
+					Error(SPL_CONST_OVERWRITE, *let, ErrorMessages[SPL_CONST_OVERWRITE], filename);
 				}
 			}
 
@@ -72,7 +72,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 
 				if (!variables.count(varName))
 				{
-					Error(*print, "Tried to reference a variable that doesn't exist", filename);
+					Error(SPL_REF_VAR, *print, ErrorMessages[SPL_REF_VAR], filename);
 				}
 
 				variables[varName].hasBeenReferenced = true;
@@ -83,7 +83,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 			Free* free = dynamic_cast<Free*>(nodes[nodeIndex].node);
 			if (!variables.count(free->VariableName().GetLexeme()))
 			{
-				Error(*free, "Tried to reference a variable that doesn't exist", filename);
+				Error(SPL_REF_VAR, *free, ErrorMessages[SPL_REF_VAR], filename);
 			}
 		}
 		else if (dynamic_cast<Exit*>(nodes[nodeIndex].node))
@@ -96,7 +96,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 			{
 				if (!variables.count(exit->GetValue()->Token().GetLexeme()))
 				{
-					Error(*exit, "Tried to reference a variable that doesn't exist", filename);
+					Error(SPL_REF_VAR, *exit, ErrorMessages[SPL_REF_VAR], filename);
 				}
 			}
 
@@ -110,7 +110,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 			{
 				if (!variables.count(push->GetValue()->Token().GetLexeme()))
 				{
-					Error(*push, "Tried to reference a variable that doesn't exist", filename);
+					Error(SPL_REF_VAR, *push, ErrorMessages[SPL_REF_VAR], filename);
 				}
 			}
 
@@ -118,7 +118,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 		}
 		else if (dynamic_cast<Pop*>(nodes[nodeIndex].node))
 		{
-			if (stackSize <= 0) Error(*nodes[nodeIndex].node, "Tried to pop an empty stack", filename);
+			if (stackSize <= 0) Error(SPL_POP_EMPTY, *nodes[nodeIndex].node, ErrorMessages[SPL_POP_EMPTY], filename);
 
 			stackSize--;
 		}
@@ -151,7 +151,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 			std::string name = sp->Name().GetLexeme();
 
 			//Check that there is a value on the stack
-			if (stackSize == 0) Error(*sp, "Tried to set from a value off of the stack while it was empty", filename);
+			if (stackSize == 0) Error(SPL_SETPOP_STACK_EMPTY , *sp, ErrorMessages[SPL_SETPOP_STACK_EMPTY], filename);
 
 			stackSize--;
 			variables[name] = Variable(sp->IsMutable());
@@ -160,7 +160,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 		{
 			Ret* ret = dynamic_cast<Ret*>(nodes[nodeIndex].node);
 
-			if (callstack.empty()) Error(*ret, "Cannot return when the callstack is empty. Are you using 'goto' and not 'call'?", filename);
+			if (callstack.empty()) Error(SPL_RET_EMPTY , *ret, ErrorMessages[SPL_RET_EMPTY], filename);
 
 			nodes[nodeIndex].hasBeenReached = true;
 			nodeIndex = callstack.top();
@@ -180,7 +180,7 @@ SPL::Compiler::Analyser::SemanticAnalyserResults SPL::Compiler::Analyser::Semant
 	{
 		if (!sn.hasBeenReached)
 		{
-			Warning(*sn.node, "Unreachable code detected", filename);
+			Warning(WSPL_UNREACHABLE, *sn.node, ErrorMessages[WSPL_UNREACHABLE], filename);
 			nodesToCull.push_back(sn.node);
 		}
 	}

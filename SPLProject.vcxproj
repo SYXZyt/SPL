@@ -177,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SPLErrors.h" />
     <ClInclude Include="SPL\VirtualMachine\Accumulator.h" />
     <ClInclude Include="SPL\VirtualMachine\SPLExitCodes.h" />
     <ClInclude Include="SPL\Disassembling\Disassembler.h" />

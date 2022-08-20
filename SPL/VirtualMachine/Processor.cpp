@@ -6,17 +6,15 @@
 #define HANDLENULLVAR(varName) \
 if (!vstack.count(varName)) \
 { \
-	std::stringstream ss; \
-	ss << "Variable " << varName << " does not exist"; \
-	ErrorNoExit(ss.str()); \
+	std::string params[] {std::string(varName)};\
+	ErrorNoExit(SPL_UNKNOWN_VAR, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_VAR], 1, params)); \
 	KILL; \
 	break; \
 }
 
 #define LOCKSTRINGFROMCALC(calcName) \
-std::stringstream ss; \
-ss << "String cannot be used in '" << calcName << "' calculation"; \
-ErrorNoExit(ss.str()); \
+std::string params[] {std::string(calcName)}; \
+ErrorNoExit(SPL_STRING_UNEXPECTED, GetMessageWithParams(ErrorMessages[SPL_STRING_UNEXPECTED], 1, params)); \
 KILL; \
 break;
 
@@ -77,7 +75,7 @@ void SPL::VirtualMachine::Processor::Run()
 
 		if (cstack.Size() >= callstackMaxSize)
 		{
-			ErrorNoExit("Stack Overflow!");
+			ErrorNoExit(SPL_STACKOVERFLOW, ErrorMessages[SPL_STACKOVERFLOW]);
 			KILL;
 		}
 
@@ -183,7 +181,7 @@ void SPL::VirtualMachine::Processor::Run()
 				//We need to check that we aren't returning when the callstack is empty. The analyser should've caught it, but we want to make sure
 				if (cstack.Size() == 0)
 				{
-					ErrorNoExit("Tried to return when the callstack is empty");
+					ErrorNoExit(SPL_RET_EMPTY, ErrorMessages[SPL_RET_EMPTY]);
 					KILL;
 				}
 
@@ -243,7 +241,7 @@ void SPL::VirtualMachine::Processor::Run()
 				PREPARE_TYPE_FOR_ACCU("div");
 				if (!accumulator.CalculateDivision())
 				{
-					ErrorNoExit("Tried to divide by zero");
+					ErrorNoExit(SPL_DIV_ZERO, ErrorMessages[SPL_DIV_ZERO]);
 					KILL;
 				}
 			}
@@ -268,7 +266,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (!accumulator.CastToFloat())
 				{
-					ErrorNoExit("Cannot convert value to float");
+					std::string params[]{"float"};
+					ErrorNoExit(SPL_CONVERSION_ERROR, GetMessageWithParams(ErrorMessages[SPL_CONVERSION_ERROR], 1, params));
 					KILL;
 				}
 			}
@@ -277,16 +276,19 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (!accumulator.CastToInt())
 				{
-					ErrorNoExit("Cannot convert value to int");
+					std::string params[]{ "int" };
+					ErrorNoExit(SPL_CONVERSION_ERROR, GetMessageWithParams(ErrorMessages[SPL_CONVERSION_ERROR], 1, params));
 					KILL;
 				}
 			}
 			break;
 			default:
 			{
+				std::string params[1]{};
 				std::stringstream ss;
-				ss << "Unknown opcode '0x" << std::hex << std::setw(2) << std::setfill('0') << (int)opcode << '\'';
-				ErrorNoExit(ss.str());
+				ss << std::hex << std::setw(2) << std::setfill('0') << (int)opcode;
+				params[0] = ss.str().c_str();
+				ErrorNoExit(SPL_UNKNOWN_OPCODE, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_OPCODE], 1, params));
 				KILL;
 			}
 			break;

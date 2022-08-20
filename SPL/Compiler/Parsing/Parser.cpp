@@ -67,9 +67,7 @@ SPL::Compiler::Parser::Nodes::Let* SPL::Compiler::Parser::Parser::ParseVariableD
     //Check if the user has provided the correct access modifier, and then set a bool accordingly
     if (PeekCurrent().GetTokenType() != Tokenisation::TokenType::KEYWORD && (PeekCurrent().GetLexeme() != ConstantKeyword && PeekCurrent().GetLexeme() != MutableKeyword))
     {
-        std::stringstream ss;
-        ss << "Expected '" << ConstantKeyword << "' or '" << MutableKeyword << "'";
-        Error(let, ss.str(), "Parser.cpp");
+        Error(SPL_MISSING_ACCESS_MODIFIER, let, ErrorMessages[SPL_MISSING_ACCESS_MODIFIER], "Parser.cpp");
     }
 
     bool isMutable = PeekCurrent().GetLexeme() == MutableKeyword;
@@ -80,9 +78,8 @@ SPL::Compiler::Parser::Nodes::Let* SPL::Compiler::Parser::Parser::ParseVariableD
     //Check that the name is an identifier
     if (name.GetTokenType() != Tokenisation::TokenType::IDENTIFIER)
     {
-        std::string errorMessage = name.GetTokenType() != Tokenisation::TokenType::KEYWORD ? "Expected a variable name" : "Name cannot be a keyword";
-
-        Error(name, errorMessage, "Parser.cpp");
+        SPL_ERROR_CODE errorCode = name.GetTokenType() != Tokenisation::TokenType::KEYWORD ? SPL_VARNAME_NOT_IDEN : SPL_VARNAME_IS_KEY;
+        Error(errorCode, name, ErrorMessages[errorCode], "Parser.cpp");
     }
 
     //Now that we have the name, we need to get the value stored, using ParseExpressino to get the value
@@ -105,7 +102,7 @@ SPL::Compiler::Parser::Nodes::Free* SPL::Compiler::Parser::Parser::ParseFreeStat
         return free;
     }
 
-    Error(freeKeyword, "'free' keyword expected a variable name", "Parser.cpp");
+    Error(SPL_FREE_NOT_VAR, freeKeyword, ErrorMessages[SPL_FREE_NOT_VAR], "Parser.cpp");
     return nullptr;
 }
 
@@ -161,9 +158,7 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
     }
     else
     {
-        std::stringstream ss;
-        ss << "Expected either '" << ConstantKeyword << "' or '" << MutableKeyword << "'";
-        Error(PeekCurrent(), ss.str(), "Parser.cpp");
+        Error(SPL_MISSING_ACCESS_MODIFIER, PeekCurrent(), ErrorMessages[SPL_MISSING_ACCESS_MODIFIER], "Parser.cpp");
     }
 
     Token name = PeekNext();
@@ -172,9 +167,8 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
     //Check that the name is an identifier
     if (name.GetTokenType() != Tokenisation::TokenType::IDENTIFIER)
     {
-        std::string errorMessage = name.GetTokenType() != Tokenisation::TokenType::KEYWORD ? "Expected a variable name" : "Name cannot be a keyword";
-
-        Error(name, errorMessage, "Parser.cpp");
+        SPL_ERROR_CODE errorCode = name.GetTokenType() != Tokenisation::TokenType::KEYWORD ? SPL_VARNAME_NOT_IDEN : SPL_VARNAME_IS_KEY;
+        Error(errorCode, name, ErrorMessages[errorCode], "Parser.cpp");
     }
 
     return new SetPop(initialKeyword, access.GetLexeme() == MutableKeyword, name);
@@ -203,7 +197,7 @@ SPL::Compiler::Parser::Nodes::Call* SPL::Compiler::Parser::Parser::ParseCallStat
     //We should double check anyway to be sure
     if (PeekCurrent().GetTokenType() != Tokenisation::TokenType::INT)
     {
-        Error(PeekNext(), "'call' expects a label name", "Parser.cpp");
+        Error(SPL_CALL_INVALID_ADDRESS, PeekNext(), ErrorMessages[SPL_CALL_INVALID_ADDRESS], "Parser.cpp");
     }
 
     return new Call(call, ParseExpression());
@@ -294,7 +288,7 @@ SPL::Compiler::Parser::Nodes::Value* SPL::Compiler::Parser::Parser::ParseExpress
     }
     else
     {
-        Error(PeekCurrent(), "Expected an expression", "Parser.cpp");
+        Error(SPL_EXPRESSION, PeekCurrent(), ErrorMessages[SPL_EXPRESSION], "Parser.cpp");
         return nullptr;
     }
 }
@@ -325,9 +319,9 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "pop") return ParsePopStatement();
         else
         {
-            std::stringstream ss;
-            ss << "Keyword '" << PeekCurrent().GetLexeme() << "' was unexpected at this time";
-            Error(PeekCurrent(), ss.str(), "Parser.cpp");
+            std::string params[]{ PeekCurrent().GetLexeme()};
+            std::string message = GetMessageWithParams(ErrorMessages[SPL_UNEXPECTED_KEYWORD], 1, params);
+            Error(SPL_UNEXPECTED_KEYWORD, PeekCurrent(), message, "Parser.cpp");
             return nullptr;
         }
     }
@@ -339,9 +333,9 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
     }
     else
     {
-        std::stringstream ss;
-        ss << '\'' << PeekCurrent().GetLexeme() << "' was unexpected at this time";
-        Error(PeekCurrent(), ss.str(), "Parser.cpp");
+        std::string params[]{ PeekCurrent().GetLexeme() };
+        std::string message = GetMessageWithParams(ErrorMessages[SPL_UNEXPECTED_TOKEN], 1, params);
+        Error(SPL_UNEXPECTED_TOKEN, PeekCurrent(), message, "Parser.cpp");
         return nullptr;
     }
 }

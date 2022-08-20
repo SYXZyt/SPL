@@ -9,6 +9,7 @@
 #include "../../../String.h"
 #include "../../../Vector2.h"
 #include "../../../Constants.h"
+#include "../../../SPLErrors.h"
 #include "../../../ErrorStream.h"
 
 namespace SPL

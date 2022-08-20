@@ -1,5 +1,6 @@
 #pragma once
 #include <sstream>
+#include <cstdarg>
 #include <iostream>
 
 #pragma region Windows_Stuff
@@ -39,6 +40,8 @@ static void ResetConsoleColour()
 #endif
 #pragma endregion
 
+#include "String.h"
+#include "SPLErrors.h"
 #include "SPL\Compiler\Tokenisation\Token.h"
 #include "SPL\Compiler\Parsing\Nodes\Node.h"
 
@@ -59,6 +62,13 @@ static void ErrorNoExit(std::string message)
 #ifdef _WIN32
 	ResetConsoleColour();
 #endif
+}
+
+static void ErrorNoExit(const SPL_ERROR_CODE code, std::string message)
+{
+	std::stringstream ss;
+	ss << code << " : " << message;
+	ErrorNoExit(ss.str());
 }
 
 /// <summary>
@@ -142,4 +152,47 @@ static void Warning(Token token, std::string message, std::string filename = "")
 static void Warning(Node node, std::string message, std::string filename = "")
 {
 	Warning(node.Token(), message, filename);
+}
+
+static void Warning(const SPL_ERROR_CODE code, Node node, std::string message, std::string filename = "")
+{
+	std::stringstream ss;
+	ss << code << " : " << message;
+	Warning(node, ss.str(), filename);
+}
+
+static std::string GetMessageWithParams(std::string msg, int argc, std::string params[])
+{
+	std::string output = msg;;
+
+	for (int i = 0; i < argc; i++)
+	{
+		std::stringstream ss;
+		ss << "&SPL_";
+		ss << i;
+		output = Replace(output, ss.str(), params[i]);
+	}
+
+	return output;
+}
+
+static void Error(const SPL_ERROR_CODE code, std::string message)
+{
+	std::stringstream ss;
+	ss << code << " : " << message;
+	Error(ss.str());
+}
+
+static void Error(const SPL_ERROR_CODE code, Token t, std::string message, std::string filename)
+{
+	std::stringstream ss;
+	ss << code << " : " << message;
+	Error(t, ss.str(), filename);
+}
+
+static void Error(const SPL_ERROR_CODE code, Node n, std::string message, std::string filename)
+{
+	std::stringstream ss;
+	ss << code << " : " << message;
+	Error(n, ss.str(), filename);
 }

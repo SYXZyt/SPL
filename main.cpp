@@ -4,6 +4,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include "SPLErrors.h"
+
 #include "rom.h"
 #include "SPL\Compiler\Parsing\Parser.h"
 #include "SPL\VirtualMachine\Processor.h"

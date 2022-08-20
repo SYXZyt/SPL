@@ -22,7 +22,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             }
             else
             {
-                Error(Peek(i), "Expected an identifier after a label definition", "PreProcessor.cpp");
+                Error(SPL_LABEL_NAME_MISSING, Peek(i), ErrorMessages[SPL_LABEL_NAME_MISSING], "PreProcessor.cpp");
             }
         }
     }
@@ -54,7 +54,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             }
             else
             {
-                Error(CurrentToken(i), "Expected a numerical value to follow '-'", "PreProcessor.cpp");
+                Error(SPL_MISSING_NEGATIVE_NUMBER, CurrentToken(i), ErrorMessages[SPL_MISSING_NEGATIVE_NUMBER], "PreProcessor.cpp");
             }
         }
         else if (CurrentToken(i).GetTokenType() == TokenType::KEYWORD && CurrentToken(i).GetLexeme() == "println")
@@ -85,9 +85,8 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
                 //If the identifier is not in the dictionary, then we have to report an error as we can't continue otherwise
                 if (!labels.count(CurrentToken(i).GetLexeme()))
                 {
-                    std::stringstream ss;
-                    ss << "The label '" << CurrentToken(i).GetLexeme() << "' does not exist";
-                    Error(CurrentToken(i), ss.str(), "PreProcessor.cpp");
+                    std::string params[]{ CurrentToken(i).GetLexeme() };
+                    Error(SPL_NONEXISTANT_LABEL, CurrentToken(i), GetMessageWithParams(ErrorMessages[SPL_NONEXISTANT_LABEL], 1, params), "PreProcessor.cpp");
                 }
 
                 int lineNumber = labels[CurrentToken(i).GetLexeme()];
@@ -97,7 +96,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             }
             else if (Peek(i).GetTokenType() == TokenType::INT)
             {
-                if (CurrentToken(i).GetLexeme() == "call") Error(CurrentToken(i), "'call' expects a label name", "PreProcessor.cpp");
+                if (CurrentToken(i).GetLexeme() == "call") Error(SPL_CALL_INVALID_ADDRESS, CurrentToken(i), ErrorMessages[SPL_CALL_INVALID_ADDRESS], "PreProcessor.cpp");
 
                 tokens.push_back(CurrentToken(i++));
 
@@ -110,7 +109,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             }
             else
             {
-                Error(CurrentToken(i), "'goto' expects a line number or a label name", "PreProcessor.cpp");
+                Error(SPL_GOTO_INVALID_ADDRESS, CurrentToken(i), ErrorMessages[SPL_GOTO_INVALID_ADDRESS], "PreProcessor.cpp");
             }
         }
         else

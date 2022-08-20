@@ -87,3 +87,17 @@ static std::string Escape(std::string s)
 
 	return newString;
 }
+
+static std::string Replace(std::string& str, const std::string original, const std::string substr)
+{
+	if (str.empty()) return "";
+
+	size_t startPos = 0;
+	while ((startPos = str.find(original, startPos)) != std::string::npos)
+	{
+		str.replace(startPos, original.length(), substr);
+		startPos += substr.length();
+	}
+
+	return str;
+}

@@ -11,6 +11,7 @@
 #include "Accumulator.h"
 #include "VariableData.h"
 #include "SPLExitCodes.h"
+#include "../../SPLErrors.h"
 #include "../../ErrorStream.h"
 
 namespace SPL

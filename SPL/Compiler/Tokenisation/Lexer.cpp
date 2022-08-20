@@ -62,7 +62,7 @@ SPL::Compiler::Tokenisation::Token SPL::Compiler::Tokenisation::Lexer::BuildStri
 		if (currentChar == '\0' || currentChar == '\n')
 		{
 			Token t = Token(value, TokenType::STRING, pos, inputName);
-			Error(t, "Unterminated string. Did you forget an end quote?", "Lexer.cpp");
+			Error(SPL_UNTERMINATED_STRING, t, ErrorMessages[SPL_UNTERMINATED_STRING], "Lexer.cpp");
 		}
 
 		//Check if the current character is a backslash. so we can parse an escape sequence
@@ -113,10 +113,11 @@ SPL::Compiler::Tokenisation::Token SPL::Compiler::Tokenisation::Lexer::BuildStri
 
 			if (escape == '#')
 			{
-				Token t = Token("\\" + escape, TokenType::STRING, Pos(), inputName);
-				std::stringstream ss;
-				ss << "'\\" << escape << "' is not a recognised escape sequence";
-				Error(t, ss.str().c_str(), "Lexer.cpp");
+				Token t = Token("\\" + currentChar, TokenType::STRING, pos, inputName);
+				std::string errorString = "\\"; errorString += currentChar;
+				std::string params[1]{ errorString };
+				std::string message = GetMessageWithParams(ErrorMessages[SPL_UNRECOGNISED_ESCAPE], 1, params);
+				Error(SPL_UNRECOGNISED_ESCAPE, t, message, "Lexer.cpp");
 			}
 
 			value += escape;
@@ -155,7 +156,7 @@ SPL::Compiler::Tokenisation::Token SPL::Compiler::Tokenisation::Lexer::BuildNumb
 	if (decimalCount > 1)
 	{
 		Token t = Token(strRepr, TokenType::INT, pos, inputName);
-		Error(t, "Number was not a valid format", "Lexer.cpp");
+		Error(SPL_MALFORMED_NUMERIC, t, ErrorMessages[SPL_MALFORMED_NUMERIC], "Lexer.cpp");
 	}
 
 	Token t;
@@ -212,12 +213,6 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 			tokens.push_back(t);
 			Advance();
 		}
-		else if (currentChar == '&')
-		{
-			Token t = Token(std::string(1, currentChar), TokenType::BUILTIN, Pos(), inputName);
-			tokens.push_back(t);
-			Advance();
-		}
 		else if (currentChar == ';') //In order to handle comments, we will skip every char until either end of line or end of file
 		{
 			while (currentChar != '\n' && currentChar != '\0')
@@ -228,9 +223,9 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 		else
 		{
 			Token t = Token(std::to_string(currentChar), TokenType::IDENTIFIER, Pos(), inputName);
-			std::stringstream ss;
-			ss << "Illegal character '" << currentChar << "' found";
-			Error(t, ss.str(), "Lexer.cpp");
+			std::string params[]{std::string(1, currentChar)};
+			std::string message = GetMessageWithParams(ErrorMessages[SPL_ILLEGAL_CHARACTER], 1, params);
+			Error(SPL_ILLEGAL_CHARACTER, t, message, "Lexer.cpp");
 		}
 	}
 
