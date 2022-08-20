@@ -55,6 +55,18 @@ static std::string TokenTypeToString(SPL::Compiler::Tokenisation::TokenType t)
 			return "(STRING)";
 		case TokenType::_NULL:
 			return "(NULL)";
+		case TokenType::EQUALS:
+			return "(==)";
+		case TokenType::NEQ:
+			return "(!=)";
+		case TokenType::GREATER:
+			return "(>)";
+		case TokenType::GREATER_EQ:
+			return "(>=)";
+		case TokenType::LOWER:
+			return "(<)";
+		case TokenType::LOWER_EQ:
+			return "(<=)";
 		default:
 			return "(UNKNOWN)";
 	}
