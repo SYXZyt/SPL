@@ -19,7 +19,7 @@ namespace SPL
 				private:
 					Condition* condition;
 					Block* block;
-					If* elseNode;
+					Block* elseNode;
 
 				public:
 					Condition* GetCondition()
@@ -32,7 +32,7 @@ namespace SPL
 						return block;
 					}
 
-					If* ElseNode()
+					Block* ElseNode()
 					{
 						return elseNode;
 					}
@@ -59,7 +59,7 @@ namespace SPL
 						elseNode = nullptr;
 					}
 
-					If(Tokenisation::Token token, Condition* condition, Block* block, If* elseNode) : Node(token)
+					If(Tokenisation::Token token, Condition* condition, Block* block, Block* elseNode) : Node(token)
 					{
 						this->block = block;
 						this->condition = condition;

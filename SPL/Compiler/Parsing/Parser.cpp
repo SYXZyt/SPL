@@ -232,14 +232,20 @@ SPL::Compiler::Parser::Nodes::If* SPL::Compiler::Parser::Parser::ParseIfStatemen
 	}
 
 	//Now we can check if an else statement is next, if not, set it to null
-	If* elseBranch = nullptr;
-	if (PeekNext().GetLexeme() == "else")
+	Block* elseBlock = nullptr;
+	if (PeekCurrent().GetLexeme() == "else")
 	{
 		Advance();
-		elseBranch = dynamic_cast<If*>(Statement());
+		Node* elseStatement = Statement();
+		if (elseBlock = dynamic_cast<Block*>(elseStatement)) {}
+		else
+		{
+			elseBlock = new Block(elseStatement->Token());
+			elseBlock->AddNode(elseStatement);
+		}
 	}
 
-	return new If(ifToken, condition, ifBlock, elseBranch);
+	return new If(ifToken, condition, ifBlock, elseBlock);
 }
 
 SPL::Compiler::Parser::Nodes::Condition* SPL::Compiler::Parser::Parser::ParseCondition()
@@ -273,8 +279,9 @@ SPL::Compiler::Parser::Nodes::Block* SPL::Compiler::Parser::Parser::ParseBlock()
 {
 	std::vector<Node*> nodes;
 	Token t = PeekCurrent();
+	Advance();
 
-	while (PeekNext().GetTokenType() != Tokenisation::TokenType::R_CURLY)
+	while (PeekCurrent().GetTokenType() != Tokenisation::TokenType::R_CURLY)
 	{
 		nodes.push_back(Statement());
 	} Advance();
@@ -375,6 +382,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
 	{
 		std::string lex = PeekCurrent().GetLexeme();
 		if (lex == "let") return ParseVariableDefination();
+		else if (lex == "if") return ParseIfStatement();
 		else if (lex == "print") return ParsePrintStatement();
 		else if (lex == "free") return ParseFreeStatement();
 		else if (lex == "exit") return ParseExitStatement();
