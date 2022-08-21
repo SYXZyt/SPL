@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Nodes\Let.h"
+#include "Nodes\Pass.h"
 #include "Nodes\Free.h"
 #include "Nodes\Node.h"
 #include "Nodes\Value.h"
@@ -96,6 +97,7 @@ namespace SPL
 				Nodes::If* ParseIfStatement();
 				Nodes::Condition* ParseCondition();
 				Nodes::Block* ParseBlock();
+				Nodes::Pass* ParsePassStatemeent();
 
 #pragma region Maths
 				Nodes::Add* ParseAddStatement();

@@ -293,6 +293,13 @@ SPL::Compiler::Parser::Nodes::Block* SPL::Compiler::Parser::Parser::ParseBlock()
 	return b;
 }
 
+SPL::Compiler::Parser::Nodes::Pass* SPL::Compiler::Parser::Parser::ParsePassStatemeent()
+{
+	Pass* pass = new Pass(PeekCurrent());
+	Advance();
+	return pass;
+}
+
 SPL::Compiler::Parser::Nodes::Add* SPL::Compiler::Parser::Parser::ParseAddStatement()
 {
 	Add* add = new Add(PeekCurrent());
@@ -401,6 +408,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
 		else if (lex == "to_string") return ParseToStringStatement();
 		else if (lex == "concat") return ParseConcatStatement();
 		else if (lex == "pop") return ParsePopStatement();
+		else if (lex == "pass") return ParsePassStatemeent();
 		else
 		{
 			std::string params[]{ PeekCurrent().GetLexeme() };

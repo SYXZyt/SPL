@@ -175,6 +175,7 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Pass.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Condition.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Block.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\If.h" />

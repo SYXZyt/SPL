@@ -323,6 +323,9 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Condition.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Pass.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />
