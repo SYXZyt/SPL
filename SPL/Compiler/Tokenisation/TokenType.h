@@ -28,6 +28,9 @@ namespace SPL
 				LOWER,
 				LOWER_EQ,
 				NEQ,
+
+				L_CURLY,
+				R_CURLY,
 			};
 		}
 	}

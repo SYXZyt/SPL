@@ -155,7 +155,6 @@
     <ClCompile Include="SPL\Compiler\Optimising\Optimiser.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Call.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\Let.cpp" />
-    <ClCompile Include="SPL\Compiler\Parsing\Nodes\Block.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Exit.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\Free.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Goto.cpp" />
@@ -176,6 +175,9 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Condition.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Block.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\If.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SPLErrors.h" />
     <ClInclude Include="SPL\VirtualMachine\Accumulator.h" />
@@ -193,7 +195,6 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Ret.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Parser.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Add.h" />
-    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Block.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Concat.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Div.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Exit.h" />
@@ -229,7 +230,6 @@
     <None Include="clc.py" />
     <None Include="readme.md" />
     <None Include="test.spl" />
-    <None Include="vc.bat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SPLProject.rc" />

@@ -11,7 +11,6 @@
 #include "../Parsing/Nodes/Let.h"
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
-#include "../Parsing/Nodes/Block.h"
 #include "../Parsing/Nodes/Stack/Pop.h"
 #include "../Parsing/Nodes/Stack/Push.h"
 #include "../Parsing/Nodes/Maths/Add.h"
@@ -29,6 +28,7 @@
 #include "../Parsing/Nodes/ControlFlow/Call.h"
 #include "../Parsing/Nodes/ControlFlow/Goto.h"
 #include "../Parsing/Nodes/ControlFlow/Exit.h"
+#include "../Parsing/Nodes/ControlFlow/Block.h"
 
 using namespace SPL::Compiler::Parser::Nodes;
 using namespace SPL::Compiler::Parser::Nodes::Casting;

@@ -120,9 +120,6 @@
     <ClCompile Include="SPL\Compiler\PreProcessing\PreProcessor.cpp">
       <Filter>Source Files\SPL\Compiler\PreProcessing</Filter>
     </ClCompile>
-    <ClCompile Include="SPL\Compiler\Parsing\Nodes\Block.cpp">
-      <Filter>Source Files\SPL\Compiler\Parser\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\Free.cpp">
       <Filter>Source Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClCompile>
@@ -202,9 +199,6 @@
     </ClInclude>
     <ClInclude Include="SPL\Compiler\PreProcessing\PreProcessor.h">
       <Filter>Header Files\SPL\Compiler\PreProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Block.h">
-      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Free.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
@@ -320,6 +314,15 @@
     <ClInclude Include="SPLErrors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\If.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\ControlFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Block.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Condition.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />
@@ -329,7 +332,6 @@
     <None Include="test.spl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="vc.bat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SPLProject.rc">

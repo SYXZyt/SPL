@@ -139,7 +139,7 @@ std::string GetStdioInput()
 	std::string line;
 	std::string output = "";
 
-	std::cout << "SPL v1.0.0 (13 August 2022) [X64]\nEnter a blank line to execute" << std::endl;
+	std::cout << "SPL v1.0.0 DEV (13 August 2022) [X64]\nEnter a blank line to execute" << std::endl;
 
 	while (true)
 	{
@@ -280,6 +280,7 @@ int main(int argc, char** argv)
 	//If theres is no processor object, the memory will remain
 	//To fix this, use rom::clear();
 	rom _rom = LoadRom(binaryName);
+
 	//Disassembler d = Disassembler(_rom);
 	//d.Disassemble();
 	Processor cpu = Processor(_rom);

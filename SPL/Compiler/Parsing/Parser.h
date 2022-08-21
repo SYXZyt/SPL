@@ -6,7 +6,6 @@
 #include "Nodes\Free.h"
 #include "Nodes\Node.h"
 #include "Nodes\Value.h"
-#include "Nodes\Block.h"
 #include "Nodes\Single.h"
 #include "Nodes\Maths\Add.h"
 #include "Nodes\Maths\Div.h"
@@ -14,6 +13,7 @@
 #include "Nodes\Maths\Pow.h"
 #include "Nodes\Maths\Sub.h"
 #include "Nodes\Stack\Pop.h"
+#include "Nodes\Condition.h"
 #include "Nodes\Stack\Push.h"
 #include "../../../Constants.h"
 #include "Nodes\Stack\SetPop.h"
@@ -21,6 +21,7 @@
 #include "Nodes\Output\Print.h"
 #include "Nodes\Casting\ToInt.h"
 #include "../../../ErrorStream.h"
+#include "Nodes\ControlFlow\If.h"
 #include "Nodes\Casting\ToFloat.h"
 #include "../Tokenisation/Token.h"
 #include "Nodes\ControlFlow\Ret.h"
@@ -28,6 +29,7 @@
 #include "Nodes\ControlFlow\Exit.h"
 #include "Nodes\ControlFlow\Goto.h"
 #include "Nodes\ControlFlow\Call.h"
+#include "Nodes\ControlFlow\Block.h"
 
 using namespace SPL::Compiler::Parser::Nodes;
 using namespace SPL::Compiler::Parser::Nodes::Casting;
@@ -91,7 +93,10 @@ namespace SPL
 				Nodes::Pop* ParsePopStatement();
 				Nodes::Call* ParseCallStatement();
 				Nodes::Ret* ParseRetStatement();
-				
+				Nodes::If* ParseIfStatement();
+				Nodes::Condition* ParseCondition();
+				Nodes::Block* ParseBlock();
+
 #pragma region Maths
 				Nodes::Add* ParseAddStatement();
 				Nodes::Sub* ParseSubStatement();

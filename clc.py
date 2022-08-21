@@ -46,7 +46,7 @@ def main():
 			lines += thisFileLines
 
 	avg = float(lines / (hedCount + cppCount))
-	print(f"Found {cppCount} cpp files\nFound {hedCount} header files\nFound {skpCount} non C++ files\nCounted {lines} lines\nAverage line count {round(avg, 2)} per file\nMin file was {_min[0]} with {_min[1]} lines\nMax file was {_max[0]} with {_max[1]} lines")
+	print(f"Counted {lines} lines\nAverage line count {round(avg, 2)} per file\nMin file was {_min[0]} with {_min[1]} lines\nMax file was {_max[0]} with {_max[1]} lines")
 
 if __name__ == "__main__":
 	main()

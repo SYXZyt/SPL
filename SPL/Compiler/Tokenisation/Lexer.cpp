@@ -220,6 +220,18 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 			tokens.push_back(t);
 			Advance();
 		}
+		else if (currentChar == '{')
+		{
+			Token t = Token(std::string(1, currentChar), TokenType::L_CURLY, Pos(), inputName);
+			tokens.push_back(t);
+			Advance();
+		}
+		else if (currentChar == '}')
+		{
+			Token t = Token(std::string(1, currentChar), TokenType::R_CURLY, Pos(), inputName);
+			tokens.push_back(t);
+			Advance();
+		}
 		else if (currentChar == '>')
 		{
 			//Check if the next character is =, as that changes the token type
@@ -341,6 +353,9 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		 "free",
 		 "concat",
 		 "call",
-		 "ret"
+		 "ret",
+		 "pass",
+		 "if",
+		 "else",
 	};
 }

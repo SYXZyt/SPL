@@ -33,6 +33,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_EXPRESSION = 1205,
 	SPL_UNEXPECTED_KEYWORD = 1206,
 	SPL_UNEXPECTED_TOKEN = 1207,
+	SPL_INVALID_CONDITIONAL = 1208,
 
 	//Semantic analyser
 	SPL_OUT_OF_FILE = 1301,
@@ -82,6 +83,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_EXPRESSION, "Expected an expression"},
 	{SPL_UNEXPECTED_KEYWORD, "Keyword '&SPL_0' was unexpected at this time"},
 	{SPL_UNEXPECTED_TOKEN, "'&SPL_0' was unexpected at this time"},
+	{SPL_INVALID_CONDITIONAL, "'&SPL_0' cannot be used in a condition"},
 
 	{SPL_OUT_OF_FILE, "Tried to find code that is outside the file"},
 	{WSPL_UNUSED_VAR, "Variable has been reassigned, despite not being reference. Try removing the original assignment"},
