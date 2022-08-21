@@ -269,6 +269,23 @@ SPL::Compiler::Parser::Nodes::Condition* SPL::Compiler::Parser::Parser::ParseCon
 	return new Condition(lhs, op, rhs);
 }
 
+SPL::Compiler::Parser::Nodes::Block* SPL::Compiler::Parser::Parser::ParseBlock()
+{
+	std::vector<Node*> nodes;
+	Token t = PeekCurrent();
+
+	while (PeekNext().GetTokenType() != Tokenisation::TokenType::R_CURLY)
+	{
+		nodes.push_back(Statement());
+	} Advance();
+
+	if (nodes.size() == 0) Error(SPL_EMPTY_BLOCK, PeekCurrent(), ErrorMessages[SPL_EMPTY_BLOCK], "Parser.cpp");
+
+	Block* b = new Block(t);
+	for (Node* n : nodes) b->AddNode(n);
+	return b;
+}
+
 SPL::Compiler::Parser::Nodes::Add* SPL::Compiler::Parser::Parser::ParseAddStatement()
 {
 	Add* add = new Add(PeekCurrent());
@@ -383,6 +400,10 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
 			Error(SPL_UNEXPECTED_KEYWORD, PeekCurrent(), message, "Parser.cpp");
 			return nullptr;
 		}
+	}
+	else if (PeekCurrent().GetTokenType() == Tokenisation::TokenType::L_CURLY)
+	{
+		return ParseBlock();
 	}
 	else if (PeekCurrent().GetTokenType() == Tokenisation::TokenType::COLON)
 	{
