@@ -73,23 +73,8 @@
     <Filter Include="Source Files\SPL\Compiler\Parser\Nodes\Stack">
       <UniqueIdentifier>{80743ff0-9ea7-4812-9a08-66af52860a25}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\SPL\Compiler\Analyser">
-      <UniqueIdentifier>{0424af78-a792-4733-b847-77a19e5c72cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\SPL\Compiler\Analyser">
-      <UniqueIdentifier>{8ba5c805-4fc7-436e-b37f-da9b9e2bae32}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\SPL\Compiler\Assembling">
       <UniqueIdentifier>{be25d4e9-6e7a-4e23-8043-1648c6d51049}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\SPL\Compiler\Assembler">
-      <UniqueIdentifier>{b4d6f563-4464-4b51-bf84-1f625c518a11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\SPL\Compiler\Optimising">
-      <UniqueIdentifier>{dd4cc855-1718-494d-a175-bea1c358037e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\SPL\Compiler\Optimising">
-      <UniqueIdentifier>{8df521a6-be08-4167-8aba-785155c05f07}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\SPL\Disassembling">
       <UniqueIdentifier>{39d19739-ce82-4f13-87ac-73c1400aca5b}</UniqueIdentifier>
@@ -102,6 +87,9 @@
     </Filter>
     <Filter Include="Header Files\SPL\VirtualMachine">
       <UniqueIdentifier>{34599ee6-2208-434d-ac2e-e529d1d683e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SPL\Compiler\Assembler">
+      <UniqueIdentifier>{0cf0c1d2-6d27-49fe-a3ce-d89f4e7610d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,17 +144,8 @@
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\Let.cpp">
       <Filter>Source Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="SPL\Compiler\Analyser\SemanticAnalyser.cpp">
-      <Filter>Source Files\SPL\Compiler\Analyser</Filter>
-    </ClCompile>
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Call.cpp">
       <Filter>Source Files\SPL\Compiler\Parser\Nodes\ControlFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="SPL\Compiler\Optimising\Optimiser.cpp">
-      <Filter>Source Files\SPL\Compiler\Optimising</Filter>
-    </ClCompile>
-    <ClCompile Include="SPL\Compiler\Assembling\Assembler.cpp">
-      <Filter>Source Files\SPL\Compiler\Assembler</Filter>
     </ClCompile>
     <ClCompile Include="SPL\Disassembling\Disassembler.cpp">
       <Filter>Source Files\SPL\Disassembling</Filter>
@@ -179,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="SPL\VirtualMachine\Accumulator.cpp">
       <Filter>Source Files\SPL\VirtualMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="SPL\Compiler\Assembling\Assembler.cpp">
+      <Filter>Source Files\SPL\Compiler\Assembler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,17 +254,11 @@
     <ClInclude Include="SPL\Compiler\Parsing\Parser.h">
       <Filter>Header Files\SPL\Compiler\Parser</Filter>
     </ClInclude>
-    <ClInclude Include="SPL\Compiler\Analyser\SemanticAnalyser.h">
-      <Filter>Header Files\SPL\Compiler\Analyser</Filter>
-    </ClInclude>
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Call.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes\ControlFlow</Filter>
     </ClInclude>
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Ret.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes\ControlFlow</Filter>
-    </ClInclude>
-    <ClInclude Include="SPL\Compiler\Optimising\Optimiser.h">
-      <Filter>Header Files\SPL\Compiler\Optimising</Filter>
     </ClInclude>
     <ClInclude Include="SPL\Compiler\Assembling\Assembler.h">
       <Filter>Header Files\SPL\Compiler\Assembling</Filter>

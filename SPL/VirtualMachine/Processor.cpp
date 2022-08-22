@@ -88,6 +88,13 @@ void SPL::VirtualMachine::Processor::Run()
 				break;
 			case 0x01: //setpop
 			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_POP_EMPTY, ErrorMessages[SPL_POP_EMPTY]);
+					KILL;
+					break;
+				}
+
 				std::string varName = ReadString();
 				VariableData* v = stack.Pop();
 				VariableData* data = new VariableData(*v);
@@ -215,6 +222,13 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x13: //pop
 			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_POP_EMPTY, ErrorMessages[SPL_POP_EMPTY]);
+					KILL;
+					break;
+				}
+
 				stack.Pop();
 			}
 			break;
