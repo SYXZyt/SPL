@@ -44,6 +44,15 @@ namespace SPL
 						return size;
 					}
 
+					std::string _ToString()
+					{
+						std::stringstream ss;
+						ss << "[CODEBLOCK] - " << Size();
+						for (Node* n : blockNodes)
+							ss << "{" << n->_ToString() << "} ";
+						return ss.str();
+					}
+
 					Block() : Node() {}
 					Block(Tokenisation::Token token) : Node(token)
 					{

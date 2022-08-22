@@ -298,7 +298,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 			}
 
 			Advance();
-			Token t("==", TokenType::EQUALS, pos, inputName);
+			Token t("!=", TokenType::EQUALS, pos, inputName);
 			tokens.push_back(t);
 		}
 		else if (currentChar == ';') //In order to handle comments, we will skip every char until either end of line or end of file

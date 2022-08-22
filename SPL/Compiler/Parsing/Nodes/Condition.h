@@ -39,6 +39,13 @@ namespace SPL
 						return (1 + lhs->Size()) + (1 + rhs->Size()); //The conditional will simplify to two push instructions
 					}
 
+					std::string _ToString()
+					{
+						std::stringstream ss;
+						ss << "[CONDITION] - " << Size() << '<' << lhs->_ToString() << "> [OPERATION] '" << op.GetLexeme() << "' <" << rhs->_ToString() << '>';
+						return ss.str();
+					}
+
 					Condition(Value* lhs, Tokenisation::Token op, Value* rhs) : Node(op)
 					{
 						this->lhs = lhs;

@@ -37,6 +37,13 @@ namespace SPL
 						return elseNode;
 					}
 
+					std::string _ToString()
+					{
+						std::stringstream ss;
+						ss << "[IF] - " << Size() << "(" << condition->_ToString() << ") (" << block->_ToString() << ") (" << (elseNode == nullptr ? "ELSE_NULL" : elseNode->_ToString()) << ")";
+						return ss.str();
+					}
+
 					int Size()
 					{
 						int size = 6;
