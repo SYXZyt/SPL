@@ -13,9 +13,7 @@
 #include "SPL\Compiler\Parsing\Nodes\Node.h"
 #include "SPL\Compiler\Tokenisation\Token.h"
 #include "SPL\Compiler\Tokenisation\Lexer.h"
-#include "SPL\Compiler\Optimising\Optimiser.h"
 #include "SPL\Compiler\Assembling\Assembler.h"
-#include "SPL\Compiler\Analyser\SemanticAnalyser.h"
 #include "SPL\Compiler\PreProcessing\PreProcessor.h"
 
 //These are used for development. Enable them if you want. They mostly just dump pre-ran code
@@ -180,9 +178,7 @@ int main(int argc, char** argv)
 	using namespace SPL::Disassembling;
 	using namespace SPL::VirtualMachine;
 	using namespace SPL::Compiler::Parser;
-	using namespace SPL::Compiler::Analyser;
 	using namespace SPL::Compiler::Assembler;
-	using namespace SPL::Compiler::Optimising;
 	using namespace SPL::Compiler::Tokenisation;
 	using namespace SPL::Compiler::Parser::Nodes;
 	using namespace SPL::Compiler::PreProcessing;
@@ -252,12 +248,6 @@ int main(int argc, char** argv)
 		}
 		std::cout << "Total Size: " << size << " bytes" << std::endl;
 #endif
-
-		SemanticAnalyser analyser = SemanticAnalyser(nodes);
-		SemanticAnalyserResults sar = analyser.Analyse();
-
-		if (!skipOptimiser) Optimiser::Optimise(nodes, sar);
-
 		Assembler assembler = Assembler(nodes, binaryName);
 		assembler.Assemble();
 

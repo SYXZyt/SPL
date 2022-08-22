@@ -178,11 +178,12 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x0e: //ret
 			{
-				//We need to check that we aren't returning when the callstack is empty. The analyser should've caught it, but we want to make sure
+				//We need to check that we aren't returning when the callstack is empty
 				if (cstack.Size() == 0)
 				{
 					ErrorNoExit(SPL_RET_EMPTY, ErrorMessages[SPL_RET_EMPTY]);
 					KILL;
+					break;
 				}
 
 				ptr = cstack.Pop();
@@ -215,6 +216,13 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x13: //pop
 			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_POP_EMPTY, ErrorMessages[SPL_POP_EMPTY]);
+					KILL;
+					break;
+				}
+
 				stack.Pop();
 			}
 			break;

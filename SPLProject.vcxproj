@@ -151,8 +151,6 @@
   <ItemGroup>
     <ClCompile Include="SPL\VirtualMachine\Accumulator.cpp" />
     <ClCompile Include="SPL\Compiler\Assembling\Assembler.cpp" />
-    <ClCompile Include="SPL\Compiler\Analyser\SemanticAnalyser.cpp" />
-    <ClCompile Include="SPL\Compiler\Optimising\Optimiser.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Call.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\Let.cpp" />
     <ClCompile Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Exit.cpp" />
@@ -188,11 +186,9 @@
     <ClInclude Include="Int.h" />
     <ClInclude Include="rom.h" />
     <ClInclude Include="SPL\Compiler\Assembling\Assembler.h" />
-    <ClInclude Include="SPL\Compiler\Optimising\Optimiser.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Call.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ErrorStream.h" />
-    <ClInclude Include="SPL\Compiler\Analyser\SemanticAnalyser.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\ControlFlow\Ret.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Parser.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Add.h" />

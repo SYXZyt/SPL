@@ -36,15 +36,8 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_INVALID_CONDITIONAL = 1208,
 	SPL_EMPTY_BLOCK = 1209,
 
-	//Semantic analyser
-	SPL_OUT_OF_FILE = 1301,
-	WSPL_UNUSED_VAR = 1302,
-	SPL_CONST_OVERWRITE = 1304,
-	SPL_REF_VAR = 1305,
-	SPL_POP_EMPTY = 1306,
-	SPL_SETPOP_STACK_EMPTY = 1307,
-	SPL_RET_EMPTY = 1308,
-	WSPL_UNREACHABLE = 1309,
+	//Assembler
+	SPL_JUMP_OUT_OF_BOUNDS = 1301,
 
 	//VM
 	SPL_UNKNOWN_VAR = 1401,
@@ -52,6 +45,8 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_DIV_ZERO = 1404,
 	SPL_CONVERSION_ERROR = 1405,
 	SPL_UNKNOWN_OPCODE = 1406,
+	SPL_RET_EMPTY = 1407,
+	SPL_POP_EMPTY = 1408,
 };
 
 static std::ostream& operator<<(std::ostream& os, SPL_ERROR_CODE code)
@@ -87,18 +82,13 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_INVALID_CONDITIONAL, "'&SPL_0' cannot be used in a condition"},
 	{SPL_EMPTY_BLOCK, "SPL does not support empty code blocks. Please use the 'pass' keyword instead"},
 
-	{SPL_OUT_OF_FILE, "Tried to find code that is outside the file"},
-	{WSPL_UNUSED_VAR, "Variable has been reassigned, despite not being reference. Try removing the original assignment"},
-	{SPL_CONST_OVERWRITE, "Tried to overwrite a constant value"},
-	{SPL_REF_VAR, "Tried to reference a variable that does not exist"},
-	{SPL_POP_EMPTY, "Tried to pop an empty stack"},
-	{SPL_SETPOP_STACK_EMPTY, "Tried to set a value off of the stack while it was empty"},
-	{SPL_RET_EMPTY, "Cannot return when the callstack is empty. Are you using 'goto' and not 'call'?"},
-	{WSPL_UNREACHABLE, "Unreachable code detected"},
+	{SPL_JUMP_OUT_OF_BOUNDS, "Could not jump to line &SPL_0 as no code was found there"},
 
 	{SPL_UNKNOWN_VAR, "Variable '&SPL_0' does not exist"},
 	{SPL_STRING_UNEXPECTED, "String cannot be used in '&SPL_0' calculation"},
 	{SPL_DIV_ZERO, "Tried to divide by zero"},
 	{SPL_CONVERSION_ERROR, "Cannot convert value to &SPL_0"},
-	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"}
+	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"},
+	{SPL_RET_EMPTY, "Cannot return when the callstack was empty"},
+	{SPL_POP_EMPTY, "Cannot pop when the stack was empty"}
 };

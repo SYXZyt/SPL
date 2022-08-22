@@ -25,11 +25,8 @@ int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 
 	if (!found)
 	{
-		std::string s = "Could not jump to line ";
-		s += line;
-		s += " as no code was found there";
-
-		Error(*nodes[nodes.size() - 1], s, "Assembler.cpp");
+		std::string params[] {std::to_string(line + 1)};
+		Error(SPL_JUMP_OUT_OF_BOUNDS, *nodes[nodes.size() - 1], GetMessageWithParams(ErrorMessages[SPL_JUMP_OUT_OF_BOUNDS], 1, params), "Assembler.cpp");
 	}
 
 	//Now we need to go over every node until the current node, and combine their size, to get the correct offset in the binary file
