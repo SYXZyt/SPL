@@ -150,7 +150,7 @@ SPL::Compiler::Tokenisation::Token SPL::Compiler::Tokenisation::Lexer::BuildNumb
 
 		strRepr += currentChar;
 		Advance();
-	} Advance();
+	}
 
 	//Check that the number follows a valid format
 	if (decimalCount > 1)
