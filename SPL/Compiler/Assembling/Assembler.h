@@ -9,6 +9,7 @@
 #include "../../../String.h"
 #include "../../../ErrorStream.h"
 #include "../Parsing/Nodes/Let.h"
+#include "../Parsing/Nodes/Pass.h"
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
 #include "../Parsing/Nodes/Stack/Pop.h"
