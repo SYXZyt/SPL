@@ -267,6 +267,12 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		 "free",
 		 "concat",
 		 "call",
-		 "ret"
+		 "ret",
+		 "equ",
+		 "neq",
+		 "grt",
+		 "grtequ",
+		 "lwr",
+		 "lwrequ",
 	};
 }

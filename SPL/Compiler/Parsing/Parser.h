@@ -24,10 +24,16 @@
 #include "Nodes\Casting\ToFloat.h"
 #include "../Tokenisation/Token.h"
 #include "Nodes\ControlFlow\Ret.h"
+#include "Nodes\Comparisons\Equ.h"
+#include "Nodes\Comparisons\Neq.h"
+#include "Nodes\Comparisons\Grt.h"
+#include "Nodes\Comparisons\Lwr.h"
 #include "Nodes\Casting\ToString.h"
 #include "Nodes\ControlFlow\Exit.h"
 #include "Nodes\ControlFlow\Goto.h"
 #include "Nodes\ControlFlow\Call.h"
+#include "Nodes\Comparisons\GrtEqu.h"
+#include "Nodes\Comparisons\LwrEqu.h"
 
 using namespace SPL::Compiler::Parser::Nodes;
 using namespace SPL::Compiler::Parser::Nodes::Casting;
@@ -92,6 +98,15 @@ namespace SPL
 				Nodes::Call* ParseCallStatement();
 				Nodes::Ret* ParseRetStatement();
 				
+#pragma region Comparisons
+				Nodes::Equ* ParseEquStatement();
+				Nodes::Neq* ParseNeqStatement();
+				Nodes::Grt* ParseGrtStatement();
+				Nodes::GrtEqu* ParseGrtEquStatement();
+				Nodes::Lwr* ParseLwrStatement();
+				Nodes::LwrEqu* ParseLwrEquStatement();
+#pragma endregion
+
 #pragma region Maths
 				Nodes::Add* ParseAddStatement();
 				Nodes::Sub* ParseSubStatement();

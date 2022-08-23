@@ -1,0 +1,7 @@
+push 1
+push 1
+equ 6.
+println "True"
+goto endif_0
+println "False"
+:endif_0

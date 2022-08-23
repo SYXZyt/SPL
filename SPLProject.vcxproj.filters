@@ -91,6 +91,9 @@
     <Filter Include="Source Files\SPL\Compiler\Assembler">
       <UniqueIdentifier>{0cf0c1d2-6d27-49fe-a3ce-d89f4e7610d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SPL\Compiler\Parser\Nodes\Comparisons">
+      <UniqueIdentifier>{fd82fa42-ea4e-47c3-a404-e92605958947}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -295,6 +298,27 @@
     </ClInclude>
     <ClInclude Include="SPLErrors.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Equ.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Neq.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Lwr.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\GrtEqu.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Grt.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\LwrEqu.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Comparison.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -210,6 +210,60 @@ SPL::Compiler::Parser::Nodes::Ret* SPL::Compiler::Parser::Parser::ParseRetStatem
     return ret;
 }
 
+SPL::Compiler::Parser::Nodes::Equ* SPL::Compiler::Parser::Parser::ParseEquStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* line = ParseExpression();
+    return new Equ(t, line);
+}
+
+SPL::Compiler::Parser::Nodes::Neq* SPL::Compiler::Parser::Parser::ParseNeqStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* line = ParseExpression();
+    return new Neq(t, line);
+}
+
+SPL::Compiler::Parser::Nodes::Grt* SPL::Compiler::Parser::Parser::ParseGrtStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* line = ParseExpression();
+    return new Grt(t, line);
+}
+
+SPL::Compiler::Parser::Nodes::GrtEqu* SPL::Compiler::Parser::Parser::ParseGrtEquStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* line = ParseExpression();
+    return new GrtEqu(t, line);
+}
+
+SPL::Compiler::Parser::Nodes::Lwr* SPL::Compiler::Parser::Parser::ParseLwrStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* line = ParseExpression();
+    return new Lwr(t, line);
+}
+
+SPL::Compiler::Parser::Nodes::LwrEqu* SPL::Compiler::Parser::Parser::ParseLwrEquStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* line = ParseExpression();
+    return new LwrEqu(t, line);
+}
+
 SPL::Compiler::Parser::Nodes::Add* SPL::Compiler::Parser::Parser::ParseAddStatement()
 {
     Add* add = new Add(PeekCurrent());
@@ -317,6 +371,12 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "to_string") return ParseToStringStatement();
         else if (lex == "concat") return ParseConcatStatement();
         else if (lex == "pop") return ParsePopStatement();
+        else if (lex == "equ") return ParseEquStatement();
+        else if (lex == "neq") return ParseNeqStatement();
+        else if (lex == "grt") return ParseGrtStatement();
+        else if (lex == "grtequ") return ParseGrtEquStatement();
+        else if (lex == "lwr") return ParseLwrStatement();
+        else if (lex == "lwrequ") return ParseLwrEquStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};
