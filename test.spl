@@ -1,6 +1,6 @@
-push 1
-push 1
-equ 6
+push 5
+push 5
+lwrequ 6
 println "True"
 goto endif_0
 println "False"

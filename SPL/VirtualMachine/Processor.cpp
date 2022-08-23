@@ -307,6 +307,61 @@ void SPL::VirtualMachine::Processor::Run()
 				}
 			}
 			break;
+			case 0x1e:
+			{
+				//Read the int offset to jump to if the comparison fails
+				int failOffset = ReadInt();
+
+				if (!accumulator.NotEqualComparison())
+				{
+					ptr = failOffset;
+				}
+			}
+			break;
+			case 0x1f:
+			{
+				//Read the int offset to jump to if the comparison fails
+				int failOffset = ReadInt();
+
+				if (!accumulator.GreaterComparison())
+				{
+					ptr = failOffset;
+				}
+			}
+			break;
+			case 0x20:
+			{
+				//Read the int offset to jump to if the comparison fails
+				int failOffset = ReadInt();
+
+				if (!accumulator.GreaterEqualComparison())
+				{
+					ptr = failOffset;
+				}
+			}
+			break;
+			case 0x21:
+			{
+				//Read the int offset to jump to if the comparison fails
+				int failOffset = ReadInt();
+
+				if (!accumulator.LessComparison())
+				{
+					ptr = failOffset;
+				}
+			}
+			break;
+			case 0x22:
+			{
+				//Read the int offset to jump to if the comparison fails
+				int failOffset = ReadInt();
+
+				if (!accumulator.LessEqualComparison())
+				{
+					ptr = failOffset;
+				}
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};

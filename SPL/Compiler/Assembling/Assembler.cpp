@@ -25,7 +25,7 @@ int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 
 	if (!found)
 	{
-		std::string params[]{ std::to_string(line)};
+		std::string params[]{ std::to_string(line) };
 
 		Error(SPL_NO_CODE, *nodes[nodes.size() - 1], GetMessageWithParams(ErrorMessages[SPL_NO_CODE], 1, params), "Assembler.cpp");
 	}
@@ -293,6 +293,36 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			assembled.push_back(0x1D);
 
 			AddRange(assembled, IntToBytes(GetLabelOffset(equ->Line()->Token().GetValueInt())));
+		}
+		else if (Neq* neq = dynamic_cast<Neq*>(n))
+		{
+			assembled.push_back(0x1E);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(neq->Line()->Token().GetValueInt())));
+		}
+		else if (Grt* grt = dynamic_cast<Grt*>(n))
+		{
+			assembled.push_back(0x1F);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(grt->Line()->Token().GetValueInt())));
+		}
+		else if (GrtEqu* grtEqu = dynamic_cast<GrtEqu*>(n))
+		{
+			assembled.push_back(0x20);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(grtEqu->Line()->Token().GetValueInt())));
+		}
+		else if (Lwr* lwr = dynamic_cast<Lwr*>(n))
+		{
+			assembled.push_back(0x21);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(lwr->Line()->Token().GetValueInt())));
+		}
+		else if (LwrEqu* lwrEqu = dynamic_cast<LwrEqu*>(n))
+		{
+			assembled.push_back(0x22);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(lwrEqu->Line()->Token().GetValueInt())));
 		}
 
 		else

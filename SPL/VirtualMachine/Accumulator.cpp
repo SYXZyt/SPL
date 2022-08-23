@@ -4,20 +4,20 @@
 #define SCAST_FLT static_cast<float> 
 
 #define COMPARISON(op) \
-VariableData* b = stack->Pop();\
-VariableData* a = stack->Pop();\
-if (a->GetType() != b->GetType()) return false;\
-if (a->GetType() == VariableType::INT)\
+VariableData* lhs = stack->Pop();\
+VariableData* rhs = stack->Pop();\
+if (lhs->GetType() != rhs->GetType()) return false;\
+if (lhs->GetType() == VariableType::INT)\
 {\
-	return a->GetInt() op b->GetInt();\
+	return lhs->GetInt() op rhs->GetInt();\
 }\
-else if (a->GetType() == VariableType::FLOAT)\
+else if (lhs->GetType() == VariableType::FLOAT)\
 {\
-	return a->GetFloat() op b->GetFloat();\
+	return lhs->GetFloat() op rhs->GetFloat();\
 }\
 else\
 {\
-	return a->GetString() op b->GetString();\
+	return lhs->GetString() op rhs->GetString();\
 }
 
 using namespace SPL::VirtualMachine;
