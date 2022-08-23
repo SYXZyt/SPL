@@ -25,11 +25,9 @@ int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 
 	if (!found)
 	{
-		std::string s = "Could not jump to line ";
-		s += line;
-		s += " as no code was found there";
+		std::string params[]{ std::to_string(line) };
 
-		Error(*nodes[nodes.size() - 1], s, "Assembler.cpp");
+		Error(SPL_NO_CODE, *nodes[nodes.size() - 1], GetMessageWithParams(ErrorMessages[SPL_NO_CODE], 1, params), "Assembler.cpp");
 	}
 
 	//Now we need to go over every node until the current node, and combine their size, to get the correct offset in the binary file
@@ -289,6 +287,42 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		else if (dynamic_cast<ToInt*>(n))
 		{
 			assembled.push_back(0x1C);
+		}
+		else if (Equ* equ = dynamic_cast<Equ*>(n))
+		{
+			assembled.push_back(0x1D);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(equ->Line()->Token().GetValueInt())));
+		}
+		else if (Neq* neq = dynamic_cast<Neq*>(n))
+		{
+			assembled.push_back(0x1E);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(neq->Line()->Token().GetValueInt())));
+		}
+		else if (Grt* grt = dynamic_cast<Grt*>(n))
+		{
+			assembled.push_back(0x1F);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(grt->Line()->Token().GetValueInt())));
+		}
+		else if (GrtEqu* grtEqu = dynamic_cast<GrtEqu*>(n))
+		{
+			assembled.push_back(0x20);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(grtEqu->Line()->Token().GetValueInt())));
+		}
+		else if (Lwr* lwr = dynamic_cast<Lwr*>(n))
+		{
+			assembled.push_back(0x21);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(lwr->Line()->Token().GetValueInt())));
+		}
+		else if (LwrEqu* lwrEqu = dynamic_cast<LwrEqu*>(n))
+		{
+			assembled.push_back(0x22);
+
+			AddRange(assembled, IntToBytes(GetLabelOffset(lwrEqu->Line()->Token().GetValueInt())));
 		}
 
 		else

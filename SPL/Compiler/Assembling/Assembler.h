@@ -25,10 +25,16 @@
 #include "../Parsing/Nodes/Casting/ToInt.h"
 #include "../Parsing/Nodes/ControlFlow/Ret.h"
 #include "../Parsing/Nodes/Casting/ToFloat.h"
+#include "../Parsing/Nodes/Comparisons/Equ.h"
+#include "../Parsing/Nodes/Comparisons/Neq.h"
+#include "../Parsing/Nodes/Comparisons/Grt.h"
+#include "../Parsing/Nodes/Comparisons/Lwr.h"
 #include "../Parsing/Nodes/Casting/ToString.h"
 #include "../Parsing/Nodes/ControlFlow/Call.h"
 #include "../Parsing/Nodes/ControlFlow/Goto.h"
 #include "../Parsing/Nodes/ControlFlow/Exit.h"
+#include "../Parsing/Nodes/Comparisons/GrtEqu.h"
+#include "../Parsing/Nodes/Comparisons/LwrEqu.h"
 
 using namespace SPL::Compiler::Parser::Nodes;
 using namespace SPL::Compiler::Parser::Nodes::Casting;
