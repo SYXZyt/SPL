@@ -3,6 +3,23 @@
 #define SCAST_INT static_cast<int>
 #define SCAST_FLT static_cast<float> 
 
+#define COMPARISON(op) \
+VariableData* b = stack->Pop();\
+VariableData* a = stack->Pop();\
+if (a->GetType() != b->GetType()) return false;\
+if (a->GetType() == VariableType::INT)\
+{\
+	return a->GetInt() op b->GetInt();\
+}\
+else if (a->GetType() == VariableType::FLOAT)\
+{\
+	return a->GetFloat() op b->GetFloat();\
+}\
+else\
+{\
+	return a->GetString() op b->GetString();\
+}
+
 using namespace SPL::VirtualMachine;
 
 static bool CanBeNumber(const std::string s)
@@ -323,4 +340,34 @@ bool SPL::VirtualMachine::Accumulator::CastToInt()
 	}
 
 	return true;
+}
+
+bool SPL::VirtualMachine::Accumulator::EqualComparison()
+{
+	COMPARISON(==);
+}
+
+bool SPL::VirtualMachine::Accumulator::NotEqualComparison()
+{
+	COMPARISON(!=);
+}
+
+bool SPL::VirtualMachine::Accumulator::GreaterComparison()
+{
+	COMPARISON(>);
+}
+
+bool SPL::VirtualMachine::Accumulator::GreaterEqualComparison()
+{
+	COMPARISON(>=);
+}
+
+bool SPL::VirtualMachine::Accumulator::LessComparison()
+{
+	COMPARISON(<);
+}
+
+bool SPL::VirtualMachine::Accumulator::LessEqualComparison()
+{
+	COMPARISON(<=);
 }

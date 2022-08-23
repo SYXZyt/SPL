@@ -63,6 +63,13 @@ namespace SPL
 			/// <returns>False if the cast failed</returns>
 			bool CastToInt();
 
+			bool EqualComparison();
+			bool NotEqualComparison();
+			bool GreaterComparison();
+			bool GreaterEqualComparison();
+			bool LessComparison();
+			bool LessEqualComparison();
+
 			/// <summary>
 			/// Create a new accumulator
 			/// </summary>

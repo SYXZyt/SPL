@@ -34,15 +34,10 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_UNEXPECTED_KEYWORD = 1206,
 	SPL_UNEXPECTED_TOKEN = 1207,
 
-	//Semantic analyser
-	SPL_OUT_OF_FILE = 1301,
-	WSPL_UNUSED_VAR = 1302,
-	SPL_CONST_OVERWRITE = 1304,
-	SPL_REF_VAR = 1305,
-	SPL_POP_EMPTY = 1306,
-	SPL_SETPOP_STACK_EMPTY = 1307,
-	SPL_RET_EMPTY = 1308,
-	WSPL_UNREACHABLE = 1309,
+	//Assembler
+	SPL_NO_CODE = 1301,
+	SPL_POP_EMPTY = 1302,
+	SPL_RET_EMPTY = 1303,
 
 	//VM
 	SPL_UNKNOWN_VAR = 1401,
@@ -83,14 +78,9 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_UNEXPECTED_KEYWORD, "Keyword '&SPL_0' was unexpected at this time"},
 	{SPL_UNEXPECTED_TOKEN, "'&SPL_0' was unexpected at this time"},
 
-	{SPL_OUT_OF_FILE, "Tried to find code that is outside the file"},
-	{WSPL_UNUSED_VAR, "Variable has been reassigned, despite not being reference. Try removing the original assignment"},
-	{SPL_CONST_OVERWRITE, "Tried to overwrite a constant value"},
-	{SPL_REF_VAR, "Tried to reference a variable that does not exist"},
-	{SPL_POP_EMPTY, "Tried to pop an empty stack"},
-	{SPL_SETPOP_STACK_EMPTY, "Tried to set a value off of the stack while it was empty"},
-	{SPL_RET_EMPTY, "Cannot return when the callstack is empty. Are you using 'goto' and not 'call'?"},
-	{WSPL_UNREACHABLE, "Unreachable code detected"},
+	{SPL_NO_CODE, "Cannot jump to line &SPL_0 as no code was found"},
+	{SPL_POP_EMPTY, "Tried to pop while the stack was empty"},
+	{SPL_RET_EMPTY, "Tried to return while the callstack was empty"},
 
 	{SPL_UNKNOWN_VAR, "Variable '&SPL_0' does not exist"},
 	{SPL_STRING_UNEXPECTED, "String cannot be used in '&SPL_0' calculation"},

@@ -296,6 +296,17 @@ void SPL::VirtualMachine::Processor::Run()
 				}
 			}
 			break;
+			case 0x1d:
+			{
+				//Read the int offset to jump to if the comparison fails
+				int failOffset = ReadInt();
+
+				if (!accumulator.EqualComparison())
+				{
+					ptr = failOffset;
+				}
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};
