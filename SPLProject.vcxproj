@@ -174,8 +174,15 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Comparison.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Grt.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\GrtEqu.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Lwr.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\LwrEqu.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Neq.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SPLErrors.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Equ.h" />
     <ClInclude Include="SPL\VirtualMachine\Accumulator.h" />
     <ClInclude Include="SPL\VirtualMachine\SPLExitCodes.h" />
     <ClInclude Include="SPL\Disassembling\Disassembler.h" />

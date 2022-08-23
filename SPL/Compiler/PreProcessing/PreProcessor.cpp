@@ -75,7 +75,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             tokens.push_back(a);
             tokens.push_back(b);
         }
-        else if (CurrentToken(i).GetTokenType() == TokenType::KEYWORD && (CurrentToken(i).GetLexeme() == "goto" || CurrentToken(i).GetLexeme() == "call"))
+        else if (CurrentToken(i).GetTokenType() == TokenType::KEYWORD && (CurrentToken(i).GetLexeme() == "goto" || CurrentToken(i).GetLexeme() == "call" || CurrentToken(i).GetLexeme() == "equ" || CurrentToken(i).GetLexeme() == "neq" || CurrentToken(i).GetLexeme() == "grt" || CurrentToken(i).GetLexeme() == "grtequ" || CurrentToken(i).GetLexeme() == "lwr" || CurrentToken(i).GetLexeme() == "lwrequ"))
         {
             //Check if an identifier was passed, if not, we need to check for a number, otherwise this statement is invalid
             if (Peek(i).GetTokenType() == TokenType::IDENTIFIER)
@@ -109,7 +109,8 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             }
             else
             {
-                Error(SPL_GOTO_INVALID_ADDRESS, CurrentToken(i), ErrorMessages[SPL_GOTO_INVALID_ADDRESS], "PreProcessor.cpp");
+                std::string params[]{ CurrentToken(i).GetLexeme() };
+                Error(SPL_GOTO_INVALID_ADDRESS, CurrentToken(i), GetMessageWithParams(ErrorMessages[SPL_GOTO_INVALID_ADDRESS], 1, params), "PreProcessor.cpp");
             }
         }
         else

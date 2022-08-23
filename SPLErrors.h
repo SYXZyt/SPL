@@ -73,7 +73,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_MISSING_NEGATIVE_NUMBER, "Expected a numerical value to follow '-'"},
 	{SPL_NONEXISTANT_LABEL, "The label '&SPL_0' does not exist"},
 	{SPL_CALL_INVALID_ADDRESS, "'call' expects a label name"},
-	{SPL_GOTO_INVALID_ADDRESS, "'goto' expects a line number or label name"},
+	{SPL_GOTO_INVALID_ADDRESS, "'&SPL_0' expects a line number or label name"},
 
 	{SPL_MISSING_ACCESS_MODIFIER, "Expected 'const' or 'mut' keyword"},
 	{SPL_VARNAME_NOT_IDEN, "Expected a variable name"},
