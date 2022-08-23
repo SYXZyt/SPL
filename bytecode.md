@@ -23,10 +23,10 @@ Something to note is that the disassembly may
 | 0C | `goto` | Jumps the program counter to a specific address |
 | 0D | `call` | Jumps the program counter to a specific address, while adding the current address to the callstack |    
 | 0E | `ret` | Jumps to the latest address saved on the call stack |
-| 0F | `push` (string) | Push a string to the stack |
-| 10 | `push` (float) | Push a float to the stack |
-| 11 | `push` (int) | Push an integer to the stack |
-| 12 | `push` (variable) | Push a variable to the stack |
+| 0F | `pushstr` | Push a string to the stack |
+| 10 | `pushflt` | Push a float to the stack |
+| 11 | `pushint` | Push an integer to the stack |
+| 12 | `pushvar` | Push a variable to the stack |
 | 13 | `pop` | Pop a value off of the stack |
 | 14 | `add` | Add two values together off of the stack, and push the result |
 | 15 | `sub` | Subtract two values together off of the stack, and push the result |
@@ -37,3 +37,9 @@ Something to note is that the disassembly may
 | 1A | `strcast` | Take a value off of the stack, convert it to a string, and then push it |
 | 1B | `fltcast` | Take a value off of the stack, convert it to a float, and then push it |
 | 1C | `intcast` | Take a value off of the stack, convert it to an integer, and then push it |
+| 1D | `equ` | Run a `==` comparison |
+| 1E |`neq` | Run a `!=` comparison |
+| 1F |`grt` | Run a `>` comparison |
+| 20 |`grtequ` | Run a `>=` comparison |
+| 21 |`lwr` | Run a `<` comparison |
+| 22 |`lwrequ` | Run a `<=` comparison |
