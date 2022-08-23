@@ -53,6 +53,12 @@ SPL features various instructions all with different functions. Many of these in
 | `to_float` | Convert a value on the stack to a float. Will throw error if invalid |
 | `to_int` | Convert a value on the stack to a int. Will throw error if invalid |
 | `to_string` | Convert a value on the stack to a string |
+| `equ` [`line_num` or `label_name`] | Check if the current two values on the stack are equal (==), and jump to the line or label if not |
+| `neq` [`line_num` or `label_name`] | Check if the current two values on the stack are not equal (!=), and jump to the line or label if not |
+| `grt` [`line_num` or `label_name`] | Check if the current two values on the stack are greater (>), and jump to the line or label if not |
+| `grtequ` [`line_num` or `label_name`] | Check if the current two values on the stack are greater or equal (>=), and jump to the line or label if not |
+| `lwr` [`line_num` or `label_name`] | Check if the current two values on the stack are lower (<), and jump to the line or label if not |
+| `lwrequ` [`line_num` or `label_name`] | Check if the current two values on the stack are lower or equal (<=), and jump to the line or label if not |
 
 It is very important that you remember to do all maths operations in reverse. Lets say you want to do `10 / 5`, the SPL would be
 ```
