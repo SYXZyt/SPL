@@ -1,3 +1,15 @@
-let x 10
-let x x
-println x
+const PI 3.1415926
+
+push PI
+push "PI == "
+concat
+setpop msg
+println msg
+
+push PI
+push 1
+add
+push "PI + 1 == "
+concat
+setpop msg
+println msg

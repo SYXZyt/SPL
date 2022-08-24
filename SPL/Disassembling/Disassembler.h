@@ -19,6 +19,7 @@ namespace SPL
 		/// </summary>
 		struct Disassembled
 		{
+			int addr;
 			byte opcode;
 			std::vector<byte> assembled;
 			std::string disassembled;
