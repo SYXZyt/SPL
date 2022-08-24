@@ -42,10 +42,10 @@ static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
 	std::list<std::string> consts;
 	for (Constant* c : nodes.constants)
 	{
-		if (std::count(consts.begin(), consts.end(), c->Token().GetLexeme()))
+		if (std::count(consts.begin(), consts.end(), c->GetName().GetLexeme()))
 		{
 			Error(SPL_CONST_OVERWRITE, c->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
-		} consts.push_back(c->Token().GetLexeme());
+		} consts.push_back(c->GetName().GetLexeme());
 	}
 
 	//Now run through normal nodes and check if and mutable variables share a name with a const

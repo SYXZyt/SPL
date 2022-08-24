@@ -1,9 +1,3 @@
-const PI 3.1415
-let piCpy PI
-push piCpy
-push 1
-add
-setpop piCpy
-
-println PI
-println piCpy
+let x 10
+let x x
+println x
