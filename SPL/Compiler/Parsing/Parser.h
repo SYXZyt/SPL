@@ -8,6 +8,7 @@
 #include "Nodes\Value.h"
 #include "Nodes\Block.h"
 #include "Nodes\Single.h"
+#include "Nodes\Constant.h"
 #include "Nodes\Maths\Add.h"
 #include "Nodes\Maths\Div.h"
 #include "Nodes\Maths\Mul.h"
@@ -15,7 +16,6 @@
 #include "Nodes\Maths\Sub.h"
 #include "Nodes\Stack\Pop.h"
 #include "Nodes\Stack\Push.h"
-#include "../../../Constants.h"
 #include "Nodes\Stack\SetPop.h"
 #include "Nodes\Maths\Concat.h"
 #include "Nodes\Output\Print.h"
@@ -87,6 +87,7 @@ namespace SPL
 				}
 
 				Nodes::Let* ParseVariableDefination();
+				Nodes::Constant* ParseConstantStatement();
 				Nodes::Free* ParseFreeStatement();
 				Nodes::Print* ParsePrintStatement();
 				Nodes::Exit* ParseExitStatement();

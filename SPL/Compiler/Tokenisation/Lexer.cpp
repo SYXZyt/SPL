@@ -223,7 +223,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::Tokenisation::Lex
 		else
 		{
 			Token t = Token(std::to_string(currentChar), TokenType::IDENTIFIER, Pos(), inputName);
-			std::string params[]{std::string(1, currentChar)};
+			std::string params[]{ std::string(1, currentChar) };
 			std::string message = GetMessageWithParams(ErrorMessages[SPL_ILLEGAL_CHARACTER], 1, params);
 			Error(SPL_ILLEGAL_CHARACTER, t, message, "Lexer.cpp");
 		}
@@ -249,30 +249,29 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		"print",
 		"println",
 		"let",
-		 ConstantKeyword,
-		 MutableKeyword,
-		 "goto",
-		 "exit",
-		 "push",
-		 "pop",
-		 "setpop",
-		 "add",
-		 "sub",
-		 "mul",
-		 "div",
-		 "pow",
-		 "to_float",
-		 "to_int",
-		 "to_string",
-		 "free",
-		 "concat",
-		 "call",
-		 "ret",
-		 "equ",
-		 "neq",
-		 "grt",
-		 "grtequ",
-		 "lwr",
-		 "lwrequ",
+		"const",
+		"goto",
+		"exit",
+		"push",
+		"pop",
+		"setpop",
+		"add",
+		"sub",
+		"mul",
+		"div",
+		"pow",
+		"to_float",
+		"to_int",
+		"to_string",
+		"free",
+		"concat",
+		"call",
+		"ret",
+		"equ",
+		"neq",
+		"grt",
+		"grtequ",
+		"lwr",
+		"lwrequ",
 	};
 }

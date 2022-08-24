@@ -1,8 +1,2 @@
-push 5
-push 5
-lwrequ 6
-println "True"
-goto endif_0
-println "False"
-:endif_0
-exit 0
+const PI 3.1415
+let piCpy PI

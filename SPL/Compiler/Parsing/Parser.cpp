@@ -62,15 +62,6 @@ SPL::Compiler::Parser::Nodes::Let* SPL::Compiler::Parser::Parser::ParseVariableD
 {
     //So we know that the current token is a let keyword, so we can skip this token
     Token let = PeekCurrent();
-    Advance();
-
-    //Check if the user has provided the correct access modifier, and then set a bool accordingly
-    if (PeekCurrent().GetTokenType() != Tokenisation::TokenType::KEYWORD && (PeekCurrent().GetLexeme() != ConstantKeyword && PeekCurrent().GetLexeme() != MutableKeyword))
-    {
-        Error(SPL_MISSING_ACCESS_MODIFIER, let, ErrorMessages[SPL_MISSING_ACCESS_MODIFIER], "Parser.cpp");
-    }
-
-    bool isMutable = PeekCurrent().GetLexeme() == MutableKeyword;
     Token name = Advance();
 
     Advance();
@@ -86,7 +77,34 @@ SPL::Compiler::Parser::Nodes::Let* SPL::Compiler::Parser::Parser::ParseVariableD
     Value* value = ParseExpression();
 
     //Finally we can now construct a LetDef node
-    return new Let(let, value, name, isMutable);
+    return new Let(let, value, name);
+}
+
+SPL::Compiler::Parser::Nodes::Constant* SPL::Compiler::Parser::Parser::ParseConstantStatement()
+{
+    Token _const = PeekCurrent();
+
+    //Check the variable name
+    Token name = Advance();
+    Advance();
+
+    //Make sure the name is valid
+    if (name.GetTokenType() != Tokenisation::TokenType::IDENTIFIER)
+    {
+        //We need to throw a different error based on if this is a keyword or nor
+        SPL_ERROR_CODE errorCode = name.GetTokenType() != Tokenisation::TokenType::KEYWORD ? SPL_VARNAME_NOT_IDEN : SPL_VARNAME_IS_KEY;
+        Error(errorCode, name, ErrorMessages[errorCode], "Parser.cpp");
+    }
+
+    Value* value = ParseExpression();
+
+    //Check that the value is not an identifier, as they are a runtime value, whereas const expects a compile time value
+    if (value->Type() == ValueType::IDENTIFIER)
+    {
+        Error(SPL_CONST_NOT_LITERAL, *value, ErrorMessages[SPL_CONST_NOT_LITERAL], "Parser.cpp");
+    }
+
+    return new Constant(_const, value);
 }
 
 SPL::Compiler::Parser::Nodes::Free* SPL::Compiler::Parser::Parser::ParseFreeStatement()
@@ -152,7 +170,7 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
     Token access;
 
     //Check that an access token was provided
-    if (PeekCurrent().GetLexeme() == ConstantKeyword || PeekCurrent().GetLexeme() == MutableKeyword)
+    if (PeekCurrent().GetLexeme() == "const" || PeekCurrent().GetLexeme() == "mut")
     {
         access = PeekCurrent();
     }
@@ -171,7 +189,7 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
         Error(errorCode, name, ErrorMessages[errorCode], "Parser.cpp");
     }
 
-    return new SetPop(initialKeyword, access.GetLexeme() == MutableKeyword, name);
+    return new SetPop(initialKeyword, access.GetLexeme() == "mut", name);
 }
 
 SPL::Compiler::Parser::Nodes::Concat* SPL::Compiler::Parser::Parser::ParseConcatStatement()
@@ -353,6 +371,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
     {
         std::string lex = PeekCurrent().GetLexeme();
         if (lex == "let") return ParseVariableDefination();
+        else if (lex == "const") return ParseConstantStatement();
         else if (lex == "print") return ParsePrintStatement();
         else if (lex == "free") return ParseFreeStatement();
         else if (lex == "exit") return ParseExitStatement();

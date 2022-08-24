@@ -182,9 +182,6 @@
     <ClInclude Include="String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SPL\Compiler\PreProcessing\PreProcessor.h">
       <Filter>Header Files\SPL\Compiler\PreProcessing</Filter>
     </ClInclude>
@@ -319,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Comparison.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes\Comparisons</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Constant.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

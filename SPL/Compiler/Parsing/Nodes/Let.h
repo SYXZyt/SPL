@@ -16,19 +16,17 @@ namespace SPL
 				private:
 					Value* value;
 					Tokenisation::Token name;
-					bool isMutable;
 
 				public:
 					Value* GetValue();
 					Tokenisation::Token Name();
-					bool IsMutable();
 
 					int Size();
 
 					std::string _ToString()
 					{
 						std::stringstream ss;
-						ss << "[LET] - " << Size() << " MUT-" << (isMutable ? "1" : "0") << " <" << value->_ToString() << "> " << name.GetLexeme();
+						ss << "[LET] - " << Size() << " <" << value->_ToString() << "> " << name.GetLexeme();
 						return ss.str();
 					}
 
@@ -36,14 +34,12 @@ namespace SPL
 					{
 						value = l.value;
 						name = l.name;
-						isMutable = l.isMutable;
 					}
 
-					Let(Tokenisation::Token token, Value* value, Tokenisation::Token name, bool isMutable) : Node(token)
+					Let(Tokenisation::Token token, Value* value, Tokenisation::Token name) : Node(token)
 					{
 						this->value = value;
 						this->name = name;
-						this->isMutable = isMutable;
 					}
 
 					~Let()

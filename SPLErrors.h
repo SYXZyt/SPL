@@ -3,7 +3,6 @@
 #include <ostream>
 
 #include "String.h"
-#include "Constants.h"
 
 enum SPL_ERROR_CODE : unsigned short
 {
@@ -33,6 +32,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_EXPRESSION = 1205,
 	SPL_UNEXPECTED_KEYWORD = 1206,
 	SPL_UNEXPECTED_TOKEN = 1207,
+	SPL_CONST_NOT_LITERAL = 1208,
 
 	//Assembler
 	SPL_NO_CODE = 1301,
@@ -77,6 +77,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_EXPRESSION, "Expected an expression"},
 	{SPL_UNEXPECTED_KEYWORD, "Keyword '&SPL_0' was unexpected at this time"},
 	{SPL_UNEXPECTED_TOKEN, "'&SPL_0' was unexpected at this time"},
+	{SPL_CONST_NOT_LITERAL, "Constant value could not be parsed at compile time"},
 
 	{SPL_NO_CODE, "Cannot jump to line &SPL_0 as no code was found"},
 	{SPL_POP_EMPTY, "Tried to pop while the stack was empty"},
