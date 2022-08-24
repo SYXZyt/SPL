@@ -33,6 +33,14 @@ namespace SPL
 					{
 						this->value = value;
 					}
+					Constant(const Constant& c)
+					{
+						this->value = c.value;
+					}
+					~Constant()
+					{
+						delete value;
+					}
 				};
 			}
 		}

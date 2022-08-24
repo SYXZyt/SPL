@@ -188,9 +188,6 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Block.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
-    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Free.h">
-      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
-    </ClInclude>
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Let.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
@@ -319,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Constant.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Free.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Output</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

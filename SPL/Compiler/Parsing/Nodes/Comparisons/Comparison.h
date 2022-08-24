@@ -38,6 +38,10 @@ namespace SPL
 					{
 						this->line = line;
 					}
+					~Comparison()
+					{
+						delete line;
+					}
 				};
 			}
 		}
