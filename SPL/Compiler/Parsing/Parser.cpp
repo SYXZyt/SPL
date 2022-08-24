@@ -104,7 +104,7 @@ SPL::Compiler::Parser::Nodes::Constant* SPL::Compiler::Parser::Parser::ParseCons
         Error(SPL_CONST_NOT_LITERAL, *value, ErrorMessages[SPL_CONST_NOT_LITERAL], "Parser.cpp");
     }
 
-    return new Constant(_const, value);
+    return new Constant(_const, name, value);
 }
 
 SPL::Compiler::Parser::Nodes::Free* SPL::Compiler::Parser::Parser::ParseFreeStatement()
@@ -167,20 +167,8 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
     Token initialKeyword = PeekCurrent();
     Advance();
 
-    Token access;
-
-    //Check that an access token was provided
-    if (PeekCurrent().GetLexeme() == "const" || PeekCurrent().GetLexeme() == "mut")
-    {
-        access = PeekCurrent();
-    }
-    else
-    {
-        Error(SPL_MISSING_ACCESS_MODIFIER, PeekCurrent(), ErrorMessages[SPL_MISSING_ACCESS_MODIFIER], "Parser.cpp");
-    }
-
-    Token name = PeekNext();
-    Advance(2);
+    Token name = PeekCurrent();
+    Advance();
 
     //Check that the name is an identifier
     if (name.GetTokenType() != Tokenisation::TokenType::IDENTIFIER)
@@ -189,7 +177,7 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
         Error(errorCode, name, ErrorMessages[errorCode], "Parser.cpp");
     }
 
-    return new SetPop(initialKeyword, access.GetLexeme() == "mut", name);
+    return new SetPop(initialKeyword, name);
 }
 
 SPL::Compiler::Parser::Nodes::Concat* SPL::Compiler::Parser::Parser::ParseConcatStatement()

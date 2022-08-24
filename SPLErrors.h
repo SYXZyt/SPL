@@ -38,6 +38,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_NO_CODE = 1301,
 	SPL_POP_EMPTY = 1302,
 	SPL_RET_EMPTY = 1303,
+	SPL_CONST_OVERWRITE = 1304,
 
 	//VM
 	SPL_UNKNOWN_VAR = 1401,
@@ -82,6 +83,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_NO_CODE, "Cannot jump to line &SPL_0 as no code was found"},
 	{SPL_POP_EMPTY, "Tried to pop while the stack was empty"},
 	{SPL_RET_EMPTY, "Tried to return while the callstack was empty"},
+	{SPL_CONST_OVERWRITE, "Tried to overwrite a constant value"},
 
 	{SPL_UNKNOWN_VAR, "Variable '&SPL_0' does not exist"},
 	{SPL_STRING_UNEXPECTED, "String cannot be used in '&SPL_0' calculation"},

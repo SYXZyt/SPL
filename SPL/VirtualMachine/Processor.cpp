@@ -27,6 +27,36 @@ stack.Push(b);
 
 #pragma endregion
 
+void SPL::VirtualMachine::Processor::LoadConstants()
+{
+	//Step one, read how many constants there are
+	const int cCount = ReadInt();
+	if (cCount == 0) return;
+
+	for (int i = 0; i < cCount; i++)
+	{
+		//Read the name
+		std::string constName = ReadString();
+
+		//Now we need to read a byte, which determines the data type
+		switch (_rom[ptr++])
+		{
+			case 0x00:
+				vstack[constName] = new VariableData(ReadInt());
+				break;
+			case 0x01:
+				vstack[constName] = new VariableData(ReadFloat());
+				break;
+			default:
+				vstack[constName] = new VariableData(ReadString());
+			break;
+		}
+	}
+
+	_rom = TrimRom(ptr, _rom);
+	ptr = 0;
+}
+
 std::string SPL::VirtualMachine::Processor::ReadString()
 {
 	std::string s = "";
@@ -389,6 +419,7 @@ SPL::VirtualMachine::Processor::Processor(rom _rom)
 	Advance();
 	code = SPL_EXIT_SUCCESS;
 	accumulator = Accumulator(stack);
+	LoadConstants();
 }
 
 SPL::VirtualMachine::Processor::~Processor()
@@ -401,7 +432,7 @@ SPL::VirtualMachine::Processor::~Processor()
 		v = nullptr;
 	}
 
-	for (auto var : vstack)
+	for (std::pair<const std::string, VariableData*> var : vstack)
 	{
 		VariableData* v = var.second;
 		delete v;

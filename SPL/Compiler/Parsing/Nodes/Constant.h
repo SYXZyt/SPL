@@ -15,11 +15,17 @@ namespace SPL
 				{
 				private:
 					Value* value;
+					Tokenisation::Token name;
 
 				public:
 					Value* GetValue()
 					{
 						return value;
+					}
+
+					Tokenisation::Token GetName()
+					{
+						return name;
 					}
 
 					std::string _ToString()
@@ -29,13 +35,19 @@ namespace SPL
 						return ss.str();
 					}
 
-					Constant(Tokenisation::Token token, Value* value) : Node(token)
+					Constant()
+					{
+						value = nullptr;
+					}
+					Constant(Tokenisation::Token token, Tokenisation::Token name, Value* value) : Node(token)
 					{
 						this->value = value;
+						this->name = name;
 					}
 					Constant(const Constant& c)
 					{
 						this->value = c.value;
+						this->name = c.name;
 					}
 					~Constant()
 					{

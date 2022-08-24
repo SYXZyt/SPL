@@ -1,2 +1,9 @@
 const PI 3.1415
 let piCpy PI
+push piCpy
+push 1
+add
+setpop piCpy
+
+println PI
+println piCpy

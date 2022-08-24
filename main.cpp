@@ -210,7 +210,7 @@ int main(int argc, char** argv)
 	//Another check we can do is by compiling anywhere if no rom was found
 	if (!FileExists(binaryName)) reCompile = true;
 
-#ifdef ALWAYSCOMPILE
+#if defined ALWAYSCOMPILE || _DEBUG
 	reCompile = true;
 #endif
 

@@ -14,24 +14,21 @@ namespace SPL
 				{
 				private:
 					Tokenisation::Token name;
-					bool isMutable;
 
 				public:
 					Tokenisation::Token Name();
-					bool IsMutable();
 
 					int Size();
 
 					std::string _ToString()
 					{
 						std::stringstream ss;
-						ss << "[SETPOP] - " << Size() << "MUT-" << (isMutable ? "1" : "0") << " <" << name.GetLexeme() << '>';
+						ss << "[SETPOP] - " << Size() << " <" << name.GetLexeme() << '>';
 						return ss.str();
 					}
 
-					SetPop(Tokenisation::Token token, bool isMutable, Tokenisation::Token name) : Node(token)
+					SetPop(Tokenisation::Token token, Tokenisation::Token name) : Node(token)
 					{
-						this->isMutable = isMutable;
 						this->name = name;
 					}
 				};
