@@ -1,260 +1,292 @@
-#include "Disassembler.h"
-
-//#define FASTDUMP
+﻿#include "Disassembler.h"
 
 #define EMPTY std::vector<byte>()
 
-#define SINGLEOP(opName) \
-result.assembled = EMPTY; \
-result.disassembled = opName;
+#define INIT(base) \
+std::string spl = base;\
+std::vector<byte> bytes
+
+#define SINGLEOP(op) \
+result.assembled = EMPTY;\
+result.disassembled = op
 
 #define SETRESULT \
 result.assembled = bytes; \
-result.disassembled = spl;
-
-#define ADDNAME(str) \
-str += ReadString(rom, bytes, i);
-
-#define ADDNAMENOINC(str) \
-ADDNAME(str) \
-i--;
+result.disassembled = spl
 
 #define MOVEBYTES(dst, src) \
 dst[0] = src[0]; \
 dst[1] = src[1]; \
 dst[2] = src[2]; \
-dst[3] = src[3];
+dst[3] = src[3]
 
-static std::string ReadString(byte* rom, std::vector<byte>& bytes, int& i)
+static std::string ReadString(const byte* rom, std::vector<byte>& bytes, int& offset)
 {
-	std::string chars = "";
-	while (rom[i])
+	std::string str = "";
+	while (rom[offset])
 	{
-		bytes.push_back(rom[i]);
-		chars += rom[i++];
+		bytes.push_back(rom[offset]);
+		str += rom[offset++];
+	} offset++;
+
+	bytes.push_back(0x00);
+	return str;
+}
+
+static std::string ReadString(const byte* rom, int& offset)
+{
+	std::vector<byte> _;
+	return ReadString(rom, _, offset);
+}
+
+static int ReadInt(const byte* rom, std::vector<byte>& bytes, int& offset)
+{
+	std::vector<byte> intBytes;
+	for (int i = 0; i < 4; i++)
+	{
+		intBytes.push_back(rom[offset + i]);
+		bytes.push_back(rom[offset + i]);
+	} offset += 4;
+	byte by[4]{};
+	MOVEBYTES(by, intBytes);
+	return BytesToInt(by);
+}
+
+static int ReadInt(const byte* rom, int& offset)
+{
+	std::vector<byte> _;
+	return ReadInt(rom, _, offset);
+}
+
+static float ReadFloat(const byte* rom, std::vector<byte>& bytes, int& offset)
+{
+	std::vector<byte> fltBytes;
+	for (int i = 0; i < 4; i++)
+	{
+		fltBytes.push_back(rom[offset + i]);
+		bytes.push_back(rom[offset + i]);
+	} offset += 4;
+	byte by[4]{};
+	MOVEBYTES(by, fltBytes);
+	return BytesToFloat(by);
+}
+
+static float ReadFloat(const byte* rom, int& offset)
+{
+	std::vector<byte> _;
+	return ReadFloat(rom, _, offset);
+}
+
+static byte ReadByte(const byte* rom, std::vector<byte>& bytes, int& offset)
+{
+	bytes.push_back(rom[offset]);
+	return rom[offset++];
+}
+
+static byte ReadByte(const byte* rom, int& offset)
+{
+	std::vector<byte> _;
+	return ReadByte(rom, _, offset);
+}
+
+static void ReadConstants(const byte* rom, int& addr)
+{
+	//Print constant values
+	int cCount = ReadInt(rom, addr);
+	std::cout << "===|CONSTS " << cCount << "|===" << std::endl;
+	for (int i = 0; i < cCount; i++)
+	{
+		std::string name = ReadString(rom, addr);
+
+		//Read a byte which determines what type to read
+		byte type = ReadByte(rom, addr);
+
+		std::cout << name << " ~ ";
+		switch (type)
+		{
+			case 0x00:
+			{
+				int _int = ReadInt(rom, addr);
+				std::cout << _int << std::endl;
+			}
+			break;
+			case 0x01:
+			{
+				float flt = ReadFloat(rom, addr);
+				std::cout << flt << std::endl;
+			}
+			break;
+			default:
+			{
+				std::string str = ReadString(rom, addr);
+				std::cout << str << std::endl;
+			}
+		}
+	}
+	std::cout << "\n===|Disassembly|===" << std::endl;
+}
+
+static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> results)
+{
+	using SPL::Disassembling::Disassembled;
+
+	//Out of all lines of bytes, get the longest
+	int longestLine = 0;
+	int longestSPL = 0; //This is so the border goes to the edge
+
+	for (Disassembled d : results)
+	{
+		//Since each opcode is two chars and a space, we need to multiply the length by three
+		int length = static_cast<int>(d.assembled.size()) * 3;
+		if (longestLine < length) longestLine = length;
+		if (longestSPL < d.disassembled.size()) longestSPL = static_cast<int>(d.disassembled.size());
 	}
 
-	bytes.push_back(0);
-	i++;
-	return chars;
+	int offset = sizeof("ADDR|OP|ASM");
+
+	std::cout << "ADDR|OP|ASM|" << std::string(longestLine-4, ' ') << "SPL" << std::endl;
+	std::cout << std::string(longestLine + longestSPL + offset, '-') << std::endl;
+
+	//Now we can print the disassembly
+	for (Disassembled d : results)
+	{
+		std::stringstream ss;
+		ss << std::hex << std::setw(4) << std::setfill('0');
+		ss << d.addr << ' ' << std::setw(2) << std::setfill('0');
+		ss << (unsigned)d.opcode << ' ';
+		for (byte b : d.assembled) ss << std::setw(2) << std::setfill('0') << (unsigned)b << ' ';
+
+		int len = longestLine - d.assembled.size() * 3;
+		ss << std::string(len, ' ');
+		ss << d.disassembled;
+
+		std::cout << ss.str() << std::endl;
+	}
 }
 
 void SPL::Disassembling::Disassembler::Disassemble()
 {
-	std::vector<Disassembled> results = std::vector<Disassembled>();
-
-	//We need to loop over every byte and make an attempt at generating SPL code from it
-	//Some instructions may fail so we can use ?? to represent that the disassembler failed to generate an instruction
+	int addr = 0;
 	byte* rom = &_rom.bytes[0];
 
-	for (int i = 0; i < _rom.size; i++)
-	{
-		byte opcode = rom[i];
+	ReadConstants(rom, addr);
 
+	//Remove the constant data, so we can display correct addresses
+	_rom = TrimRom(addr, _rom);
+	rom = &_rom.bytes[0];
+	addr = 0;
+
+	std::vector<Disassembled> results;
+
+	for (; addr < _rom.size;)
+	{
 		Disassembled result{};
+		result.addr = addr;
+		byte opcode = ReadByte(rom, addr);
+
 		result.opcode = opcode;
 
 		//Check if this is a known opcode
 		switch (opcode)
 		{
-			case 0x00:
+			case 0x00:	//NULL
 				SINGLEOP("nop");
 				break;
-			case 0x01:
+			case 0x01:	//SETPOP
 			{
-				i++;
-				std::string spl = "setpop ";
-				std::vector<byte> bytes;
-				ADDNAMENOINC(spl);
+				INIT("setpop ");
 
+				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}
 			break;
-			case 0x02:
+			case 0x02: //LET STRING
 			{
-				i++;
-				std::string spl = "str ";
-				std::vector<byte> bytes;
-				ADDNAME(spl);
-
-				spl += " \"";
-				ADDNAMENOINC(spl);
+				INIT("str ");
+				spl += ReadString(rom, bytes, addr);
+				spl += '"';
+				spl += Escape(ReadString(rom, bytes, addr));
 				spl += '"';
 
 				SETRESULT;
 			}
 			break;
-			case 0x03:
+			case 0x03: //LET FLOAT
 			{
-				i++;
-				std::string spl = "flt ";
-				std::vector<byte> bytes;
-				ADDNAME(spl);
-
-				std::vector<byte> flt;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[j + i]);
-					flt.push_back(rom[j + i]);
-				} i += 3;
-
-				float v = BytesToFloat(flt.data());
-				spl += ' ' + std::to_string(v);
-
+				INIT("flt ");
+				spl += std::to_string(ReadFloat(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
-			case 0x04:
+			case 0x04: //LET INT
 			{
-				i++;
-				std::string spl = "int ";
-				std::vector<byte> bytes;
-				ADDNAME(spl);
-
-				std::vector<byte> integer;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[j + i]);
-					integer.push_back(rom[j + i]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-
-				int _i = BytesToInt(by);
-				spl += ' ' + std::to_string(_i);
-
+				INIT("int ");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
-			case 0x05:
+			case 0x05: //LET VAR
 			{
-				i++;
-				std::string spl = "cpy ";
-				std::vector<byte> bytes;
-				ADDNAME(spl);
-
-				spl += ' ';
-				ADDNAMENOINC(spl);
-
+				INIT("cpy ");
+				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}
 			break;
-			case 0x06:
+			case 0x06: //PRINT STRING
 			{
-				i++;
-				std::string spl = "strout \"";
-				std::vector<byte> bytes;
-				ADDNAMENOINC(spl);
-				spl += '"';
-
+				INIT("strout \"");
+				spl += Escape(ReadString(rom, bytes, addr) + '"');
 				SETRESULT;
 			}
 			break;
-			case 0x07:
+			case 0x07: //PRINT FLOAT
 			{
-				i++;
-				std::string spl = "fltout ";
-				std::vector<byte> bytes;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-
-				float value = BytesToFloat(by);
-				spl += std::to_string(value);
-
+				INIT("fltout ");
+				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}
 			break;
-			case 0x08:
+			case 0x08: //PRINT INT
 			{
-				i++;
-				std::string spl = "intout ";
-				std::vector<byte> bytes;
-
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-				int value = BytesToInt(by);
-				spl += std::to_string(value);
-
+				INIT("intout");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x09:
 			{
-				i++;
-				std::string spl = "varout ";
-				std::vector<byte> bytes;
-				ADDNAMENOINC(spl);
-
+				INIT("varout ");
+				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}
 			break;
 			case 0x0a:
 			{
-				i++;
-				std::string spl = "free ";
-				std::vector<byte> bytes;
-
-				ADDNAMENOINC(spl);
-
+				INIT("free ");
+				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}
 			break;
 			case 0x0b:
 			{
-				i++;
-				std::string spl = "exit ";
-				std::vector<byte> bytes;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-				int value = BytesToInt(by);
-				spl += std::to_string(value);
-
+				INIT("exit ");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x0c:
 			{
-				i++;
-				std::string spl = "goto ";
-				std::vector<byte> bytes;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-				int value = BytesToInt(by);
-				spl += std::to_string(value);
-
+				INIT("goto ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
 				SETRESULT;
 			}
 			break;
 			case 0x0d:
 			{
-				i++;
-				std::string spl = "call ";
-				std::vector<byte> bytes;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-				int value = BytesToInt(by);
-				spl += std::to_string(value);
-
+				INIT("call ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
 				SETRESULT;
 			}
 			break;
@@ -265,56 +297,29 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			break;
 			case 0x0f:
 			{
-				i++;
-				std::string spl = "strpush \"";
-				std::vector<byte> bytes;
-				ADDNAMENOINC(spl);
-				spl += '"';
-
+				INIT("strpush \"");
+				spl += Escape(ReadString(rom, bytes, addr) + '"');
 				SETRESULT;
 			}
 			break;
 			case 0x10:
 			{
-				i++;
-				std::string spl = "fltpush ";
-				std::vector<byte> bytes;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-				float value = BytesToFloat(by);
-				spl += std::to_string(value);
-
+				INIT("fltpush ");
+				spl += std::to_string(ReadFloat(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x11:
 			{
-				i++;
-				std::string spl = "intpush ";
-				std::vector<byte> bytes;
-				for (int j = 0; j < 4; j++)
-				{
-					bytes.push_back(rom[i + j]);
-				} i += 3;
-				byte by[4]{};
-				MOVEBYTES(by, bytes);
-				int value = BytesToInt(by);
-				spl += std::to_string(value);
-
+				INIT("intpush ");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x12:
 			{
-				i++;
-				std::string spl = "varout ";
-				std::vector<byte> bytes;
-				ADDNAMENOINC(spl);
-
+				INIT("varout ");
+				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}
 			break;
@@ -368,83 +373,64 @@ void SPL::Disassembling::Disassembler::Disassemble()
 				SINGLEOP("intcast");
 			}
 			break;
+			case 0x1d:
+			{
+				INIT("equ ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x1e:
+			{
+				INIT("neq ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x1f:
+			{
+				INIT("grt ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x20:
+			{
+				INIT("grtequ ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x21:
+			{
+				INIT("lwr ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x22:
+			{
+				INIT("lwrequ ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
 			default:
 				SINGLEOP("??");
 				break;
-			}
+		}
 
 		results.push_back(result);
-		}
-#pragma region Dump
-#ifdef FASTDUMP
-	for (Disassembled result : results)
-	{
-		std::stringstream ss;
-		ss << std::hex << std::setw(2) << std::setfill('0');
-		ss << (unsigned)result.opcode;
-		ss << "  ";
-		if (result.assembled.size())
-		{
-			for (byte b : result.assembled)
-			{
-				ss << std::hex << std::setw(2) << std::setfill('0');
-				ss << (int)b << ' ';
-			}
-		}
-		else
-		{
-			ss << "## ";
-		}
-		std::cout << ss.str();
-		std::cout << ' ' << Escape(result.disassembled) << std::endl;
-	}
-#else
-	//The idea here is that want to find out the largest amount of bytes he have to display, so we can offset all the disassembly, to make it nice and neat
-	int charactersToAdd = 0;
-	int longestSPL = 0;
-	for (Disassembled d : results)
-	{
-		//We can simply get the longest by updating the longest if the current length is longer
-		//We have to multiply the length by 3, as each byte has three characters used to display. e.g. `45 `
-		//Characters is simply how many characters are needed to reach the target length. It is used in a calculation a bit further down
-		int len = static_cast<int>((d.assembled.size() * 3) + 1);
-		if (len > charactersToAdd) charactersToAdd = len;
-		if (d.disassembled.size() > longestSPL) longestSPL = static_cast<int>(d.disassembled.size());
 	}
 
-	//Draws the guide at the top of the dump, can be disabled by commenting these. It's only for aesthetics
-	std::cout << "OP||BIN|";
-	for (int i = 0; i < charactersToAdd - 5; i++) std::cout << ' ';
-	std::cout << "|ASM|" << std::endl;
-
-	for (int i = 0; i < charactersToAdd + 3 + longestSPL; i++) std::cout << '=';
-	std::cout << std::endl;
-
-	//Now that we have done all calculations and drawn the guide, we can begin to dump the rom
-	for (Disassembled result : results)
-	{
-		std::stringstream ss;
-		ss << std::hex << std::setw(2) << std::setfill('0');
-		ss << (unsigned)result.opcode << "  ";
-
-		if (result.assembled.size())
-		{
-			for (byte b : result.assembled)
-			{
-				ss << std::hex << std::setw(2) << std::setfill('0');
-				ss << (int)b << ' ';
-			}
-		}
-		std::cout << ss.str();
-
-		int spacer = charactersToAdd - (static_cast<int>(result.assembled.size() * 3));
-
-		for (int i = 0; i < spacer; i++) std::cout << ' ';
-		std::cout << Escape(result.disassembled) << std::endl;
-	}
-#endif
-#pragma endregion
-	}
+	DumpDisassembly(results);
+}
 
 SPL::Disassembling::Disassembler::Disassembler(rom _rom)
 {

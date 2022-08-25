@@ -31,7 +31,14 @@ void SPL::VirtualMachine::Processor::LoadConstants()
 {
 	//Step one, read how many constants there are
 	const int cCount = ReadInt();
-	if (cCount == 0) return;
+
+	//If there are no constants, we can trim the start int
+	if (cCount == 0)
+	{
+		ptr = 0;
+		_rom = TrimRom(4, _rom);
+		return;
+	}
 
 	for (int i = 0; i < cCount; i++)
 	{
@@ -220,6 +227,7 @@ void SPL::VirtualMachine::Processor::Run()
 				{
 					ErrorNoExit(SPL_RET_EMPTY, ErrorMessages[SPL_RET_EMPTY]);
 					KILL;
+					break;
 				}
 
 				ptr = cstack.Pop();

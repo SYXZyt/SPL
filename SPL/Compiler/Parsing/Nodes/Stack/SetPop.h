@@ -1,5 +1,6 @@
 #pragma once
 #include "../Node.h"
+#include "../Value.h"
 #include "../../../Tokenisation/Token.h"
 
 namespace SPL
@@ -13,21 +14,21 @@ namespace SPL
 				class SetPop final : public Node
 				{
 				private:
-					Tokenisation::Token name;
+					Value* name;
 
 				public:
-					Tokenisation::Token Name();
+					Value* Name();
 
 					int Size();
 
 					std::string _ToString()
 					{
 						std::stringstream ss;
-						ss << "[SETPOP] - " << Size() << " <" << name.GetLexeme() << '>';
+						ss << "[SETPOP] - " << Size() << " <" << name->_ToString() << '>';
 						return ss.str();
 					}
 
-					SetPop(Tokenisation::Token token, Tokenisation::Token name) : Node(token)
+					SetPop(Tokenisation::Token token, Value* name) : Node(token)
 					{
 						this->name = name;
 					}

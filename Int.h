@@ -1,5 +1,8 @@
 #pragma once
 #include <vector>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 /// <summary>
 /// Convert an int to 4 individual bytes
@@ -29,4 +32,11 @@ static int BytesToInt(unsigned char* v)
 	std::memcpy(&value, bytes, sizeof(int));
 
 	return value;
+}
+
+static std::string GetHex(int i, int filler = 2)
+{
+	std::stringstream ss;
+	ss << std::hex << std::setw(filler) << std::setfill('0') << i;
+	return ss.str();
 }

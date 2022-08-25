@@ -1,3 +1,32 @@
-let x 10
-let x x
-println x
+goto main
+
+:Squares
+	setpop n
+	push n
+	push n
+	mul
+	setpop n
+	println n
+	ret
+
+:main
+	let i 0
+
+:while
+	;Increment index
+	push i
+	push 1
+	add
+	setpop i
+
+	;Run the code
+	push i
+	call Squares
+
+	;Check to break the loop
+	push 12
+	push i
+	lwr _exit
+	goto while
+:_exit
+	exit 0

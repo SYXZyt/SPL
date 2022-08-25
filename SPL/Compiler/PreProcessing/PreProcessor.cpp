@@ -20,6 +20,10 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
 
                 labels.insert(std::make_pair(curr.GetLexeme(), curr.GetPosition().Y()));
             }
+            else if (Peek(i).GetTokenType() == TokenType::KEYWORD)
+            {
+                Error(SPL_LABEL_CANNOT_BE_KEYWORD, Peek(i), ErrorMessages[SPL_LABEL_CANNOT_BE_KEYWORD], "PreProcessor.cpp");
+            }
             else
             {
                 Error(SPL_LABEL_NAME_MISSING, Peek(i), ErrorMessages[SPL_LABEL_NAME_MISSING], "PreProcessor.cpp");

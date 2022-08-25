@@ -167,14 +167,13 @@ SPL::Compiler::Parser::Nodes::SetPop* SPL::Compiler::Parser::Parser::ParseSetPop
     Token initialKeyword = PeekCurrent();
     Advance();
 
-    Token name = PeekCurrent();
-    Advance();
+    Value* name = ParseExpression();
 
     //Check that the name is an identifier
-    if (name.GetTokenType() != Tokenisation::TokenType::IDENTIFIER)
+    if (name->Token().GetTokenType() != Tokenisation::TokenType::IDENTIFIER)
     {
-        SPL_ERROR_CODE errorCode = name.GetTokenType() != Tokenisation::TokenType::KEYWORD ? SPL_VARNAME_NOT_IDEN : SPL_VARNAME_IS_KEY;
-        Error(errorCode, name, ErrorMessages[errorCode], "Parser.cpp");
+        SPL_ERROR_CODE errorCode = name->Token().GetTokenType() != Tokenisation::TokenType::KEYWORD ? SPL_VARNAME_NOT_IDEN : SPL_VARNAME_IS_KEY;
+        Error(errorCode, name->Token(), ErrorMessages[errorCode], "Parser.cpp");
     }
 
     return new SetPop(initialKeyword, name);

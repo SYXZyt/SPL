@@ -29,7 +29,7 @@ struct rom
 	}
 };
 
-static rom TrimRom(int newStart, rom _rom)
+static rom TrimRom(int newStart, rom& _rom)
 {
 	//If the start pos is 0, no changes are needed
 	if (newStart == 0) return _rom;
