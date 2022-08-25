@@ -201,7 +201,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		}
 		else if (SetPop* setPop = dynamic_cast<SetPop*>(n))
 		{
-			std::vector<unsigned char> name = GetAscii(setPop->Name().GetLexeme());
+			std::vector<unsigned char> name = GetAscii(setPop->Name()->Token().GetLexeme());
 			assembled.push_back(0x01);
 			AddRange(assembled, name);
 		}

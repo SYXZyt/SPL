@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <sstream>
 #include <ostream>
 
 namespace SPL
@@ -25,6 +26,13 @@ namespace SPL
 			float GetFloat() const;
 
 			VariableType GetType() const;
+
+			std::string ToString()
+			{
+				std::stringstream ss;
+				ss << this;
+				return ss.str();
+			}
 
 			VariableData();
 			VariableData(const VariableData& v);
