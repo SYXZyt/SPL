@@ -1,15 +1,43 @@
-const PI 3.1415926
-
-push PI
-push "PI == "
-concat
-setpop msg
-println msg
-
-push PI
-push 1
-add
-push "PI + 1 == "
-concat
-setpop msg
-println msg
+goto main
+:fib
+	setpop n;
+	;Check if n is below 2
+	push 2
+	push n
+	lwr isGreaterThan2
+	
+	;If n is lower than 2, just return n
+	push n
+	ret
+:isGreaterThan2
+	;Now we need to do this 'return fib(n - 1) + fib(n - 2)'
+	;We can start by calculating n - 1
+	push 1
+	push n
+	sub
+	
+	;Now we have n - 1, we can call fib
+	call fib
+	
+	;Now we have the result of that on the stack, we can leave that there til we run fib again
+	;For not we need to do the same again but with n - 2
+	push 2
+	push n
+	sub
+	call fib
+	
+	;Now we can add both fib results together
+	add
+	
+	;And finally return
+	ret
+	
+:main
+	push 40
+	call fib
+	
+	;Print results
+	setpop res
+	println res
+	
+	exit 0

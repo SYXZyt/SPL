@@ -23,7 +23,7 @@ namespace SPL
 					std::string _ToString()
 					{
 						std::stringstream ss;
-						ss << "[SETPOP] - " << Size() << " <" << name.GetLexeme() << '>';
+						ss << "[SETPOP] - " << Size() << " <" << name.GetValueString() << '>';
 						return ss.str();
 					}
 

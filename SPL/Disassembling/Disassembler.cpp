@@ -249,7 +249,7 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			case 0x08: //PRINT INT
 			{
 				INIT("intout");
-				spl += ReadInt(rom, bytes, addr);
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
@@ -270,21 +270,23 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			case 0x0b:
 			{
 				INIT("exit ");
-				spl += ReadInt(rom, bytes, addr);
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x0c:
 			{
 				INIT("goto ");
-				spl += ReadInt(rom, bytes, addr);
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
 				SETRESULT;
 			}
 			break;
 			case 0x0d:
 			{
 				INIT("call ");
-				spl += ReadInt(rom, bytes, addr);
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
 				SETRESULT;
 			}
 			break;
@@ -310,7 +312,7 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			case 0x11:
 			{
 				INIT("intpush ");
-				spl += ReadInt(rom, bytes, addr);
+				spl += std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
@@ -369,6 +371,54 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			case 0x1c:
 			{
 				SINGLEOP("intcast");
+			}
+			break;
+			case 0x1d:
+			{
+				INIT("equ ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x1e:
+			{
+				INIT("neq ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x1f:
+			{
+				INIT("grt ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x20:
+			{
+				INIT("grtequ ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x21:
+			{
+				INIT("lwr ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
+			}
+			break;
+			case 0x22:
+			{
+				INIT("lwrequ ");
+				int offset = ReadInt(rom, bytes, addr);
+				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+				SETRESULT;
 			}
 			break;
 			default:
