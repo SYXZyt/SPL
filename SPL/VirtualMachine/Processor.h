@@ -29,6 +29,8 @@ namespace SPL
 
 			Accumulator accumulator;
 
+			void LoadConstants();
+
 			/// <summary>
 			/// Read a string from rom
 			/// </summary>

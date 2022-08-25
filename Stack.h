@@ -1,8 +1,8 @@
 #pragma once
 #include <stack>
+#include <iostream>
 
 //I don't like the fact that pop doesn't return a value in the normal stack, so I just created my own
-
 const int callstackMaxSize = static_cast<int>(pow(2, 16));
 
 /// <summary>
@@ -15,6 +15,7 @@ class Stack final
 private:
 	std::stack<T> s;
 public:
+
 	/// <summary>
 	/// Get how many elements are on the stack
 	/// </summary>

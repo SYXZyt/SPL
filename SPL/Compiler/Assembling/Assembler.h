@@ -12,13 +12,14 @@
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
 #include "../Parsing/Nodes/Block.h"
+#include "../Parsing/Nodes/Constant.h"
 #include "../Parsing/Nodes/Stack/Pop.h"
-#include "../Parsing/Nodes/Stack/Push.h"
 #include "../Parsing/Nodes/Maths/Add.h"
 #include "../Parsing/Nodes/Maths/Sub.h"
 #include "../Parsing/Nodes/Maths/Div.h"
 #include "../Parsing/Nodes/Maths/Mul.h"
 #include "../Parsing/Nodes/Maths/Pow.h"
+#include "../Parsing/Nodes/Stack/Push.h"
 #include "../Parsing/Nodes/Maths/Concat.h"
 #include "../Parsing/Nodes/Output/Print.h"
 #include "../Parsing/Nodes/Stack/SetPop.h"
@@ -45,13 +46,29 @@ namespace SPL
 	{
 		namespace Assembler
 		{
+			struct FinalNodes
+			{
+				std::vector<Constant*> constants;
+				std::vector<Node*> nodes;
+
+				Node* operator[](int index)
+				{
+					return nodes[index];
+				}
+
+				Constant* operator<<(int index)
+				{
+					return constants[index];
+				}
+			};
+
 			/// <summary>
 			/// Class which can convert nodes to SPL bytecode
 			/// </summary>
 			class Assembler final
 			{
 			private:
-				std::vector<Node*> nodes;
+				FinalNodes nodes;
 				const char* outputfile;
 
 				/// <summary>

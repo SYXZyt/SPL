@@ -24,7 +24,24 @@ struct rom
 	/// </summary>
 	void Clear()
 	{
-		delete bytes;
+		delete[] bytes;
 		bytes = nullptr;
 	}
 };
+
+static rom TrimRom(int newStart, rom& _rom)
+{
+	//If the start pos is 0, no changes are needed
+	if (newStart == 0) return _rom;
+
+	rom newRom{};
+	newRom.bytes = new byte[_rom.size - newStart];
+	newRom.size = _rom.size - newStart;
+
+	for (int i = newStart; i < _rom.size; i++)
+	{
+		newRom.bytes[i - newStart] = _rom[i];
+	}
+
+	return newRom;
+}

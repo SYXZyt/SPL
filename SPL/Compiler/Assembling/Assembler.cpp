@@ -7,6 +7,60 @@ static void AddRange(std::vector<T>& a, std::vector<T> b)
 	a.insert(a.end(), b.begin(), b.end());
 }
 
+static std::vector<unsigned char> AssembleValue(Value* v)
+{
+	std::vector<unsigned char> assembled;
+	switch (v->Type())
+	{
+		case ValueType::IDENTIFIER:
+		case ValueType::STRING:
+		{
+			std::vector<unsigned char> str = GetAscii(v->Token().GetValueString());
+			AddRange(assembled,str);
+		}
+			break;
+		case ValueType::INT:
+		{
+			std::vector<unsigned char> bytes = IntToBytes(v->Token().GetValueInt());
+			AddRange(assembled, bytes);
+		}
+			break;
+		case ValueType::FLOAT:
+		{
+			std::vector<unsigned char> bytes = FloatToBytes(v->Token().GetValueFloat());
+			AddRange(assembled, bytes);
+		}
+			break;
+	}
+
+	return assembled;
+}
+
+static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
+{
+	//Run a quick pass and store any constants
+	std::list<std::string> consts;
+	for (Constant* c : nodes.constants)
+	{
+		if (std::count(consts.begin(), consts.end(), c->GetName().GetLexeme()))
+		{
+			Error(SPL_CONST_OVERWRITE, c->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
+		} consts.push_back(c->GetName().GetLexeme());
+	}
+
+	//Now run through normal nodes and check if and mutable variables share a name with a const
+	for (Node* n : nodes.nodes)
+	{
+		if (Let* l = dynamic_cast<Let*>(n))
+		{
+			if (std::count(consts.begin(), consts.end(), l->Name().GetLexeme()))
+			{
+				Error(SPL_CONST_OVERWRITE, l->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
+			}
+		}
+	}
+}
+
 int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 {
 	//Loop over every node, until we find the first node to match the line number
@@ -14,7 +68,7 @@ int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 	//Simply, we can check if the current node line is greater or equal than the line we are looking for
 	int index;
 	bool found = false;
-	for (index = 0; index < nodes.size(); index++)
+	for (index = 0; index < nodes.nodes.size(); index++)
 	{
 		if (nodes[index]->Token().GetPosition().Y() >= line)
 		{
@@ -27,7 +81,7 @@ int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 	{
 		std::string params[]{ std::to_string(line) };
 
-		Error(SPL_NO_CODE, *nodes[nodes.size() - 1], GetMessageWithParams(ErrorMessages[SPL_NO_CODE], 1, params), "Assembler.cpp");
+		Error(SPL_NO_CODE, *nodes[static_cast<int>(nodes.nodes.size()) - 1], GetMessageWithParams(ErrorMessages[SPL_NO_CODE], 1, params), "Assembler.cpp");
 	}
 
 	//Now we need to go over every node until the current node, and combine their size, to get the correct offset in the binary file
@@ -56,9 +110,41 @@ void SPL::Compiler::Assembler::Assembler::WriteBinary(std::vector<unsigned char>
 
 void SPL::Compiler::Assembler::Assembler::Assemble()
 {
+	VerifyVariables(nodes);
+		
 	std::vector<unsigned char> assembled;
 
-	for (Node* n : nodes)
+	//Step one, write the total count of constants
+	std::vector<unsigned char> constSizeBytes = IntToBytes(static_cast<int>(nodes.constants.size()));
+	AddRange(assembled, constSizeBytes);
+		
+	//Now write the constants
+	for (Constant* c : nodes.constants)
+	{
+		//Write the name
+		AddRange(assembled, GetAscii(c->GetName().GetValueString()));
+
+		//Write the type
+		//00 -> INT
+		//01 -> FLOAT
+		//02 -> STRING
+		switch (c->GetValue()->Type())
+		{
+			case ValueType::INT:
+				assembled.push_back(0x00);
+				break;
+			case ValueType::FLOAT:
+				assembled.push_back(0x01);
+				break;
+			case ValueType::STRING:
+				assembled.push_back(0x02);
+				break;
+		}
+
+		AddRange(assembled, AssembleValue(c->GetValue()));
+	}
+
+	for (Node* n : nodes.nodes)
 	{
 		//Now we need to check what type of node this is, to properly assemble it
 		if (Let* let = dynamic_cast<Let*>(n))
@@ -115,7 +201,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		}
 		else if (SetPop* setPop = dynamic_cast<SetPop*>(n))
 		{
-			std::vector<unsigned char> name = GetAscii(setPop->Name().GetLexeme());
+			std::vector<unsigned char> name = GetAscii(setPop->Name()->Token().GetLexeme());
 			assembled.push_back(0x01);
 			AddRange(assembled, name);
 		}
@@ -341,6 +427,18 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 
 SPL::Compiler::Assembler::Assembler::Assembler(std::vector<Node*> nodes, const char* outputfile)
 {
-	this->nodes = nodes;
+	FinalNodes finalNodes{};
+	std::vector<Constant*> constants;
+	std::vector<Node*> _nodes;
+
+	for (Node* n : nodes)
+	{
+		if (Constant* c = dynamic_cast<Constant*>(n)) constants.push_back(c);
+		else _nodes.push_back(n);
+	}
+
+	finalNodes.constants = constants;
+	finalNodes.nodes = _nodes;
+	this->nodes = finalNodes;
 	this->outputfile = outputfile;
 }

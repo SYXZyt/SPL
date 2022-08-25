@@ -3,7 +3,6 @@
 #include <ostream>
 
 #include "String.h"
-#include "Constants.h"
 
 enum SPL_ERROR_CODE : unsigned short
 {
@@ -24,6 +23,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_NONEXISTANT_LABEL = 1103,
 	SPL_CALL_INVALID_ADDRESS = 1104,
 	SPL_GOTO_INVALID_ADDRESS = 1105,
+	SPL_LABEL_CANNOT_BE_KEYWORD  = 1106,
 
 	//Parser errors
 	SPL_MISSING_ACCESS_MODIFIER = 1201,
@@ -33,11 +33,13 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_EXPRESSION = 1205,
 	SPL_UNEXPECTED_KEYWORD = 1206,
 	SPL_UNEXPECTED_TOKEN = 1207,
+	SPL_CONST_NOT_LITERAL = 1208,
 
 	//Assembler
 	SPL_NO_CODE = 1301,
 	SPL_POP_EMPTY = 1302,
 	SPL_RET_EMPTY = 1303,
+	SPL_CONST_OVERWRITE = 1304,
 
 	//VM
 	SPL_UNKNOWN_VAR = 1401,
@@ -69,6 +71,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_NONEXISTANT_LABEL, "The label '&SPL_0' does not exist"},
 	{SPL_CALL_INVALID_ADDRESS, "'call' expects a label name"},
 	{SPL_GOTO_INVALID_ADDRESS, "'&SPL_0' expects a line number or label name"},
+	{SPL_LABEL_CANNOT_BE_KEYWORD, "Label name cannot be a keyword"},
 
 	{SPL_MISSING_ACCESS_MODIFIER, "Expected 'const' or 'mut' keyword"},
 	{SPL_VARNAME_NOT_IDEN, "Expected a variable name"},
@@ -77,10 +80,12 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_EXPRESSION, "Expected an expression"},
 	{SPL_UNEXPECTED_KEYWORD, "Keyword '&SPL_0' was unexpected at this time"},
 	{SPL_UNEXPECTED_TOKEN, "'&SPL_0' was unexpected at this time"},
+	{SPL_CONST_NOT_LITERAL, "Constant value could not be parsed at compile time"},
 
 	{SPL_NO_CODE, "Cannot jump to line &SPL_0 as no code was found"},
 	{SPL_POP_EMPTY, "Tried to pop while the stack was empty"},
 	{SPL_RET_EMPTY, "Tried to return while the callstack was empty"},
+	{SPL_CONST_OVERWRITE, "Tried to overwrite a constant value"},
 
 	{SPL_UNKNOWN_VAR, "Variable '&SPL_0' does not exist"},
 	{SPL_STRING_UNEXPECTED, "String cannot be used in '&SPL_0' calculation"},

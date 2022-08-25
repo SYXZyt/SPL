@@ -11,41 +11,47 @@ namespace SPL
 		{
 			namespace Nodes
 			{
-				class Let final : public Node
+				class Constant final : public Node
 				{
 				private:
 					Value* value;
 					Tokenisation::Token name;
 
 				public:
-					Value* GetValue();
-					Tokenisation::Token Name();
+					Value* GetValue()
+					{
+						return value;
+					}
 
-					int Size();
+					Tokenisation::Token GetName()
+					{
+						return name;
+					}
 
 					std::string _ToString()
 					{
 						std::stringstream ss;
-						ss << "[LET] - " << Size() << " <" << value->_ToString() << "> " << name.GetLexeme();
+						ss << "[CONST] - " << value;
 						return ss.str();
 					}
 
-					Let(const Let& l)
+					Constant()
 					{
-						value = l.value;
-						name = l.name;
+						value = nullptr;
 					}
-
-					Let(Tokenisation::Token token, Value* value, Tokenisation::Token name) : Node(token)
+					Constant(Tokenisation::Token token, Tokenisation::Token name, Value* value) : Node(token)
 					{
 						this->value = value;
 						this->name = name;
 					}
-
-					~Let()
+					Constant(const Constant& c)
+					{
+						this->value = c.value;
+						this->name = c.name;
+					}
+					~Constant()
 					{
 						delete value;
-						value = nullptr;
 					}
 				};
 			}

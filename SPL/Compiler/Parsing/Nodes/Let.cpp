@@ -10,11 +10,6 @@ SPL::Compiler::Tokenisation::Token SPL::Compiler::Parser::Nodes::Let::Name()
 	return name;
 }
 
-bool SPL::Compiler::Parser::Nodes::Let::IsMutable()
-{
-	return isMutable;
-}
-
 int SPL::Compiler::Parser::Nodes::Let::Size()
 {
 	int size = 1;
