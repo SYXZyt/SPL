@@ -93,5 +93,5 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_DIV_ZERO, "Tried to divide by zero"},
 	{SPL_CONVERSION_ERROR, "Cannot convert value to &SPL_0"},
 	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"},
-	{SPL_NOT_ENOUGH_ITEMS, "Calculation expected items on the stack"},
+	{SPL_NOT_ENOUGH_ITEMS, "Calculation '&SPL_0' expected items on the stack"},
 };

@@ -276,5 +276,6 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		"inc",
 		"dec",
 		"input",
+		"mod",
 	};
 }

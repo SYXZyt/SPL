@@ -296,6 +296,23 @@ void SPL::VirtualMachine::Accumulator::Decrement()
 	}
 }
 
+void SPL::VirtualMachine::Accumulator::Modulo()
+{
+	VariableData* lhs = stack->Pop();
+	VariableData* rhs = stack->Pop();
+
+	int l;
+	int r;
+
+	if (lhs->GetType() == VariableType::FLOAT) l = SCAST_INT(lhs->GetFloat());
+	else l = lhs->GetInt();
+	if (rhs->GetType() == VariableType::FLOAT) r = SCAST_INT(rhs->GetFloat());
+	else r = rhs->GetInt();
+
+	int res = l % r;
+	stack->Push(new VariableData(res));
+}
+
 void SPL::VirtualMachine::Accumulator::CastToString()
 {
 	VariableData* toCast = stack->Pop();

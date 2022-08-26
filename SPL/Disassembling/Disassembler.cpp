@@ -436,6 +436,11 @@ void SPL::Disassembling::Disassembler::Disassemble()
 				SINGLEOP("input");
 			}
 			break;
+			case 0x26:
+			{
+				SINGLEOP("mod");
+			}
+			break;
 			default:
 				SINGLEOP("??");
 				break;
