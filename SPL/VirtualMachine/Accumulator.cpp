@@ -9,15 +9,24 @@ VariableData* rhs = stack->Pop();\
 if (lhs->GetType() != rhs->GetType()) return false;\
 if (lhs->GetType() == VariableType::INT)\
 {\
-	return lhs->GetInt() op rhs->GetInt();\
+	bool res = lhs->GetInt() op rhs->GetInt(); \
+	delete lhs;\
+	delete rhs;\
+	return res;\
 }\
 else if (lhs->GetType() == VariableType::FLOAT)\
 {\
-	return lhs->GetFloat() op rhs->GetFloat();\
+	bool res = lhs->GetFloat() op rhs->GetFloat();\
+	delete lhs;\
+	delete rhs;\
+	return res;\
 }\
 else\
 {\
-	return lhs->GetString() op rhs->GetString();\
+	bool res = lhs->GetString() op rhs->GetString();\
+	delete lhs;\
+	delete rhs;\
+	return res;\
 }
 
 using namespace SPL::VirtualMachine;
@@ -84,6 +93,9 @@ void SPL::VirtualMachine::Accumulator::CalculateAddition()
 
 		stack->Push(new VariableData(result));
 	}
+
+	delete lhs;
+	delete rhs;
 }
 
 void SPL::VirtualMachine::Accumulator::CalculateSubtraction()
@@ -115,6 +127,9 @@ void SPL::VirtualMachine::Accumulator::CalculateSubtraction()
 
 		stack->Push(new VariableData(result));
 	}
+
+	delete lhs;
+	delete rhs;
 }
 
 void SPL::VirtualMachine::Accumulator::CalculateMultiplication()
@@ -146,6 +161,9 @@ void SPL::VirtualMachine::Accumulator::CalculateMultiplication()
 
 		stack->Push(new VariableData(result));
 	}
+
+	delete lhs;
+	delete rhs;
 }
 
 bool SPL::VirtualMachine::Accumulator::CalculateDivision()
@@ -183,18 +201,30 @@ bool SPL::VirtualMachine::Accumulator::CalculateDivision()
 
 		if (rhs->GetType() == VariableType::FLOAT)
 		{
-			if (rhs->GetFloat() == 0.0) return false;
+			if (rhs->GetFloat() == 0.0)
+			{
+				delete lhs;
+				delete rhs;
+				return false;
+			}
 			result /= SCAST_INT(rhs->GetFloat());
 		}
 		else
 		{
-			if (rhs->GetInt() == 0) return false;
+			if (rhs->GetInt() == 0)
+			{
+				delete lhs;
+				delete rhs;
+				return false;
+			}
 			result /= rhs->GetInt();
 		}
 
 		stack->Push(new VariableData(result));
 	}
 
+	delete lhs;
+	delete rhs;
 	return true;
 }
 
@@ -230,6 +260,9 @@ void SPL::VirtualMachine::Accumulator::CalculatePower()
 
 		stack->Push(new VariableData(SCAST_INT(pow(base, power))));
 	}
+
+	delete lhs;
+	delete rhs;
 }
 
 void SPL::VirtualMachine::Accumulator::CalculateConcatenation()
@@ -266,6 +299,8 @@ void SPL::VirtualMachine::Accumulator::CalculateConcatenation()
 	}
 
 	stack->Push(new VariableData(result));
+	delete lhs;
+	delete rhs;
 }
 
 void SPL::VirtualMachine::Accumulator::Increment()
@@ -280,6 +315,8 @@ void SPL::VirtualMachine::Accumulator::Increment()
 	{
 		stack->Push(new VariableData(value->GetFloat() + 1));
 	}
+
+	delete value;
 }
 
 void SPL::VirtualMachine::Accumulator::Decrement()
@@ -294,6 +331,27 @@ void SPL::VirtualMachine::Accumulator::Decrement()
 	{
 		stack->Push(new VariableData(value->GetFloat() - 1));
 	}
+
+	delete value;
+}
+
+void SPL::VirtualMachine::Accumulator::Modulo()
+{
+	VariableData* lhs = stack->Pop();
+	VariableData* rhs = stack->Pop();
+
+	int l;
+	int r;
+
+	if (lhs->GetType() == VariableType::FLOAT) l = SCAST_INT(lhs->GetFloat());
+	else l = lhs->GetInt();
+	if (rhs->GetType() == VariableType::FLOAT) r = SCAST_INT(rhs->GetFloat());
+	else r = rhs->GetInt();
+
+	int res = l % r;
+	stack->Push(new VariableData(res));
+	delete lhs;
+	delete rhs;
 }
 
 void SPL::VirtualMachine::Accumulator::CastToString()
@@ -316,6 +374,7 @@ void SPL::VirtualMachine::Accumulator::CastToString()
 		return;
 	}
 
+	delete toCast;
 	stack->Push(new VariableData(result));
 }
 
@@ -336,12 +395,17 @@ bool SPL::VirtualMachine::Accumulator::CastToFloat()
 	else
 	{
 		//Strings a little more tricky, as it isn't guaranteed to be able to be converted, so we need to check if the format is valid
-		if (!CanBeNumber(toCast->GetString())) return false;
+		if (!CanBeNumber(toCast->GetString()))
+		{
+			delete toCast;
+			return false;
+		}
 
 		float value = std::stof(toCast->GetString());
 		stack->Push(new VariableData(value));
 	}
 
+	delete toCast;
 	return true;
 }
 
@@ -361,11 +425,17 @@ bool SPL::VirtualMachine::Accumulator::CastToInt()
 	else
 	{
 		//Strings a little more tricky, as it isn't guaranteed to be able to be converted, so we need to check if the format is valid
-		if (!CanBeNumber(toCast->GetString())) return false;
+		if (!CanBeNumber(toCast->GetString()))
+		{
+			delete toCast;
+			return false;
+		}
 
 		int value = std::stoi(toCast->GetString());
 		stack->Push(new VariableData(value));
 	}
+
+	delete toCast;
 
 	return true;
 }

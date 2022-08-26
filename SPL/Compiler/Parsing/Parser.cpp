@@ -325,6 +325,13 @@ SPL::Compiler::Parser::Nodes::Dec* SPL::Compiler::Parser::Parser::ParseDecStatem
     return dec;
 }
 
+SPL::Compiler::Parser::Nodes::Mod* SPL::Compiler::Parser::Parser::ParseModStatement()
+{
+    Mod* mod = new Mod(PeekCurrent());
+    Advance();
+    return mod;
+}
+
 SPL::Compiler::Parser::Nodes::Casting::ToFloat* SPL::Compiler::Parser::Parser::ParseToFloatStatement()
 {
     ToFloat* toFloat = new ToFloat(PeekCurrent());
@@ -407,6 +414,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "lwr") return ParseLwrStatement();
         else if (lex == "lwrequ") return ParseLwrEquStatement();
         else if (lex == "input") return ParseInputStatement();
+        else if (lex == "mod") return ParseModStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};

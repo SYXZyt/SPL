@@ -17,6 +17,7 @@
 #include "Nodes\Maths\Sub.h"
 #include "Nodes\Maths\Inc.h"
 #include "Nodes\Maths\Dec.h"
+#include "Nodes\Maths\Mod.h"
 #include "Nodes\Stack\Pop.h"
 #include "Nodes\Stack\Push.h"
 #include "Nodes\Stack\SetPop.h"
@@ -120,6 +121,7 @@ namespace SPL
 				Nodes::Pow* ParsePowStatement();
 				Nodes::Inc* ParseIncStatement();
 				Nodes::Dec* ParseDecStatement();
+				Nodes::Mod* ParseModStatement();
 #pragma endregion
 #pragma region
 				Nodes::Casting::ToFloat* ParseToFloatStatement();

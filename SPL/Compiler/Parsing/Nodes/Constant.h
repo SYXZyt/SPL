@@ -31,7 +31,7 @@ namespace SPL
 					std::string _ToString()
 					{
 						std::stringstream ss;
-						ss << "[CONST] - " << value;
+						ss << "[CONST] - " << value->_ToString();
 						return ss.str();
 					}
 

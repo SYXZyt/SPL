@@ -22,6 +22,7 @@
 #include "../Parsing/Nodes/Maths/Pow.h"
 #include "../Parsing/Nodes/Maths/Inc.h"
 #include "../Parsing/Nodes/Maths/Dec.h"
+#include "../Parsing/Nodes/Maths/Mod.h"
 #include "../Parsing/Nodes/Stack/Push.h"
 #include "../Parsing/Nodes/Maths/Concat.h"
 #include "../Parsing/Nodes/Output/Print.h"

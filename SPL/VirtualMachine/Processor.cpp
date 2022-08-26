@@ -22,7 +22,7 @@ break;
 SPL::VirtualMachine::VariableData* b = stack.Pop(); \
 SPL::VirtualMachine::VariableData* a = stack.Pop(); \
 if (b->GetType() == SPL::VirtualMachine::VariableType::STRING || a->GetType() == SPL::VirtualMachine::VariableType::STRING) {LOCKSTRINGFROMCALC(calcName)} \
-stack.Push(a); \
+stack.Push(a); /*Push in reverse order that we popped, as we want b to be on the bottom*/\
 stack.Push(b)
 
 #pragma endregion
@@ -118,6 +118,8 @@ void SPL::VirtualMachine::Processor::Run()
 
 		Advance();
 		if (terminate) break;
+
+		//std::cout << (unsigned)opcode << std::endl;
 
 		switch (opcode)
 		{
@@ -310,7 +312,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() < 2)
 				{
-					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					std::string params[]{ "concat" };
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
 				}
@@ -322,7 +325,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() == 0)
 				{
-					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					std::string params[]{ "to_string" };
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
 				}
@@ -334,7 +338,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() == 0)
 				{
-					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					std::string params[]{ "to_float" };
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
 				}
@@ -351,7 +356,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() == 0)
 				{
-					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					std::string params[]{ "to_int" };
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
 				}
@@ -434,7 +440,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() == 0)
 				{
-					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					std::string params[]{ "inc" };
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
 				}
@@ -454,7 +461,8 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() == 0)
 				{
-					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					std::string params[]{"dec"};
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
 				}
@@ -463,7 +471,7 @@ void SPL::VirtualMachine::Processor::Run()
 
 				if (t->GetType() == VariableType::STRING)
 				{
-					LOCKSTRINGFROMCALC("inc");
+					LOCKSTRINGFROMCALC("dec");
 				}
 				stack.Push(t);
 
@@ -475,6 +483,12 @@ void SPL::VirtualMachine::Processor::Run()
 				std::string input;
 				std::cin >> input;
 				stack.Push(new VariableData(input));
+			}
+			break;
+			case 0x26:
+			{
+				PREPARE_TYPE_FOR_ACCU("mod");
+				accumulator.Modulo();
 			}
 			break;
 			default:

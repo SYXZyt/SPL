@@ -422,6 +422,10 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		{
 			assembled.push_back(0x25);
 		}
+		else if (Mod* mod = dynamic_cast<Mod*>(n))
+		{
+			assembled.push_back(0x26);
+		}
 
 		else
 		{
