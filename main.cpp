@@ -275,6 +275,7 @@ int main(int argc, char** argv)
 #ifdef DISASSEMBLE
 	Disassembler d = Disassembler(_rom);
 	d.Disassemble();
+	_rom.Clear();
 #else
 	Processor cpu = Processor(_rom);
 	cpu.Run();
