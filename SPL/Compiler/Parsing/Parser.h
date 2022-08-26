@@ -7,6 +7,7 @@
 #include "Nodes\Node.h"
 #include "Nodes\Value.h"
 #include "Nodes\Block.h"
+#include "Nodes\Input.h"
 #include "Nodes\Single.h"
 #include "Nodes\Constant.h"
 #include "Nodes\Maths\Add.h"
@@ -100,6 +101,7 @@ namespace SPL
 				Nodes::Pop* ParsePopStatement();
 				Nodes::Call* ParseCallStatement();
 				Nodes::Ret* ParseRetStatement();
+				Nodes::Input* ParseInputStatement();
 				
 #pragma region Comparisons
 				Nodes::Equ* ParseEquStatement();

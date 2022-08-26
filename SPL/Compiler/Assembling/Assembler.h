@@ -12,6 +12,7 @@
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
 #include "../Parsing/Nodes/Block.h"
+#include "../Parsing/Nodes/Input.h"
 #include "../Parsing/Nodes/Constant.h"
 #include "../Parsing/Nodes/Stack/Pop.h"
 #include "../Parsing/Nodes/Maths/Add.h"

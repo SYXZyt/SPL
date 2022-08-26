@@ -6,6 +6,6 @@ python clc.py
 goto end rem We don't use `exit` to ensure that the console stays open after the Python has finished
 
 :noPy
-echo "ERROR: Python not found"
+echo "ERROR: Python failed to run or be found"
 
 :end

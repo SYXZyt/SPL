@@ -215,6 +215,13 @@ SPL::Compiler::Parser::Nodes::Ret* SPL::Compiler::Parser::Parser::ParseRetStatem
     return ret;
 }
 
+SPL::Compiler::Parser::Nodes::Input* SPL::Compiler::Parser::Parser::ParseInputStatement()
+{
+    Input* input = new Input(PeekCurrent());
+    Advance();
+    return input;
+}
+
 SPL::Compiler::Parser::Nodes::Equ* SPL::Compiler::Parser::Parser::ParseEquStatement()
 {
     Token t = PeekCurrent();
@@ -399,6 +406,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "grtequ") return ParseGrtEquStatement();
         else if (lex == "lwr") return ParseLwrStatement();
         else if (lex == "lwrequ") return ParseLwrEquStatement();
+        else if (lex == "input") return ParseInputStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};

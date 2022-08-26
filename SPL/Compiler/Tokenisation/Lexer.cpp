@@ -275,5 +275,6 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		"lwrequ",
 		"inc",
 		"dec",
+		"input",
 	};
 }
