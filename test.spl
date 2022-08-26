@@ -1,4 +1,7 @@
-push 1
-inc
-setpop x
-println x
+print "What is your name? >"
+input
+print "Hello there "
+setpop name
+println name
+free name
+exit 1

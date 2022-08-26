@@ -142,9 +142,9 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 		if (longestSPL < d.disassembled.size()) longestSPL = static_cast<int>(d.disassembled.size());
 	}
 
-	int offset = sizeof("ADDR|OP|ASM");
+	int offset = sizeof("ADDR|OP||ASM");
 
-	std::cout << "ADDR|OP|ASM|" << std::string(longestLine-4, ' ') << "SPL" << std::endl;
+	std::cout << "ADDR|OP||ASM|" << std::string(longestLine-4, ' ') << "SPL" << std::endl;
 	std::cout << std::string(longestLine + longestSPL + offset, '-') << std::endl;
 
 	//Now we can print the disassembly
@@ -153,7 +153,7 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 		std::stringstream ss;
 		ss << std::hex << std::setw(4) << std::setfill('0');
 		ss << d.addr << ' ' << std::setw(2) << std::setfill('0');
-		ss << (unsigned)d.opcode << ' ';
+		ss << (unsigned)d.opcode << "  ";
 		for (byte b : d.assembled) ss << std::setw(2) << std::setfill('0') << (unsigned)b << ' ';
 
 		int len = longestLine - static_cast<int>(d.assembled.size()) * 3;
@@ -429,6 +429,11 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			case 0x24:
 			{
 				SINGLEOP("dec");
+			}
+			break;
+			case 0x25:
+			{
+				SINGLEOP("input");
 			}
 			break;
 			default:

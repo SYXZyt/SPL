@@ -267,7 +267,9 @@ void SPL::VirtualMachine::Processor::Run()
 					break;
 				}
 
-				stack.Pop();
+				VariableData* v = stack.Pop();
+				delete v;
+				v = nullptr;
 			}
 			break;
 			case 0x14: //add
@@ -428,16 +430,6 @@ void SPL::VirtualMachine::Processor::Run()
 				}
 			}
 			break;
-			default:
-			{
-				std::string params[1]{};
-				std::stringstream ss;
-				ss << std::hex << std::setw(2) << std::setfill('0') << (int)opcode;
-				params[0] = ss.str().c_str();
-				ErrorNoExit(SPL_UNKNOWN_OPCODE, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_OPCODE], 1, params));
-				KILL;
-			}
-			break;
 			case 0x23:
 			{
 				if (stack.Size() == 0)
@@ -476,6 +468,23 @@ void SPL::VirtualMachine::Processor::Run()
 				stack.Push(t);
 
 				accumulator.Decrement();
+			}
+			break;
+			case 0x25:
+			{
+				std::string input;
+				std::cin >> input;
+				stack.Push(new VariableData(input));
+			}
+			break;
+			default:
+			{
+				std::string params[1]{};
+				std::stringstream ss;
+				ss << std::hex << std::setw(2) << std::setfill('0') << (int)opcode;
+				params[0] = ss.str().c_str();
+				ErrorNoExit(SPL_UNKNOWN_OPCODE, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_OPCODE], 1, params));
+				KILL;
 			}
 			break;
 		}

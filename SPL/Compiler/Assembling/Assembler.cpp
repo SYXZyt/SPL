@@ -418,6 +418,10 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		{
 			assembled.push_back(0x24);
 		}
+		else if (Input* input = dynamic_cast<Input*>(n))
+		{
+			assembled.push_back(0x25);
+		}
 
 		else
 		{
