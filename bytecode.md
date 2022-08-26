@@ -45,3 +45,5 @@ Something to note is that the disassembly may
 | 22 |`lwrequ` | Run a `<=` comparison |
 | 23 | `inc` | Increment an int or float on the stack |
 | 24 | `dec` | Decrement an int or float on the stack |
+| 25 | `input` | Get the users input and store it on the stack |
+| 26 | `mod` | Calculates the mod of two numbers |

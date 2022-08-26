@@ -23,7 +23,7 @@ goto main
 	to_string
 	setpop output
 
-	;Check if divisable by FIZZ
+	;Check if divisible by FIZZ
 	push 0	;We push this 0 as we want to do a i % FIZZ == 0, so we just add it here rather than later
 	push FIZZ
 	push i

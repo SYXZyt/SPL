@@ -60,6 +60,8 @@ SPL features various instructions all with different functions. Many of these in
 | `grtequ` [`line_num` or `label_name`] | Check if the current two values on the stack are greater or equal (>=), and jump to the line or label if not |
 | `lwr` [`line_num` or `label_name`] | Check if the current two values on the stack are lower (<), and jump to the line or label if not |
 | `lwrequ` [`line_num` or `label_name`] | Check if the current two values on the stack are lower or equal (<=), and jump to the line or label if not |
+| `input` | Get the users input, and store it to the stack |
+| `mod` | Calculates the mod of two numbers |
 
 It is very important that you remember to do all maths operations in reverse. Lets say you want to do `10 / 5`, the SPL would be
 ```
