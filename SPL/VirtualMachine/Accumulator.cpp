@@ -268,6 +268,34 @@ void SPL::VirtualMachine::Accumulator::CalculateConcatenation()
 	stack->Push(new VariableData(result));
 }
 
+void SPL::VirtualMachine::Accumulator::Increment()
+{
+	VariableData* value = stack->Pop();
+
+	if (value->GetType() == VariableType::INT)
+	{
+		stack->Push(new VariableData(value->GetInt() + 1));
+	}
+	else
+	{
+		stack->Push(new VariableData(value->GetFloat() + 1));
+	}
+}
+
+void SPL::VirtualMachine::Accumulator::Decrement()
+{
+	VariableData* value = stack->Pop();
+
+	if (value->GetType() == VariableType::INT)
+	{
+		stack->Push(new VariableData(value->GetInt() - 1));
+	}
+	else
+	{
+		stack->Push(new VariableData(value->GetFloat() - 1));
+	}
+}
+
 void SPL::VirtualMachine::Accumulator::CastToString()
 {
 	VariableData* toCast = stack->Pop();
@@ -344,30 +372,30 @@ bool SPL::VirtualMachine::Accumulator::CastToInt()
 
 bool SPL::VirtualMachine::Accumulator::EqualComparison()
 {
-	COMPARISON(==);
+	COMPARISON(== );
 }
 
 bool SPL::VirtualMachine::Accumulator::NotEqualComparison()
 {
-	COMPARISON(!=);
+	COMPARISON(!= );
 }
 
 bool SPL::VirtualMachine::Accumulator::GreaterComparison()
 {
-	COMPARISON(>);
+	COMPARISON(> );
 }
 
 bool SPL::VirtualMachine::Accumulator::GreaterEqualComparison()
 {
-	COMPARISON(>=);
+	COMPARISON(>= );
 }
 
 bool SPL::VirtualMachine::Accumulator::LessComparison()
 {
-	COMPARISON(<);
+	COMPARISON(< );
 }
 
 bool SPL::VirtualMachine::Accumulator::LessEqualComparison()
 {
-	COMPARISON(<=);
+	COMPARISON(<= );
 }

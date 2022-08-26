@@ -320,6 +320,12 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Free.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes\Output</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Inc.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Dec.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes\Maths</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

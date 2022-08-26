@@ -156,7 +156,7 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 		ss << (unsigned)d.opcode << ' ';
 		for (byte b : d.assembled) ss << std::setw(2) << std::setfill('0') << (unsigned)b << ' ';
 
-		int len = longestLine - d.assembled.size() * 3;
+		int len = longestLine - static_cast<int>(d.assembled.size()) * 3;
 		ss << std::string(len, ' ');
 		ss << d.disassembled;
 

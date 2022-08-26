@@ -47,6 +47,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_DIV_ZERO = 1404,
 	SPL_CONVERSION_ERROR = 1405,
 	SPL_UNKNOWN_OPCODE = 1406,
+	SPL_NOT_ENOUGH_ITEMS = 1407,
 };
 
 static std::ostream& operator<<(std::ostream& os, SPL_ERROR_CODE code)
@@ -91,5 +92,6 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_STRING_UNEXPECTED, "String cannot be used in '&SPL_0' calculation"},
 	{SPL_DIV_ZERO, "Tried to divide by zero"},
 	{SPL_CONVERSION_ERROR, "Cannot convert value to &SPL_0"},
-	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"}
+	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"},
+	{SPL_NOT_ENOUGH_ITEMS, "Calculation expected items on the stack"},
 };
