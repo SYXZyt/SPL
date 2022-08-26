@@ -119,6 +119,8 @@ void SPL::VirtualMachine::Processor::Run()
 		Advance();
 		if (terminate) break;
 
+		//std::cout << (unsigned)opcode << std::endl;
+
 		switch (opcode)
 		{
 			case 0x00: //nop

@@ -1,7 +1,77 @@
-print "What is your name? >"
-input
-print "Hello there "
-setpop name
-println name
-free name
-exit 1
+goto main
+
+:fizzbuzz
+	const FIZZ 3
+	const BUZZ 5
+	const FIZZ_STR "Fizz"
+	const BUZZ_STR "Buzz"
+
+	;Create the indexer
+	let i 1 ;Fizzbuzz needs to be 1-based indexed
+	
+	;Create a while loop, which loops until x is greater than 100
+	:while
+	push 100
+	push i
+	lwrequ loop_end
+
+	;Main loop content
+	
+	;By default we want output to be our number, but if either mod checks pass, we overwrite
+	let output ""
+	push i
+	to_string
+	setpop output
+
+	;Check if divisable by FIZZ
+	push 0	;We push this 0 as we want to do a i % FIZZ == 0, so we just add it here rather than later
+	push i
+	push FIZZ
+	mod
+	equ nofizz
+	
+	;Overwrite output with fizz
+	let output FIZZ_STR
+
+	:nofizz
+	;Now we can check if divisible by BUZZ
+	;We also need to do an addition check, to see if output is storing FIZZ, as we want to concat and not overwrite if it is
+	push 0
+	push i
+	push BUZZ
+	equ increment
+	
+	;Check if we are overwriting or concatenating
+	push FIZZ_STR
+	push output
+	equ overwrite
+	
+	push BUZZ_STR
+	push output
+	concat
+	setpop output
+	
+	goto increment ;Go here, so we don't accidently run the overwrite code
+	:overwrite
+	let output BUZZ_STR
+	
+	:increment
+	;Increment i
+	push i
+	inc
+	setpop i
+	
+	println output
+	goto while
+	
+	:loop_end
+	;Delete our constants, as we don't need them anymore, so they can be reassigned if needed
+	free FIZZ
+	free BUZZ
+	free FIZZ_STR
+	free BUZZ_STR
+	ret
+
+:main
+	call fizzbuzz
+	exit 0

@@ -19,6 +19,8 @@ static bool IsWhiteSpace(const char c)
 /// <returns>The string with a terminator on the end</returns>
 static std::string& Terminate(std::string& s)
 {
+	if (s.size() == 0) return s;
+
 	if (s.back() != '\0') s += '\0';
 	return s;
 }
