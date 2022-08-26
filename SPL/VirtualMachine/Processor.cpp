@@ -137,6 +137,13 @@ void SPL::VirtualMachine::Processor::Run()
 				std::string varName = ReadString();
 				VariableData* v = stack.Pop();
 				VariableData* data = new VariableData(*v);
+				delete v;
+
+				if (vstack.count(varName))
+				{
+					delete vstack[varName];
+				}
+
 				vstack[varName] = data;
 			}
 			break;
@@ -144,6 +151,12 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				std::string varName = ReadString();
 				VariableData* v = new VariableData(ReadString());
+
+				if (vstack.count(varName))
+				{
+					delete vstack[varName];
+				}
+
 				vstack[varName] = v;
 			}
 			break;
@@ -151,6 +164,12 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				std::string varName = ReadString();
 				VariableData* v = new VariableData(ReadFloat());
+
+				if (vstack.count(varName))
+				{
+					delete vstack[varName];
+				}
+
 				vstack[varName] = v;
 			}
 			break;
@@ -158,6 +177,12 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				std::string varName = ReadString();
 				VariableData* v = new VariableData(ReadInt());
+
+				if (vstack.count(varName))
+				{
+					delete vstack[varName];
+				}
+
 				vstack[varName] = v;
 			}
 			break;
@@ -166,6 +191,12 @@ void SPL::VirtualMachine::Processor::Run()
 				std::string copyName = ReadString();
 				std::string origName = ReadString();
 				HANDLENULLVAR(origName);
+
+				if (vstack.count(copyName))
+				{
+					delete vstack[copyName];
+				}
+
 				vstack[copyName] = new VariableData(*vstack[origName]);
 			}
 			break;
