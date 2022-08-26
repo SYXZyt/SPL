@@ -138,7 +138,7 @@ std::string GetStdioInput()
 	std::string line;
 	std::string output = "";
 
-	std::cout << "SPL v1.0.0 (13 August 2022) [X64]\nEnter a blank line to execute" << std::endl;
+	std::cout << "SPL v1.1.0 (13 August 2022) [X64]\nEnter a blank line to execute" << std::endl;
 
 	while (true)
 	{

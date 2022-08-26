@@ -46,6 +46,11 @@ namespace SPL
 			/// </summary>
 			void CalculateConcatenation();
 
+			void Increment();
+			void Decrement();
+
+			void Modulo();
+
 			/// <summary>
 			/// Cast a value to string
 			/// </summary>

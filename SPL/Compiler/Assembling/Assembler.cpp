@@ -16,21 +16,21 @@ static std::vector<unsigned char> AssembleValue(Value* v)
 		case ValueType::STRING:
 		{
 			std::vector<unsigned char> str = GetAscii(v->Token().GetValueString());
-			AddRange(assembled,str);
+			AddRange(assembled, str);
 		}
-			break;
+		break;
 		case ValueType::INT:
 		{
 			std::vector<unsigned char> bytes = IntToBytes(v->Token().GetValueInt());
 			AddRange(assembled, bytes);
 		}
-			break;
+		break;
 		case ValueType::FLOAT:
 		{
 			std::vector<unsigned char> bytes = FloatToBytes(v->Token().GetValueFloat());
 			AddRange(assembled, bytes);
 		}
-			break;
+		break;
 	}
 
 	return assembled;
@@ -111,13 +111,13 @@ void SPL::Compiler::Assembler::Assembler::WriteBinary(std::vector<unsigned char>
 void SPL::Compiler::Assembler::Assembler::Assemble()
 {
 	VerifyVariables(nodes);
-		
+
 	std::vector<unsigned char> assembled;
 
 	//Step one, write the total count of constants
 	std::vector<unsigned char> constSizeBytes = IntToBytes(static_cast<int>(nodes.constants.size()));
 	AddRange(assembled, constSizeBytes);
-		
+
 	//Now write the constants
 	for (Constant* c : nodes.constants)
 	{
@@ -409,6 +409,14 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			assembled.push_back(0x22);
 
 			AddRange(assembled, IntToBytes(GetLabelOffset(lwrEqu->Line()->Token().GetValueInt())));
+		}
+		else if (Inc* inc = dynamic_cast<Inc*>(n))
+		{
+			assembled.push_back(0x23);
+		}
+		else if (Dec* dec = dynamic_cast<Dec*>(n))
+		{
+			assembled.push_back(0x24);
 		}
 
 		else

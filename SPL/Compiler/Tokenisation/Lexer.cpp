@@ -273,5 +273,7 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		"grtequ",
 		"lwr",
 		"lwrequ",
+		"inc",
+		"dec",
 	};
 }

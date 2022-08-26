@@ -304,6 +304,20 @@ SPL::Compiler::Parser::Nodes::Pow* SPL::Compiler::Parser::Parser::ParsePowStatem
     return pow;
 }
 
+SPL::Compiler::Parser::Nodes::Inc* SPL::Compiler::Parser::Parser::ParseIncStatement()
+{
+    Inc* inc = new Inc(PeekCurrent());
+    Advance();
+    return inc;
+}
+
+SPL::Compiler::Parser::Nodes::Dec* SPL::Compiler::Parser::Parser::ParseDecStatement()
+{
+    Dec* dec = new Dec(PeekCurrent());
+    Advance();
+    return dec;
+}
+
 SPL::Compiler::Parser::Nodes::Casting::ToFloat* SPL::Compiler::Parser::Parser::ParseToFloatStatement()
 {
     ToFloat* toFloat = new ToFloat(PeekCurrent());
@@ -367,6 +381,8 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "ret") return ParseRetStatement();
         else if (lex == "push") return ParsePushStatement();
         else if (lex == "add") return ParseAddStatement();
+        else if (lex == "inc") return ParseIncStatement();
+        else if (lex == "dec") return ParseDecStatement();
         else if (lex == "sub") return ParseSubStatement();
         else if (lex == "mul") return ParseMulStatement();
         else if (lex == "div") return ParseDivStatement();

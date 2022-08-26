@@ -11,22 +11,22 @@ As of right now, SPL has no way to code using multiple SPL files.
 
 ## Variables
 Variables can be updated using the `Let` keyword. This keyword will tell the virtual machine that we are wanting to assign a value in memory.
-Variables in SPL can have two different states. `Mut` or `Const`. The virtual machine itself has no understanding of mutable or constant values. The compiler keeps track of variables access, and handles if the user overwrites a constant.
+Variables in SPL can either be mutable or constant, which are created using `let` and `const` respectively. Constants are loaded into memory just before code exeuction begins, and cannot be changed once set. Constants can only store ints, floats or string. Copying a variable into a constant is impossible, as constants must be resolved at compile time.
 Variables only have three different types. `Integer`, `Float` or `String`. These are the three basic types and in `SPL 1.0` there are no structs to create your own type.
 
 Variables can be created using the following syntax
 ```
-let ['mut' or 'const'] [NAME] [VALUE]
+let [NAME] [VALUE]
 ```
 
 There is no way to create a null variable.
 You also can't easily copy variables.
 This is how copying variables would work
 ```
-let mut dog "Woof!" ;This is the value we want to copy
-let mut cat 0       ;This is where we want to copy into
+let dog "Woof!" ;This is the value we want to copy
+let cat 0       ;This is where we want to copy into
 push dog
-setpop mut cat      ;This will take the first value on the stack, and store it to a mutable variable called cat
+setpop cat      ;This will take the first value on the stack, and store it to a variable called cat
 ```
 
 ## Instructions
@@ -35,7 +35,8 @@ SPL features various instructions all with different functions. Many of these in
 | - | - |
 | `print` [`literal` or `variable`] | Print a literal or a variable to the console |
 | `println` [`literal` or `variable`] | Print something to the string followed by a newline |
-| `let` [`const` or `mut`] [`identifier`] [`literal`] | Create a value in memory |
+| `let` [`identifier`] [`literal`] | Create a value in memory |
+| `const` [`identifier` [`literal`]] | Create a constant in memory |
 | `free` | Free a variable and remove its value |
 | `goto` [`line_num` or `label_name`] | Jump the current execution to a specific point in the code |
 | `call` [`label_name`] | Jump the current execution to a specific point, while adding the current address to a call stack. Like calling a function. Unlike `goto`, `call` cannot jump to line numbers and must be given a label name |
@@ -43,7 +44,7 @@ SPL features various instructions all with different functions. Many of these in
 | `exit` [`integer` ] | Exit the program with a specific exit code |
 | `push` [`literal` or `variable`] | Push a value onto the stack |
 | `pop` | Pop a value off of the stack |
-| `setpop` [`const` or `mut`] [`identifier`] | Create a value in memory, but using the a value off the stack |
+| `setpop` [`identifier`] | Create a value in memory, but using the a value off the stack |
 | `add` | Add two values on the stack and push the result. Will throw error if non-numeric types |
 | `sub` | Subtract two values on the stack and push the result. Will throw error if non-numeric types |
 | `mul` | Multiply two values on the stack and push the result. Will throw error if non-numeric types |
@@ -85,7 +86,5 @@ E.g.
 ```
 
 ## Future Plans
-Currently this is **SPL 1.0** and it is missing a few basic features such as conditions and user input.\
-**SPL 1.1** plans to add user input and condition branches. Add proper error codes. E.g. SPL1027 - Illegal character '^'\
 **SPL 1.2** plans to add more advanced to more advanced console control, such as moving the cursor and coloured text. Both _British_ and _American_ spellings of "Colour" will be supported\
 **SPL 1.2** is planned to be the final officially supported version of SPL, as my focus will move onto a much larger and more advanced language framework. The code will remain open source if anyone wants to update the language

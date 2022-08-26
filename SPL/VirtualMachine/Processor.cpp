@@ -1,7 +1,7 @@
 #include "Processor.h"
 
 #pragma region Defines
-#define KILL terminate = true;
+#define KILL terminate = true
 
 #define HANDLENULLVAR(varName) \
 if (!vstack.count(varName)) \
@@ -23,7 +23,7 @@ SPL::VirtualMachine::VariableData* b = stack.Pop(); \
 SPL::VirtualMachine::VariableData* a = stack.Pop(); \
 if (b->GetType() == SPL::VirtualMachine::VariableType::STRING || a->GetType() == SPL::VirtualMachine::VariableType::STRING) {LOCKSTRINGFROMCALC(calcName)} \
 stack.Push(a); \
-stack.Push(b);
+stack.Push(b)
 
 #pragma endregion
 
@@ -306,16 +306,37 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x19: //concat
 			{
+				if (stack.Size() < 2)
+				{
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					KILL;
+					break;
+				}
+
 				accumulator.CalculateConcatenation();
 			}
 			break;
 			case 0x1a: //to_string
 			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					KILL;
+					break;
+				}
+
 				accumulator.CastToString();
 			}
 			break;
 			case 0x1b: //to_float
 			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					KILL;
+					break;
+				}
+
 				if (!accumulator.CastToFloat())
 				{
 					std::string params[]{"float"};
@@ -326,6 +347,13 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x1c: //to_int
 			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					KILL;
+					break;
+				}
+
 				if (!accumulator.CastToInt())
 				{
 					std::string params[]{ "int" };
@@ -408,6 +436,46 @@ void SPL::VirtualMachine::Processor::Run()
 				params[0] = ss.str().c_str();
 				ErrorNoExit(SPL_UNKNOWN_OPCODE, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_OPCODE], 1, params));
 				KILL;
+			}
+			break;
+			case 0x23:
+			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					KILL;
+					break;
+				}
+
+				VariableData* t = stack.Pop();
+
+				if (t->GetType() == VariableType::STRING)
+				{
+					LOCKSTRINGFROMCALC("inc");
+				}
+				stack.Push(t);
+
+				accumulator.Increment();
+			}
+			break;
+			case 0x24:
+			{
+				if (stack.Size() == 0)
+				{
+					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, ErrorMessages[SPL_NOT_ENOUGH_ITEMS]);
+					KILL;
+					break;
+				}
+
+				VariableData* t = stack.Pop();
+
+				if (t->GetType() == VariableType::STRING)
+				{
+					LOCKSTRINGFROMCALC("inc");
+				}
+				stack.Push(t);
+
+				accumulator.Decrement();
 			}
 			break;
 		}

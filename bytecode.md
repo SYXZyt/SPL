@@ -43,3 +43,5 @@ Something to note is that the disassembly may
 | 20 |`grtequ` | Run a `>=` comparison |
 | 21 |`lwr` | Run a `<` comparison |
 | 22 |`lwrequ` | Run a `<=` comparison |
+| 23 | `inc` | Increment an int or float on the stack |
+| 24 | `dec` | Decrement an int or float on the stack |
