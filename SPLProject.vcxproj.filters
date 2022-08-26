@@ -335,7 +335,6 @@
     <None Include="test.spl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="vc.bat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SPLProject.rc">

@@ -421,6 +421,16 @@ void SPL::Disassembling::Disassembler::Disassemble()
 				SETRESULT;
 			}
 			break;
+			case 0x23:
+			{
+				SINGLEOP("inc");
+			}
+			break;
+			case 0x24:
+			{
+				SINGLEOP("dec");
+			}
+			break;
 			default:
 				SINGLEOP("??");
 				break;

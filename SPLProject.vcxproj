@@ -234,7 +234,6 @@
     <None Include="clc.py" />
     <None Include="readme.md" />
     <None Include="test.spl" />
-    <None Include="vc.bat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SPLProject.rc" />
