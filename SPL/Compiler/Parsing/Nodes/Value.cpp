@@ -14,6 +14,8 @@ int SPL::Compiler::Parser::Nodes::Value::Size()
 	}
 	else
 	{
+		if (token.GetValueString().size() == 0) return 1;
+
 		//In this case, we need to add the null terminator onto the string, as that is included in the rom as well
 		std::string s = token.GetValueString();
 		Terminate(s);

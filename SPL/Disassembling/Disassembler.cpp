@@ -204,7 +204,7 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			{
 				INIT("str ");
 				spl += ReadString(rom, bytes, addr);
-				spl += '"';
+				spl += " \"";
 				spl += Escape(ReadString(rom, bytes, addr));
 				spl += '"';
 
@@ -214,20 +214,24 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			case 0x03: //LET FLOAT
 			{
 				INIT("flt ");
-				spl += std::to_string(ReadFloat(rom, bytes, addr));
+				spl += ReadString(rom, bytes, addr);
+				spl += " " +  std::to_string(ReadFloat(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x04: //LET INT
 			{
 				INIT("int ");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
+				spl += ReadString(rom, bytes, addr);
+				spl += " " + std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x05: //LET VAR
 			{
 				INIT("cpy ");
+				spl += ReadString(rom, bytes, addr);
+				spl += ' ';
 				spl += ReadString(rom, bytes, addr);
 				SETRESULT;
 			}

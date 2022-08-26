@@ -19,7 +19,11 @@ static bool IsWhiteSpace(const char c)
 /// <returns>The string with a terminator on the end</returns>
 static std::string& Terminate(std::string& s)
 {
-	if (s.size() == 0) return s;
+	if (s.size() == 0)
+	{
+		s = "\0";
+		return s;
+	}
 
 	if (s.back() != '\0') s += '\0';
 	return s;
@@ -32,6 +36,13 @@ static std::string& Terminate(std::string& s)
 /// <returns>The list containing the ASCII characters</returns>
 static std::vector<unsigned char> GetAscii(std::string s)
 {
+	if (s.size() == 0)
+	{
+		std::vector<unsigned char> v;
+		v.push_back(0x00);
+		return v;
+	}
+
 	Terminate(s);
 
 	std::vector<unsigned char> v;

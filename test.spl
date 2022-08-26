@@ -25,8 +25,8 @@ goto main
 
 	;Check if divisable by FIZZ
 	push 0	;We push this 0 as we want to do a i % FIZZ == 0, so we just add it here rather than later
-	push i
 	push FIZZ
+	push i
 	mod
 	equ nofizz
 	
@@ -37,8 +37,9 @@ goto main
 	;Now we can check if divisible by BUZZ
 	;We also need to do an addition check, to see if output is storing FIZZ, as we want to concat and not overwrite if it is
 	push 0
-	push i
 	push BUZZ
+	push i
+	mod
 	equ increment
 	
 	;Check if we are overwriting or concatenating
@@ -51,7 +52,7 @@ goto main
 	concat
 	setpop output
 	
-	goto increment ;Go here, so we don't accidently run the overwrite code
+	goto increment ;Go here, so we don't accidentally run the overwrite code
 	:overwrite
 	let output BUZZ_STR
 	
