@@ -151,7 +151,7 @@ namespace SPLInstaller
             }
             else
             {
-                Console.WriteLine("SPL has already been installed. Would you like to repair the install?");
+                Console.WriteLine("SPL has already been installed. Would you like to update/repair the install?");
                 if (!ConfirmationAndInput.ConfirmInstall()) return;
                 GetInstalledPath();
                 if (path is null)

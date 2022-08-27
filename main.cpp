@@ -27,6 +27,8 @@
 const char* hashName = "_spl_cache_\\checksum.hash"; //Stores a hash unique to each script, to check if the program needs to compile again
 const char* binaryName = "_spl_cache_\\out.bin"; //The name of the binary spat out by the compiler
 
+bool disassemble = false;
+
 //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exists-using-standard-c-c11-14-17-c
 /// <summary>
 /// Check to see if a file exists
@@ -137,7 +139,7 @@ std::string GetStdioInput()
 	std::string line;
 	std::string output = "";
 
-	std::cout << "SPL v1.1.0 (13 August 2022) [X64]\nEnter a blank line to execute" << std::endl;
+	std::cout << "SPL v1.1.0 (27 August 2022 ~ 14:32) [X64]\nEnter a blank line to execute" << std::endl;
 
 	while (true)
 	{
@@ -192,17 +194,52 @@ int main(int argc, char** argv)
 	{
 		input = GetStdioInput();
 	}
-	else
+	else if (argc == 2)
 	{
 		const char* file = argv[1];
 
-		if (!FileExists(file))
+		if (std::string(file) == "-d")
 		{
-			std::cerr << file << " does not exist" << std::endl;
+			disassemble = true;
+			input = GetStdioInput();
+		}
+		else
+		{
+			if (!FileExists(file))
+			{
+				std::cerr << file << " does not exist" << std::endl;
+				return 1;
+			}
+
+			inputName = file;
+			input = GetFileInput(inputName);
+		}
+	}
+	else
+	{
+		std::vector<std::string> args;
+		for (int i = 1; i < argc; i++)
+		{
+			args.push_back(argv[i]);
 		}
 
-		inputName = file;
-		input = GetFileInput(inputName);
+		for (std::string s : args)
+		{
+			if (s == "-d") disassemble = true;
+			else
+			{
+				const char* file = s.c_str();
+
+				if (!FileExists(file))
+				{
+					std::cerr << file << "does not exist" << std::endl;
+					return 1;
+				}
+
+				inputName = file;
+				input = GetFileInput(inputName);
+			}
+		}
 	}
 
 	bool reCompile = !CheckSumIdentical(input);
@@ -249,7 +286,7 @@ int main(int argc, char** argv)
 		}
 		std::cout << "Total Size: " << size << " bytes" << std::endl;
 #endif
-		
+
 		Assembler assembler = Assembler(nodes, binaryName);
 		assembler.Assemble();
 
@@ -272,13 +309,20 @@ int main(int argc, char** argv)
 	//To fix this, use rom::clear();
 	rom _rom = LoadRom(binaryName);
 
-#ifdef DISASSEMBLE
-	Disassembler d = Disassembler(_rom);
-	d.Disassemble();
-	_rom.Clear();
-#else
-	Processor cpu = Processor(_rom);
-	cpu.Run();
-	std::cout << "Program exited with code " << cpu.GetExitCode() << std::endl;
+#if DISASSEMBLE
+	disassemble = true;
 #endif
+
+	if (disassemble)
+	{
+		Disassembler d = Disassembler(_rom);
+		d.Disassemble();
+		_rom.Clear();
+	}
+	else
+	{
+		Processor cpu = Processor(_rom);
+		cpu.Run();
+		std::cout << "Program exited with code " << cpu.GetExitCode() << std::endl;
+	}
 }

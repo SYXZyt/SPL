@@ -9,9 +9,11 @@ SPL is a scripting language developed as a first custom programming language pro
 The compiler and virtual machine are all included into one visual studio solution. I developed it on Windows so I'm not 100% sure if the Linux code works, as I haven't been able to test it.
 As of right now, SPL has no way to code using multiple SPL files.
 
+You can use the `-d` flag to disassemble any input the virtual machine is given
+
 ## Variables
 Variables can be updated using the `Let` keyword. This keyword will tell the virtual machine that we are wanting to assign a value in memory.
-Variables in SPL can either be mutable or constant, which are created using `let` and `const` respectively. Constants are loaded into memory just before code exeuction begins, and cannot be changed once set. Constants can only store ints, floats or string. Copying a variable into a constant is impossible, as constants must be resolved at compile time.
+Variables in SPL can either be mutable or constant, which are created using `let` and `const` respectively. Constants are loaded into memory just before code execution begins, and cannot be changed once set. Constants can only store ints, floats or string. Copying a variable into a constant is impossible, as constants must be resolved at compile time.
 Variables only have three different types. `Integer`, `Float` or `String`. These are the three basic types and in `SPL 1.0` there are no structs to create your own type.
 
 Variables can be created using the following syntax
