@@ -309,7 +309,7 @@ int main(int argc, char** argv)
 	//To fix this, use rom::clear();
 	rom _rom = LoadRom(binaryName);
 
-#if DISASSEMBLE
+#ifdef DISASSEMBLE
 	disassemble = true;
 #endif
 

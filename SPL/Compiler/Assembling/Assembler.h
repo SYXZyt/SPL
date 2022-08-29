@@ -75,6 +75,8 @@ namespace SPL
 				FinalNodes nodes;
 				const char* outputfile;
 
+				std::vector<std::string> identifiers;
+
 				/// <summary>
 				/// Get the binary offset of an instruction
 				/// </summary>

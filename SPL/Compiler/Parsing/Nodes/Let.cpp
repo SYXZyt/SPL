@@ -14,6 +14,6 @@ int SPL::Compiler::Parser::Nodes::Let::Size()
 {
 	int size = 1;
 	size += value->Size();
-	size += static_cast<int>(name.GetValueString().length());
+	size += 4; //Name index takes 4 bytes
 	return size;
 }

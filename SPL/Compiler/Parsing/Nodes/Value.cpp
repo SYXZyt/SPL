@@ -12,6 +12,10 @@ int SPL::Compiler::Parser::Nodes::Value::Size()
 	{
 		size = sizeof(int);
 	}
+	else if (type == ValueType::IDENTIFIER)
+	{
+		size = sizeof(int);
+	}
 	else
 	{
 		if (token.GetValueString().size() == 0) return 1;
