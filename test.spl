@@ -66,13 +66,8 @@ goto main
     goto while
     
     :loop_end
-    ;Delete our constants, as we don't need them anymore, so they can be reassigned if needed
-    free FIZZ
-    free BUZZ
-    free FIZZ_STR
-    free BUZZ_STR
-    free output
     free i
+    free output
     ret
 
 :main

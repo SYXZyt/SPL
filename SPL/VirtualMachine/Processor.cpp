@@ -3,15 +3,6 @@
 #pragma region Defines
 #define KILL terminate = true
 
-#define HANDLENULLVAR(varName) \
-if (!vstack.count(varName)) \
-{ \
-	std::string params[] {std::string(varName)};\
-	ErrorNoExit(SPL_UNKNOWN_VAR, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_VAR], 1, params)); \
-	KILL; \
-	break; \
-}
-
 #define LOCKSTRINGFROMCALC(calcName) \
 std::string params[] {std::string(calcName)}; \
 ErrorNoExit(SPL_STRING_UNEXPECTED, GetMessageWithParams(ErrorMessages[SPL_STRING_UNEXPECTED], 1, params)); \
@@ -209,7 +200,6 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				std::string copyName = identifiers[ReadInt()];
 				std::string origName = identifiers[ReadInt()];
-				HANDLENULLVAR(origName);
 
 				if (vstack.count(copyName))
 				{
@@ -237,7 +227,6 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x09: //print var
 			{
 				std::string name = identifiers[ReadInt()];
-				HANDLENULLVAR(name);
 				VariableData* v = vstack[name];
 
 				if (v->GetType() == VariableType::STRING) std::cout << v->GetString();
@@ -248,7 +237,6 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x0a: //free
 			{
 				std::string name = identifiers[ReadInt()];
-				HANDLENULLVAR(name);
 				delete vstack[name];
 				vstack[name] = nullptr;
 				vstack.erase(name);
@@ -306,7 +294,6 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x12: //push var
 			{
 				std::string name = identifiers[ReadInt()];
-				HANDLENULLVAR(name);
 				stack.Push(new VariableData(*vstack[name]));
 			}
 			break;
