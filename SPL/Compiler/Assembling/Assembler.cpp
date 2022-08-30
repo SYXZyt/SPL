@@ -278,7 +278,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 						std::string param[]{ print->ToPrint()->Token().GetLexeme()};
 						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
 					}
-					AddRange(assembled, IntToBytes(nameOff));
+					AddRange(data, IntToBytes(nameOff));
 				}
 				break;
 				case 0x06:
@@ -315,6 +315,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 				Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
 			}
 
+			assembled.push_back(0x0a);
 			AddRange(assembled, IntToBytes(nameOff));
 		}
 		else if (Exit* exit = dynamic_cast<Exit*>(n))

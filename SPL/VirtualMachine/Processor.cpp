@@ -27,6 +27,27 @@ stack.Push(b)
 
 #pragma endregion
 
+void SPL::VirtualMachine::Processor::LoadIdentifiers()
+{
+	const int iCount = ReadInt();
+
+	if (iCount == 0)
+	{
+		ptr = 0;
+		_rom = TrimRom(4, _rom);
+		return;
+	}
+
+	for (int i = 0; i < iCount; i++)
+	{
+		std::string name = ReadString();
+		identifiers.push_back(name);
+	}
+
+	_rom = TrimRom(ptr, _rom);
+	ptr = 0;
+}
+
 void SPL::VirtualMachine::Processor::LoadConstants()
 {
 	//Step one, read how many constants there are
@@ -119,8 +140,6 @@ void SPL::VirtualMachine::Processor::Run()
 		Advance();
 		if (terminate) break;
 
-		//std::cout << (unsigned)opcode << std::endl;
-
 		switch (opcode)
 		{
 			case 0x00: //nop
@@ -134,7 +153,7 @@ void SPL::VirtualMachine::Processor::Run()
 					break;
 				}
 
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = stack.Pop();
 				VariableData* data = new VariableData(*v);
 				delete v;
@@ -149,7 +168,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x02: //let string
 			{
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = new VariableData(ReadString());
 
 				if (vstack.count(varName))
@@ -162,7 +181,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x03: //let float
 			{
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = new VariableData(ReadFloat());
 
 				if (vstack.count(varName))
@@ -175,7 +194,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x04: //let int
 			{
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = new VariableData(ReadInt());
 
 				if (vstack.count(varName))
@@ -188,8 +207,8 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x05: //copy
 			{
-				std::string copyName = ReadString();
-				std::string origName = ReadString();
+				std::string copyName = identifiers[ReadInt()];
+				std::string origName = identifiers[ReadInt()];
 				HANDLENULLVAR(origName);
 
 				if (vstack.count(copyName))
@@ -217,7 +236,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x09: //print var
 			{
-				std::string name = ReadString();
+				std::string name = identifiers[ReadInt()];
 				HANDLENULLVAR(name);
 				VariableData* v = vstack[name];
 
@@ -228,7 +247,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x0a: //free
 			{
-				std::string name = ReadString();
+				std::string name = identifiers[ReadInt()];
 				HANDLENULLVAR(name);
 				delete vstack[name];
 				vstack[name] = nullptr;
@@ -286,7 +305,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x12: //push var
 			{
-				std::string name = ReadString();
+				std::string name = identifiers[ReadInt()];
 				HANDLENULLVAR(name);
 				stack.Push(new VariableData(*vstack[name]));
 			}
@@ -550,6 +569,7 @@ SPL::VirtualMachine::Processor::Processor(rom _rom)
 	code = SPL_EXIT_SUCCESS;
 	accumulator = Accumulator(stack);
 	LoadConstants();
+	LoadIdentifiers();
 }
 
 SPL::VirtualMachine::Processor::~Processor()

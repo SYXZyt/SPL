@@ -38,10 +38,13 @@ static rom TrimRom(int newStart, rom& _rom)
 	newRom.bytes = new byte[_rom.size - newStart];
 	newRom.size = _rom.size - newStart;
 
+	//The reason I manually move the memory here, is because memcpy can't copy from a given index
 	for (int i = newStart; i < _rom.size; i++)
 	{
 		newRom.bytes[i - newStart] = _rom[i];
 	}
+
+	_rom = newRom;
 
 	return newRom;
 }

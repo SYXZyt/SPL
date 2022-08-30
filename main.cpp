@@ -306,7 +306,7 @@ int main(int argc, char** argv)
 	//Now that we know we have an assembled file, we can load it, and start up the virtual machine
 	//Important to note that the heap memory in the rom object is destroyed in the destructor of the processor
 	//If theres is no processor object, the memory will remain
-	//To fix this, use rom::clear();
+	//To fix this, use rom::Clear();
 	rom _rom = LoadRom(binaryName);
 
 #ifdef DISASSEMBLE

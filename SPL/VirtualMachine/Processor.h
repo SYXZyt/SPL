@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
-#include <unordered_set>
 
 #include "../../Int.h"
 #include "../../rom.h"
@@ -28,11 +27,12 @@ namespace SPL
 			int code;
 			bool terminate;
 
-			std::unordered_set<std::string> identifiers;
+			std::vector<std::string> identifiers;
 
 			Accumulator accumulator;
 
 			void LoadConstants();
+			void LoadIdentifiers();
 
 			/// <summary>
 			/// Read a string from rom
