@@ -3,15 +3,6 @@
 #pragma region Defines
 #define KILL terminate = true
 
-#define HANDLENULLVAR(varName) \
-if (!vstack.count(varName)) \
-{ \
-	std::string params[] {std::string(varName)};\
-	ErrorNoExit(SPL_UNKNOWN_VAR, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_VAR], 1, params)); \
-	KILL; \
-	break; \
-}
-
 #define LOCKSTRINGFROMCALC(calcName) \
 std::string params[] {std::string(calcName)}; \
 ErrorNoExit(SPL_STRING_UNEXPECTED, GetMessageWithParams(ErrorMessages[SPL_STRING_UNEXPECTED], 1, params)); \
@@ -26,6 +17,27 @@ stack.Push(a); /*Push in reverse order that we popped, as we want b to be on the
 stack.Push(b)
 
 #pragma endregion
+
+void SPL::VirtualMachine::Processor::LoadIdentifiers()
+{
+	const int iCount = ReadInt();
+
+	if (iCount == 0)
+	{
+		ptr = 0;
+		_rom = TrimRom(4, _rom);
+		return;
+	}
+
+	for (int i = 0; i < iCount; i++)
+	{
+		std::string name = ReadString();
+		identifiers.push_back(name);
+	}
+
+	_rom = TrimRom(ptr, _rom);
+	ptr = 0;
+}
 
 void SPL::VirtualMachine::Processor::LoadConstants()
 {
@@ -119,8 +131,6 @@ void SPL::VirtualMachine::Processor::Run()
 		Advance();
 		if (terminate) break;
 
-		//std::cout << (unsigned)opcode << std::endl;
-
 		switch (opcode)
 		{
 			case 0x00: //nop
@@ -134,7 +144,7 @@ void SPL::VirtualMachine::Processor::Run()
 					break;
 				}
 
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = stack.Pop();
 				VariableData* data = new VariableData(*v);
 				delete v;
@@ -149,7 +159,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x02: //let string
 			{
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = new VariableData(ReadString());
 
 				if (vstack.count(varName))
@@ -162,7 +172,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x03: //let float
 			{
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = new VariableData(ReadFloat());
 
 				if (vstack.count(varName))
@@ -175,7 +185,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x04: //let int
 			{
-				std::string varName = ReadString();
+				std::string varName = identifiers[ReadInt()];
 				VariableData* v = new VariableData(ReadInt());
 
 				if (vstack.count(varName))
@@ -188,9 +198,8 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x05: //copy
 			{
-				std::string copyName = ReadString();
-				std::string origName = ReadString();
-				HANDLENULLVAR(origName);
+				std::string copyName = identifiers[ReadInt()];
+				std::string origName = identifiers[ReadInt()];
 
 				if (vstack.count(copyName))
 				{
@@ -217,8 +226,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x09: //print var
 			{
-				std::string name = ReadString();
-				HANDLENULLVAR(name);
+				std::string name = identifiers[ReadInt()];
 				VariableData* v = vstack[name];
 
 				if (v->GetType() == VariableType::STRING) std::cout << v->GetString();
@@ -228,8 +236,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x0a: //free
 			{
-				std::string name = ReadString();
-				HANDLENULLVAR(name);
+				std::string name = identifiers[ReadInt()];
 				delete vstack[name];
 				vstack[name] = nullptr;
 				vstack.erase(name);
@@ -286,8 +293,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x12: //push var
 			{
-				std::string name = ReadString();
-				HANDLENULLVAR(name);
+				std::string name = identifiers[ReadInt()];
 				stack.Push(new VariableData(*vstack[name]));
 			}
 			break;
@@ -550,6 +556,7 @@ SPL::VirtualMachine::Processor::Processor(rom _rom)
 	code = SPL_EXIT_SUCCESS;
 	accumulator = Accumulator(stack);
 	LoadConstants();
+	LoadIdentifiers();
 }
 
 SPL::VirtualMachine::Processor::~Processor()

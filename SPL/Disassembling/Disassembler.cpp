@@ -89,6 +89,16 @@ static byte ReadByte(const byte* rom, int& offset)
 	return ReadByte(rom, _, offset);
 }
 
+static void ReadIdentifiers(const byte* rom, int& addr)
+{
+	int iCount = ReadInt(rom, addr);
+	std::cout << "===|Identifiers " << iCount << "|===" << std::endl;
+	for (int i = 0; i < iCount; i++)
+	{
+		std::cout << i << " ~ " << ReadString(rom, addr) << std::endl;
+	}
+}
+
 static void ReadConstants(const byte* rom, int& addr)
 {
 	//Print constant values
@@ -123,7 +133,6 @@ static void ReadConstants(const byte* rom, int& addr)
 			}
 		}
 	}
-	std::cout << "\n===|Disassembly|===" << std::endl;
 }
 
 static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> results)
@@ -142,6 +151,7 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 		if (longestSPL < d.disassembled.size()) longestSPL = static_cast<int>(d.disassembled.size());
 	}
 
+	std::cout << "\n===|Disassembly|===" << std::endl;
 	int offset = sizeof("ADDR|OP||ASM");
 
 	std::cout << "ADDR|OP||ASM|" << std::string(longestLine-4, ' ') << "SPL" << std::endl;
@@ -170,6 +180,7 @@ void SPL::Disassembling::Disassembler::Disassemble()
 	byte* rom = &_rom.bytes[0];
 
 	ReadConstants(rom, addr);
+	ReadIdentifiers(rom, addr);
 
 	//Remove the constant data, so we can display correct addresses
 	_rom = TrimRom(addr, _rom);
@@ -194,17 +205,17 @@ void SPL::Disassembling::Disassembler::Disassemble()
 				break;
 			case 0x01:	//SETPOP
 			{
-				INIT("setpop ");
+				INIT("setpop [");
 
-				spl += ReadString(rom, bytes, addr);
+				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
 				SETRESULT;
 			}
 			break;
 			case 0x02: //LET STRING
 			{
-				INIT("str ");
-				spl += ReadString(rom, bytes, addr);
-				spl += " \"";
+				INIT("str [");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
+				spl += "] \"";
 				spl += Escape(ReadString(rom, bytes, addr));
 				spl += '"';
 
@@ -213,26 +224,26 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			break;
 			case 0x03: //LET FLOAT
 			{
-				INIT("flt ");
-				spl += ReadString(rom, bytes, addr);
-				spl += " " +  std::to_string(ReadFloat(rom, bytes, addr));
+				INIT("flt [");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
+				spl += "] " +  std::to_string(ReadFloat(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x04: //LET INT
 			{
-				INIT("int ");
-				spl += ReadString(rom, bytes, addr);
-				spl += " " + std::to_string(ReadInt(rom, bytes, addr));
+				INIT("int [");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
+				spl += "] " + std::to_string(ReadInt(rom, bytes, addr));
 				SETRESULT;
 			}
 			break;
 			case 0x05: //LET VAR
 			{
-				INIT("cpy ");
-				spl += ReadString(rom, bytes, addr);
-				spl += ' ';
-				spl += ReadString(rom, bytes, addr);
+				INIT("cpy [");
+				spl += std::to_string(ReadInt(rom, bytes, addr));
+				spl += "] [";
+				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
 				SETRESULT;
 			}
 			break;
@@ -259,15 +270,15 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			break;
 			case 0x09:
 			{
-				INIT("varout ");
-				spl += ReadString(rom, bytes, addr);
+				INIT("varout [");
+				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
 				SETRESULT;
 			}
 			break;
 			case 0x0a:
 			{
-				INIT("free ");
-				spl += ReadString(rom, bytes, addr);
+				INIT("free [");
+				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
 				SETRESULT;
 			}
 			break;
@@ -322,8 +333,8 @@ void SPL::Disassembling::Disassembler::Disassemble()
 			break;
 			case 0x12:
 			{
-				INIT("varout ");
-				spl += ReadString(rom, bytes, addr);
+				INIT("varpush [");
+				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
 				SETRESULT;
 			}
 			break;

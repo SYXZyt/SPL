@@ -61,6 +61,18 @@ static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
 	}
 }
 
+template <typename T>
+static int GetIndex(const std::vector<T>& vec, const T& item)
+{
+	auto i = std::find(vec.begin(), vec.end(), item);
+
+	//If we find the element, we can do a quick calculation to get its index
+	if (i != vec.end()) return static_cast<int>(i - vec.begin());
+
+	//If we don't find it, return -1
+	return -1;
+}
+
 int SPL::Compiler::Assembler::Assembler::GetLabelOffset(int line)
 {
 	//Loop over every node, until we find the first node to match the line number
@@ -144,12 +156,26 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		AddRange(assembled, AssembleValue(c->GetValue()));
 	}
 
+	//Before we assemble the nodes, we need to inform the vm of how many identifiers to read
+	std::vector<unsigned char> idenSizeBytes = IntToBytes(static_cast<int>(identifiers.size()));
+	AddRange(assembled, idenSizeBytes);
+
+	for (std::string iden : identifiers)
+	{
+		AddRange(assembled, GetAscii(iden));
+	}
+
 	for (Node* n : nodes.nodes)
 	{
 		//Now we need to check what type of node this is, to properly assemble it
 		if (Let* let = dynamic_cast<Let*>(n))
 		{
-			std::vector<unsigned char> name = GetAscii(let->Name().GetLexeme());
+			int nameOff = GetIndex(identifiers, let->Name().GetLexeme());
+			if (nameOff == -1)
+			{
+				std::string param[]{let->Name().GetLexeme()};
+				Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+			}
 
 			unsigned char opcode = 0;
 			switch (let->GetValue()->Type())
@@ -169,14 +195,24 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			};
 
 			assembled.push_back(opcode);
-			AddRange(assembled, name);
+			AddRange(assembled, IntToBytes(nameOff));
 
 			//Now all the previous data about the variable has been written, we can write the main data
 			std::vector<unsigned char> data;
 			switch (opcode)
 			{
-				case 0x02:
 				case 0x05:
+				{
+					int nameOff = GetIndex(identifiers, let->GetValue()->Token().GetLexeme());
+					if (nameOff == -1)
+					{
+						std::string param[]{ let->GetValue()->Token().GetLexeme() };
+						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+					}
+					AddRange(data, IntToBytes(nameOff));
+				}
+				break;
+				case 0x02:
 				{
 					std::string value = let->GetValue()->Token().GetValueString();
 					Terminate(value);
@@ -201,9 +237,16 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		}
 		else if (SetPop* setPop = dynamic_cast<SetPop*>(n))
 		{
-			std::vector<unsigned char> name = GetAscii(setPop->Name()->Token().GetLexeme());
 			assembled.push_back(0x01);
-			AddRange(assembled, name);
+
+			int nameOff = GetIndex(identifiers, setPop->Name()->Token().GetLexeme());
+			if (nameOff == -1)
+			{
+				std::string param[]{ setPop->Name()->Token().GetLexeme() };
+				Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+			}
+
+			AddRange(assembled, IntToBytes(nameOff));
 		}
 		else if (Print* print = dynamic_cast<Print*>(n))
 		{
@@ -227,8 +270,18 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			std::vector<unsigned char> data;
 			switch (opcode)
 			{
-				case 0x06:
 				case 0x09:
+				{
+					int nameOff = GetIndex(identifiers, print->ToPrint()->Token().GetLexeme());
+					if (nameOff == -1)
+					{
+						std::string param[]{ print->ToPrint()->Token().GetLexeme()};
+						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+					}
+					AddRange(data, IntToBytes(nameOff));
+				}
+				break;
+				case 0x06:
 				{
 					std::string value = print->ToPrint()->Token().GetValueString();
 					Terminate(value);
@@ -255,11 +308,15 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		else if (Free* free = dynamic_cast<Free*>(n))
 		{
 			//Get the name of the variable to free
-			std::string name = free->VariableName().GetValueString();
-			Terminate(name);
+			int nameOff = GetIndex(identifiers, free->VariableName().GetLexeme());
+			if (nameOff == -1)
+			{
+				std::string param[]{ free->VariableName().GetLexeme() };
+				Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+			}
 
 			assembled.push_back(0x0a);
-			AddRange(assembled, GetAscii(name));
+			AddRange(assembled, IntToBytes(nameOff));
 		}
 		else if (Exit* exit = dynamic_cast<Exit*>(n))
 		{
@@ -309,8 +366,18 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			std::vector<unsigned char> data;
 			switch (opcode)
 			{
-				case 0x0f:
 				case 0x12:
+				{
+					int nameOff = GetIndex(identifiers, push->GetValue()->Token().GetLexeme());
+					if (nameOff == -1)
+					{
+						std::string param[]{ push->GetValue()->Token().GetLexeme()};
+						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+					}
+					AddRange(data, IntToBytes(nameOff));
+				}
+				break;
+				case 0x0f:
 				{
 					std::string value = push->GetValue()->Token().GetValueString();
 					Terminate(value);
@@ -449,7 +516,17 @@ SPL::Compiler::Assembler::Assembler::Assembler(std::vector<Node*> nodes, const c
 
 	for (Node* n : nodes)
 	{
-		if (Constant* c = dynamic_cast<Constant*>(n)) constants.push_back(c);
+		if (Let* l = dynamic_cast<Let*>(n))
+		{
+			if (!std::count(identifiers.begin(), identifiers.end(), l->Name().GetLexeme())) identifiers.push_back(l->Name().GetLexeme());
+		}
+
+		if (Constant* c = dynamic_cast<Constant*>(n))
+		{
+			constants.push_back(c);
+
+			if (!std::count(identifiers.begin(), identifiers.end(), c->GetName().GetLexeme())) identifiers.push_back(c->GetName().GetLexeme());
+		}
 		else _nodes.push_back(n);
 	}
 
