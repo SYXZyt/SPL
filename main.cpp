@@ -139,7 +139,7 @@ std::string GetStdioInput()
 	std::string line;
 	std::string output = "";
 
-	std::cout << "SPL v1.1.0 (27 August 2022 ~ 14:32) [X64]\nEnter a blank line to execute" << std::endl;
+	std::cout << "SPL v1.2.0 (DD Month YYYY ~ hh:mm) [X64]\nEnter a blank line to execute" << std::endl;
 
 	while (true)
 	{
