@@ -256,8 +256,9 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x0d: //call
 			{
-				cstack.Push(ptr + 1);
-				ptr = ReadInt();
+				int temp = ReadInt();
+				cstack.Push(ptr);
+				ptr = temp;
 			}
 			break;
 			case 0x0e: //ret
