@@ -222,6 +222,21 @@ SPL::Compiler::Parser::Nodes::Input* SPL::Compiler::Parser::Parser::ParseInputSt
     return input;
 }
 
+SPL::Compiler::Parser::Nodes::Console* SPL::Compiler::Parser::Parser::ParseConsoleStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+    Value* consoleOp = ParseExpression();
+
+    //Check we have an identifier
+    if (consoleOp->Type() != ValueType::IDENTIFIER)
+    {
+        Error(SPL_INVALID_CONSOLE_OP, *consoleOp, ErrorMessages[SPL_INVALID_CONSOLE_OP], "Parser.cpp");
+    }
+
+    return new Console(consoleOp, t);
+}
+
 SPL::Compiler::Parser::Nodes::Equ* SPL::Compiler::Parser::Parser::ParseEquStatement()
 {
     Token t = PeekCurrent();
@@ -415,6 +430,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "lwrequ") return ParseLwrEquStatement();
         else if (lex == "input") return ParseInputStatement();
         else if (lex == "mod") return ParseModStatement();
+        else if (lex == "console") return ParseConsoleStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};

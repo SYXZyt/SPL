@@ -47,3 +47,4 @@ Something to note is that the disassembly may
 | 24 | `dec` | Decrement an int or float on the stack |
 | 25 | `input` | Get the users input and store it on the stack |
 | 26 | `mod` | Calculates the mod of two numbers |
+| 27 | `console setpos` | Sets the position of the console cursor, using two values on the stack. Note that x is pushed first |
