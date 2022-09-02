@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -13,6 +14,7 @@
 #include "../Parsing/Nodes/Node.h"
 #include "../Parsing/Nodes/Block.h"
 #include "../Parsing/Nodes/Input.h"
+#include "../Parsing/Nodes/Console.h"
 #include "../Parsing/Nodes/Constant.h"
 #include "../Parsing/Nodes/Stack/Pop.h"
 #include "../Parsing/Nodes/Maths/Add.h"
@@ -75,6 +77,8 @@ namespace SPL
 				FinalNodes nodes;
 				const char* outputfile;
 
+				
+
 				std::vector<std::string> identifiers;
 
 				/// <summary>
@@ -102,6 +106,11 @@ namespace SPL
 				/// <param name="nodes">The nodes to assemble</param>
 				/// <param name="outputfile">The file to write to</param>
 				Assembler(std::vector<Node*> nodes, const char* outputfile);
+			};
+
+			static std::map<const std::string, unsigned char> ConsoleSubOps
+			{
+				{"setpos", 0x27},
 			};
 		}
 	}

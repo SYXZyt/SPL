@@ -493,6 +493,19 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		{
 			assembled.push_back(0x26);
 		}
+		else if (Console* console = dynamic_cast<Console*>(n))
+		{
+			const std::string subop = console->GetConsoleOp()->Token().GetLexeme();
+
+			//Check we have a valid subop
+			if (!ConsoleSubOps.count(subop))
+			{
+				std::string params[]{subop};
+				Error(SPL_UNKNOWN_CONSOLE_OP, *n, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_CONSOLE_OP], 1, params), "Assembler.cpp");
+			}
+
+			assembled.push_back(ConsoleSubOps[subop]);
+		}
 
 		else
 		{

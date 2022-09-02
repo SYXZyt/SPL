@@ -39,6 +39,36 @@ void SPL::VirtualMachine::Processor::LoadIdentifiers()
 	ptr = 0;
 }
 
+void SPL::VirtualMachine::Processor::MoveCursor()
+{
+	//Check we have two values
+	if (stack.Size() < 2)
+	{
+		ErrorNoExit(SPL_SETPOS_EXPECTED_INT, ErrorMessages[SPL_SETPOS_EXPECTED_INT]);
+		KILL;
+		return;
+	}
+
+	VariableData* y = stack.Pop();
+	VariableData* x = stack.Pop();
+
+	if (x->GetType() != VariableType::INT || y->GetType() != VariableType::INT)
+	{
+		ErrorNoExit(SPL_SETPOS_EXPECTED_INT, ErrorMessages[SPL_SETPOS_EXPECTED_INT]);
+		KILL;
+		return;
+	}
+
+	int _x = x->GetInt();
+	int _y = y->GetInt();
+
+	COORD pos = {_x, _y};
+	SetConsoleCursorPosition(ch, pos);
+
+	delete x;
+	delete y;
+}
+
 void SPL::VirtualMachine::Processor::LoadConstants()
 {
 	//Step one, read how many constants there are
@@ -519,7 +549,7 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x25:
 			{
 				std::string input;
-				std::cin >> input;
+				std::getline(std::cin, input);
 				stack.Push(new VariableData(input));
 			}
 			break;
@@ -529,6 +559,9 @@ void SPL::VirtualMachine::Processor::Run()
 				accumulator.Modulo();
 			}
 			break;
+			case 0x27:
+				MoveCursor();
+				break;
 			default:
 			{
 				std::string params[1]{};

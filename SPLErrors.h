@@ -34,6 +34,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_UNEXPECTED_KEYWORD = 1206,
 	SPL_UNEXPECTED_TOKEN = 1207,
 	SPL_CONST_NOT_LITERAL = 1208,
+	SPL_INVALID_CONSOLE_OP = 1209,
 
 	//Assembler
 	SPL_NO_CODE = 1301,
@@ -42,6 +43,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_CONST_OVERWRITE = 1304,
 	WSPL_FREEING_CONST = 1305,
 	SPL_IDENTIFIER_NOT_FOUND = 1306,
+	SPL_UNKNOWN_CONSOLE_OP = 1307,
 
 	//VM
 	SPL_UNKNOWN_VAR = 1401,
@@ -50,6 +52,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_CONVERSION_ERROR = 1405,
 	SPL_UNKNOWN_OPCODE = 1406,
 	SPL_NOT_ENOUGH_ITEMS = 1407,
+	SPL_SETPOS_EXPECTED_INT = 1408,
 };
 
 static std::ostream& operator<<(std::ostream& os, SPL_ERROR_CODE code)
@@ -84,6 +87,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_UNEXPECTED_KEYWORD, "Keyword '&SPL_0' was unexpected at this time"},
 	{SPL_UNEXPECTED_TOKEN, "'&SPL_0' was unexpected at this time"},
 	{SPL_CONST_NOT_LITERAL, "Constant value could not be parsed at compile time"},
+	{SPL_INVALID_CONSOLE_OP, "Console sub-operation must be a valid keyword"},
 
 	{SPL_NO_CODE, "Cannot jump to line &SPL_0 as no code was found"},
 	{SPL_POP_EMPTY, "Tried to pop while the stack was empty"},
@@ -91,6 +95,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_CONST_OVERWRITE, "Tried to overwrite a constant value"},
 	{WSPL_FREEING_CONST, "Freeing a constant will only open its name up for a variable, and not another constant"},
 	{SPL_IDENTIFIER_NOT_FOUND, "Could not find variable name '&SPL_0'"},
+	{SPL_UNKNOWN_CONSOLE_OP, "Console sub-operation '&SPL_0' is unknown"},
 
 	{SPL_UNKNOWN_VAR, "Variable '&SPL_0' does not exist"},
 	{SPL_STRING_UNEXPECTED, "String cannot be used in '&SPL_0' calculation"},
@@ -98,4 +103,5 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_CONVERSION_ERROR, "Cannot convert value to &SPL_0"},
 	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"},
 	{SPL_NOT_ENOUGH_ITEMS, "Calculation '&SPL_0' expected items on the stack"},
+	{SPL_SETPOS_EXPECTED_INT, "Console sub-operation 'setpos' expected two int values"},
 };

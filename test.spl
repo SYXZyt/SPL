@@ -19,18 +19,11 @@ goto main
 	ret
 
 :InitaliseBall
-	push 2
-	push WIDTH
-	div
-	setpop x
-	
-	push 2
-	push HEIGHT
-	div
-	setpop y
+	let x 15
+	let y 15
 	
 	let xsp 1
-	let ysp -1
+	let ysp 1
 	
 	push xsp
 	push x
@@ -66,6 +59,7 @@ goto main
 	
 	let x 1
 	call FlipXsp
+	println "Left"
 	
 	:EndCheckLeft
 	:CheckRight
@@ -78,6 +72,7 @@ goto main
 	sub
 	setpop x
 	call FlipXsp
+	println "Right"
 	
 	:EndCheckRight
 	:CheckUp
@@ -87,6 +82,8 @@ goto main
 	
 	let y 1
 	call FlipYsp
+	println "Up"
+
 	:EndCheckUp
 	:CheckDown
 	push HEIGHT
@@ -98,27 +95,29 @@ goto main
 	sub
 	setpop y
 	call FlipYsp
+	println "Down"
 	:EndCheckDown
 	ret
 
 :Draw
 	push x
 	push y
-	console.setpos
+	console setpos
 	print "0"
 	push px
 	push py
-	console.setpos
+	console setpos
 	print " "
 	ret
 
 :main
 	call InitaliseBall
-	
+
 	:loop
 	
 	call Move
 	call Collision
-	call Draw
+	;call Draw
+	input
 	
 	goto loop

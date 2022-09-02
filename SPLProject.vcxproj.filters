@@ -332,6 +332,9 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Maths\Mod.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Console.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
+#include <Windows.h>
 
 #include "../../Int.h"
 #include "../../rom.h"
@@ -33,6 +34,10 @@ namespace SPL
 
 			void LoadConstants();
 			void LoadIdentifiers();
+
+			const HANDLE ch = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			void MoveCursor();
 
 			/// <summary>
 			/// Read a string from rom
