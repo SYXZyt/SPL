@@ -1,123 +1,14 @@
-const WIDTH 40
-const HEIGHT 30
+:main	
+	let i 0
+	;Main loop
+	push 100
+	push i
+	lwr endLoop
+	println i
+	push i
+	inc
+	setpop i
+	goto 4 ;Restart loop
 
-goto main
-
-;Helper functions
-:FlipXsp
-	push -1
-	push xsp
-	mul
-	setpop xsp
-	ret
-	
-:FlipYsp
-	push -1
-	push ysp
-	mul
-	setpop ysp
-	ret
-
-:InitaliseBall
-	let x 15
-	let y 15
-	
-	let xsp 1
-	let ysp 1
-	
-	push xsp
-	push x
-	sub
-	setpop px
-	
-	push ysp
-	push y
-	sub
-	setpop py
-	ret
-
-:Move
-	let px x
-	let py y
-	
-	push xsp
-	push x
-	add
-	setpop x
-	
-	push ysp
-	push y
-	add
-	setpop y
-	ret
-	
-:Collision
-	:CheckLeft
-	push 0
-	push x
-	lwr EndCheckLeft
-	
-	let x 1
-	call FlipXsp
-	println "Left"
-	
-	:EndCheckLeft
-	:CheckRight
-	push WIDTH
-	push x
-	lwr EndCheckRight
-	
-	push 1
-	push WIDTH
-	sub
-	setpop x
-	call FlipXsp
-	println "Right"
-	
-	:EndCheckRight
-	:CheckUp
-	push 0
-	push y
-	lwr EndCheckUp
-	
-	let y 1
-	call FlipYsp
-	println "Up"
-
-	:EndCheckUp
-	:CheckDown
-	push HEIGHT
-	push y
-	lwr EndCheckDown
-	
-	push 1
-	push HEIGHT
-	sub
-	setpop y
-	call FlipYsp
-	println "Down"
-	:EndCheckDown
-	ret
-
-:Draw
-	push x
-	push y
-	console setpos
-	print "0"
-	push px
-	push py
-	console setpos
-	print " "
-	ret
-
-:main
-	call InitaliseBall
-
-	:loop
-	
-	call Move
-	call Collision
-	;call Draw
-	input
-	
-	goto loop
+	:endLoop
+	exit 0

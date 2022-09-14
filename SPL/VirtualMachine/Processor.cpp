@@ -62,11 +62,23 @@ void SPL::VirtualMachine::Processor::MoveCursor()
 	int _x = x->GetInt();
 	int _y = y->GetInt();
 
-	COORD pos = {_x, _y};
+	COORD pos = {static_cast<short>(_x), static_cast<short>(_y)};
 	SetConsoleCursorPosition(ch, pos);
 
 	delete x;
 	delete y;
+}
+
+void SPL::VirtualMachine::Processor::ClearConsole()
+{
+	//https://stackoverflow.com/questions/5866529/how-do-we-clear-the-console-in-assembly/5866648#5866648
+	COORD tl = { 0, 0 };
+	CONSOLE_SCREEN_BUFFER_INFO s;
+	GetConsoleScreenBufferInfo(ch, &s);
+	DWORD written, cells = s.dwSize.X * s.dwSize.Y;
+	FillConsoleOutputCharacter(ch, ' ', cells, tl, &written);
+	FillConsoleOutputAttribute(ch, s.wAttributes, cells, tl, &written);
+	SetConsoleCursorPosition(ch, tl);
 }
 
 void SPL::VirtualMachine::Processor::LoadConstants()
@@ -144,6 +156,12 @@ void SPL::VirtualMachine::Processor::Advance()
 	ptr++;
 }
 
+void SPL::VirtualMachine::Processor::Breakpoint()
+{
+	ClearConsole();
+	std::cout << "Variables:" << std::endl;
+}
+
 void SPL::VirtualMachine::Processor::Run()
 {
 	while (true)
@@ -156,6 +174,14 @@ void SPL::VirtualMachine::Processor::Run()
 		{
 			ErrorNoExit(SPL_STACKOVERFLOW, ErrorMessages[SPL_STACKOVERFLOW]);
 			KILL;
+		}
+
+		if (breakpoint)
+		{
+			SPL::Disassembling::Disassembled results = SPL::Disassembling::Disassembler::DisassembleInstruction(_rom, ptr);
+			ClearConsole();
+			std::cout << results.disassembled;
+			std::cin.get();
 		}
 
 		Advance();
@@ -581,9 +607,10 @@ const int SPL::VirtualMachine::Processor::GetExitCode() const
 	return code;
 }
 
-SPL::VirtualMachine::Processor::Processor(rom _rom)
+SPL::VirtualMachine::Processor::Processor(rom _rom, bool breakpoint)
 {
 	this->_rom = _rom;
+	this->breakpoint = breakpoint;
 	terminate = false;
 	ptr = -1;
 	Advance();
