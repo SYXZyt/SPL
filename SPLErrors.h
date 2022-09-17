@@ -53,6 +53,8 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_UNKNOWN_OPCODE = 1406,
 	SPL_NOT_ENOUGH_ITEMS = 1407,
 	SPL_SETPOS_EXPECTED_INT = 1408,
+	SPL_COLOUR_EXPECTED_INT = 1409,
+	SPL_CONDITION_WRONG_PARAMS = 1410,
 };
 
 static std::ostream& operator<<(std::ostream& os, SPL_ERROR_CODE code)
@@ -104,4 +106,6 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"},
 	{SPL_NOT_ENOUGH_ITEMS, "Calculation '&SPL_0' expected items on the stack"},
 	{SPL_SETPOS_EXPECTED_INT, "Console sub-operation 'setpos' expected two int values"},
+	{SPL_COLOUR_EXPECTED_INT, "Console sub-operation 'setcolor' expected an int values"},
+	{SPL_CONDITION_WRONG_PARAMS, "Conditional '&SPL_0' expected two values on the stack"}
 };

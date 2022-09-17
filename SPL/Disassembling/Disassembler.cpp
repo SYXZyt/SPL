@@ -470,6 +470,21 @@ SPL::Disassembling::Disassembled SPL::Disassembling::Disassembler::DisassembleIn
 			SINGLEOP("mod");
 		}
 		break;
+		case 0x27:
+		{
+			SINGLEOP("console setpos");
+		}
+		break;
+		case 0x28:
+		{
+			SINGLEOP("console clear");
+		}
+		break;
+		case 0x29:
+		{
+			SINGLEOP("console setcolor");
+		}
+		break;
 		default:
 			SINGLEOP("??");
 			break;

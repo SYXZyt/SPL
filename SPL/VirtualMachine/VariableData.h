@@ -29,8 +29,11 @@ namespace SPL
 
 			std::string ToString()
 			{
+				//Overriding << doesn't work for some reason, so create a method instead
 				std::stringstream ss;
-				ss << this;
+				if (GetType() == VariableType::INT) ss << GetInt() << " (INT)";
+				else if (GetType() == VariableType::FLOAT) ss << GetFloat() << " (FLOAT)";
+				else ss << GetString() << " (STRING)";
 				return ss.str();
 			}
 
@@ -41,36 +44,5 @@ namespace SPL
 			VariableData(std::string s);
 			~VariableData();
 		};
-
-		static std::ostream& operator<<(std::ostream& os, const VariableData& v)
-		{
-			if (v.GetType() == VariableType::INT) os << v.GetInt();
-			else if (v.GetType() == VariableType::FLOAT) os << v.GetFloat();
-			else os << v.GetString();
-			return os;
-		}
 	}
-}
-
-static std::ostream& operator<<(std::ostream& os, SPL::VirtualMachine::VariableType type)
-{
-	using SPL::VirtualMachine::VariableType;
-
-	switch (type)
-	{
-		case VariableType::STRING:
-			os << "string";
-			break;
-		case VariableType::FLOAT:
-			os << "float";
-			break;
-		case VariableType::INT:
-			os << "int";
-			break;
-		default:
-			os << "void";
-			break;
-	}
-
-	return os;
 }
