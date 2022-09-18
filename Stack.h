@@ -24,15 +24,27 @@ public:
 	inline size_t Size();
 
 	/// <summary>
+	/// Check if there are zero values on the stack
+	/// </summary>
+	/// <returns>True if empty</returns>
+	inline bool IsEmpty();
+
+	/// <summary>
 	/// Push a value onto the stack
 	/// </summary>
 	/// <param name="value">The value to push</param>
 	void Push(T value);
 
 	/// <summary>
+	/// Get a const reference to the bottom value on the stack
+	/// </summary>
+	/// <returns>The bottom value</returns>
+	const T& Peek();
+
+	/// <summary>
 	/// Pop a value off of the stack, and return it
 	/// </summary>
-	/// <returns>The top value on the stack</returns>
+	/// <returns>The bottom value on the stack</returns>
 	T Pop();
 
 	/// <summary>
@@ -48,9 +60,21 @@ inline size_t Stack<T>::Size()
 }
 
 template<typename T>
+inline bool Stack<T>::IsEmpty()
+{
+	return s.size() == 0;
+}
+
+template<typename T>
 inline void Stack<T>::Push(T value)
 {
 	s.push(value);
+}
+
+template<typename T>
+inline const T& Stack<T>::Peek()
+{
+	return s.top();
 }
 
 template<typename T>

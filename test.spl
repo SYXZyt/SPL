@@ -1,45 +1,39 @@
-const WIDTH 40
-const HEIGHT 30
+const RIGHT 103
+const DOWN 25
+const RIGHTPOS 102
+const DOWNPOS 24
 
+call init
 goto main
 
-;Helper functions
-:FlipXsp
+:init
+	let i 0
+	let xsp 1
+	let ysp -1
+	let x 2
+	let y 5
+	let prevX 1
+	let prevY 4
+	ret
+	
+:flipxsp
 	push -1
 	push xsp
 	mul
 	setpop xsp
 	ret
 	
-:FlipYsp
+:flipysp
 	push -1
 	push ysp
 	mul
 	setpop ysp
 	ret
+	
+:move
+	let prevX x
+	let prevY y
 
-:InitaliseBall
-	let x 15
-	let y 15
-	
-	let xsp 1
-	let ysp 1
-	
-	push xsp
-	push x
-	sub
-	setpop px
-	
-	push ysp
-	push y
-	sub
-	setpop py
-	ret
-
-:Move
-	let px x
-	let py y
-	
 	push xsp
 	push x
 	add
@@ -49,75 +43,86 @@ goto main
 	push y
 	add
 	setpop y
+
+	push 255
+	push i
+	inc
+	setpop i
+	push i
+
+	grt return
+	let i 16
+	:return
 	ret
 	
-:Collision
-	:CheckLeft
+:collision
 	push 0
 	push x
-	lwr EndCheckLeft
+	lwr endLeft
 	
 	let x 1
-	call FlipXsp
-	println "Left"
+	call flipxsp
 	
-	:EndCheckLeft
-	:CheckRight
-	push WIDTH
+	:endLeft
+	push RIGHT
 	push x
-	lwr EndCheckRight
+	grt endRight
 	
-	push 1
-	push WIDTH
-	sub
-	setpop x
-	call FlipXsp
-	println "Right"
+	let x RIGHTPOS
+	call flipxsp
 	
-	:EndCheckRight
-	:CheckUp
+	:endRight
 	push 0
 	push y
-	lwr EndCheckUp
+	lwr endUp
 	
 	let y 1
-	call FlipYsp
-	println "Up"
-
-	:EndCheckUp
-	:CheckDown
-	push HEIGHT
-	push y
-	lwr EndCheckDown
+	call flipysp
 	
-	push 1
-	push HEIGHT
-	sub
-	setpop y
-	call FlipYsp
-	println "Down"
-	:EndCheckDown
+	:endUp
+	push DOWN
+	push y
+	grt endDown
+	
+	let y DOWNPOS
+	call flipysp
+	
+	:endDown
 	ret
-
-:Draw
+	
+:draw
 	push x
 	push y
 	console setpos
 	print "0"
-	push px
-	push py
+	
+	push prevX
+	push prevY
 	console setpos
 	print " "
+	
 	ret
-
+	
 :main
-	call InitaliseBall
-
 	:loop
-	
-	call Move
-	call Collision
-	;call Draw
-	input
-	
+	call move
+	call collision
+	call draw
+	call sleep
+	push i
+	console setcolor
 	goto loop
+
+:sleep
+	let wait 0
+	:sleepLoop
+	push 500 ;This is not a timer, it just runs this code alot of times
+	push wait
+	lwr end
+	push wait
+	inc
+	setpop wait
+	goto sleepLoop
+	:end
+	free wait
+	ret

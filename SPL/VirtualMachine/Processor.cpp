@@ -3,6 +3,10 @@
 #pragma region Defines
 #define KILL terminate = true
 
+#define CLRSS(ss) \
+ss.str("");\
+ss.clear()
+
 #define LOCKSTRINGFROMCALC(calcName) \
 std::string params[] {std::string(calcName)}; \
 ErrorNoExit(SPL_STRING_UNEXPECTED, GetMessageWithParams(ErrorMessages[SPL_STRING_UNEXPECTED], 1, params)); \
@@ -62,11 +66,51 @@ void SPL::VirtualMachine::Processor::MoveCursor()
 	int _x = x->GetInt();
 	int _y = y->GetInt();
 
-	COORD pos = {_x, _y};
+	COORD pos = {static_cast<short>(_x), static_cast<short>(_y)};
 	SetConsoleCursorPosition(ch, pos);
 
 	delete x;
 	delete y;
+}
+
+void SPL::VirtualMachine::Processor::ClearConsole()
+{
+	//https://stackoverflow.com/questions/5866529/how-do-we-clear-the-console-in-assembly/5866648#5866648
+	COORD tl = { 0, 0 };
+	CONSOLE_SCREEN_BUFFER_INFO s;
+	GetConsoleScreenBufferInfo(ch, &s);
+	DWORD written, cells = s.dwSize.X * s.dwSize.Y;
+	FillConsoleOutputCharacter(ch, ' ', cells, tl, &written);
+	FillConsoleOutputAttribute(ch, s.wAttributes, cells, tl, &written);
+	SetConsoleCursorPosition(ch, tl);
+}
+
+void SPL::VirtualMachine::Processor::SetColour()
+{
+	//Check if the stack has a value on it
+	if (stack.Size() < 1)
+	{
+		ErrorNoExit(SPL_COLOUR_EXPECTED_INT, ErrorMessages[SPL_COLOUR_EXPECTED_INT]);
+		KILL;
+		return;
+	}
+
+	VariableData* value = stack.Pop();
+
+	//Check we have an int
+	if (value->GetType() != VariableType::INT)
+	{
+		ErrorNoExit(SPL_COLOUR_EXPECTED_INT, ErrorMessages[SPL_COLOUR_EXPECTED_INT]);
+		KILL;
+		return;
+	}
+
+	int v = value->GetInt();
+
+	SetConsoleTextAttribute(ch, v);
+
+	delete value;
+	value = nullptr;
 }
 
 void SPL::VirtualMachine::Processor::LoadConstants()
@@ -144,6 +188,12 @@ void SPL::VirtualMachine::Processor::Advance()
 	ptr++;
 }
 
+void SPL::VirtualMachine::Processor::Breakpoint()
+{
+	ClearConsole();
+	std::cout << "Variables:" << std::endl;
+}
+
 void SPL::VirtualMachine::Processor::Run()
 {
 	while (true)
@@ -156,6 +206,63 @@ void SPL::VirtualMachine::Processor::Run()
 		{
 			ErrorNoExit(SPL_STACKOVERFLOW, ErrorMessages[SPL_STACKOVERFLOW]);
 			KILL;
+		}
+
+		if (breakpoint)
+		{
+			SPL::Disassembling::Disassembled results = SPL::Disassembling::Disassembler::DisassembleInstruction(_rom, ptr);
+			ClearConsole();
+			
+			std::cout << "Breakpoint Disassembly (see bytecode.md for help reading)" << std::endl;
+			std::cout << "Stored Identifiers:" << std::endl;
+			for (int i = 0; i < identifiers.size(); i++)
+			{
+				std::cout << '[' << i << "] | " << identifiers[i] << std::endl;
+			}
+
+			std::cout << "\nStored Variables:" << std::endl;
+			if (vstack.size() != 0)
+			{
+				for (auto const& [key, value] : vstack)
+				{
+					std::cout << key << " | " << value->ToString() << std::endl;
+				}
+			}
+			else
+			{
+				std::cout << "VStack Empty" << std::endl;
+			}
+
+			if (stack.IsEmpty())
+			{
+				std::cout << "\nStack Empty" << std::endl;
+			}
+			else
+			{
+				std::cout << "\nStack (" << stack.Size() << ") Bottom Value : " << stack.Peek()->ToString() << std::endl;
+			}
+
+			std::cout << "\nAddress: ";
+			std::stringstream ss;
+			ss << std::hex << std::setw(4) << std::setfill('0') << results.addr << std::endl;
+			std::cout << ss.str();
+
+			CLRSS(ss);
+
+			std::cout << "\nVM Code:" << std::endl;
+			ss << std::hex << std::setw(2) << std::setfill('0') << (unsigned)results.opcode << " |  ";
+			for (int i = 0; i < results.assembled.size(); i++)
+			{
+				ss << std::hex << std::setw(2) << std::setfill('0') << (unsigned)results.assembled[i] << ' ';
+			} ss << std::endl;
+			std::cout << ss.str();
+
+			std::cout << "\nDisassembled SPL:" << std::endl;
+			std::cout << results.disassembled << std::endl;
+
+			std::cout << "Press [ENTER] to step through" << std::endl;
+
+			std::cin.get();
 		}
 
 		Advance();
@@ -443,6 +550,14 @@ void SPL::VirtualMachine::Processor::Run()
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
 
+				if (stack.Size() < 2)
+				{
+					std::string params[]{"equ"};
+					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
+					KILL;
+					break;
+				}
+
 				if (!accumulator.EqualComparison())
 				{
 					ptr = failOffset;
@@ -453,6 +568,14 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
+
+				if (stack.Size() < 2)
+				{
+					std::string params[]{ "neq" };
+					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
+					KILL;
+					break;
+				}
 
 				if (!accumulator.NotEqualComparison())
 				{
@@ -465,6 +588,14 @@ void SPL::VirtualMachine::Processor::Run()
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
 
+				if (stack.Size() < 2)
+				{
+					std::string params[]{ "grt" };
+					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
+					KILL;
+					break;
+				}
+
 				if (!accumulator.GreaterComparison())
 				{
 					ptr = failOffset;
@@ -475,6 +606,14 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
+
+				if (stack.Size() < 2)
+				{
+					std::string params[]{ "grtequ" };
+					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
+					KILL;
+					break;
+				}
 
 				if (!accumulator.GreaterEqualComparison())
 				{
@@ -487,6 +626,14 @@ void SPL::VirtualMachine::Processor::Run()
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
 
+				if (stack.Size() < 2)
+				{
+					std::string params[]{ "lwr" };
+					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
+					KILL;
+					break;
+				}
+
 				if (!accumulator.LessComparison())
 				{
 					ptr = failOffset;
@@ -497,6 +644,14 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
+
+				if (stack.Size() < 2)
+				{
+					std::string params[]{ "lwrequ" };
+					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
+					KILL;
+					break;
+				}
 
 				if (!accumulator.LessEqualComparison())
 				{
@@ -562,6 +717,12 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x27:
 				MoveCursor();
 				break;
+			case 0x28:
+				ClearConsole();
+				break;
+			case 0x29:
+				SetColour();
+				break;
 			default:
 			{
 				std::string params[1]{};
@@ -581,9 +742,10 @@ const int SPL::VirtualMachine::Processor::GetExitCode() const
 	return code;
 }
 
-SPL::VirtualMachine::Processor::Processor(rom _rom)
+SPL::VirtualMachine::Processor::Processor(rom _rom, bool breakpoint)
 {
 	this->_rom = _rom;
+	this->breakpoint = breakpoint;
 	terminate = false;
 	ptr = -1;
 	Advance();
