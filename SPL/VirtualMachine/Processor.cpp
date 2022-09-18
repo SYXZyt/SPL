@@ -432,6 +432,16 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x12: //push var
 			{
 				std::string name = identifiers[ReadInt()];
+
+				//Check that the variable exists
+				if (!vstack.count(name))
+				{
+					std::string params[]{name};
+					ErrorNoExit(SPL_UNKNOWN_VAR, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_VAR], 1, params));
+					KILL;
+					break;
+				}
+
 				stack.Push(new VariableData(*vstack[name]));
 			}
 			break;

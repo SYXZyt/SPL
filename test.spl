@@ -2,7 +2,7 @@ const RIGHT 103
 const DOWN 25
 const RIGHTPOS 102
 const DOWNPOS 24
-
+free RIGHT
 call init
 goto main
 
