@@ -485,6 +485,15 @@ SPL::Disassembling::Disassembled SPL::Disassembling::Disassembler::DisassembleIn
 			SINGLEOP("console setcolor");
 		}
 		break;
+		case 0x2a:
+		{
+			INIT("sleep ");
+			int delay = ReadInt(rom, bytes, addr);
+			spl += std::to_string(delay);
+
+			SETRESULT;
+		}
+		break;
 		default:
 			SINGLEOP("??");
 			break;

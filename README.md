@@ -65,6 +65,7 @@ SPL features various instructions all with different functions. Many of these in
 | `input` | Get the users input, and store it to the stack |
 | `mod` | Calculates the mod of two numbers |
 | `console setpos` | Using two values on the stack (note x is pushed first), move the cursor to a set position |
+| `console clear` | Clears all text on the screen |
 | `console setcolor` | Using a value on the stack, set the foreground console colour. This is how colours are implemented. [ConsoleAttributes](https://learn.microsoft.com/en-us/windows/console/console-screen-buffers#span-idwin32characterattributesspanspan-idwin32characterattributesspancharacter-attributes) |
 | `sleep` [integer] | Sleep for a set amount of milliseconds |
 

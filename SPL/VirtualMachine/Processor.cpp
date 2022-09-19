@@ -742,6 +742,9 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x2a:
 			{
 				int i = ReadInt();
+
+				if (breakpoint) break;
+
 				Sleep(i);
 			}
 			break;
