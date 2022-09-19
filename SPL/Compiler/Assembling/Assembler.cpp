@@ -506,6 +506,11 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 
 			assembled.push_back(ConsoleSubOps[subop]);
 		}
+		else if (SPL::Compiler::Parser::Nodes::Sleep* sleep = dynamic_cast<SPL::Compiler::Parser::Nodes::Sleep*>(n))
+		{
+			assembled.push_back(0x2a);
+			AddRange(assembled, AssembleValue(sleep->GetDelay()));
+		}
 
 		else
 		{

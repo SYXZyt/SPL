@@ -5,6 +5,7 @@
 #include "Nodes\Let.h"
 #include "Nodes\Free.h"
 #include "Nodes\Node.h"
+#include "Nodes\Sleep.h"
 #include "Nodes\Value.h"
 #include "Nodes\Block.h"
 #include "Nodes\Input.h"
@@ -105,6 +106,7 @@ namespace SPL
 				Nodes::Ret* ParseRetStatement();
 				Nodes::Input* ParseInputStatement();
 				Nodes::Console* ParseConsoleStatement();
+				Nodes::Sleep* ParseSleepStatement();
 				
 #pragma region Comparisons
 				Nodes::Equ* ParseEquStatement();

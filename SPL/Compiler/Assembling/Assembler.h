@@ -12,6 +12,7 @@
 #include "../Parsing/Nodes/Let.h"
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
+#include "../Parsing/Nodes/Sleep.h"
 #include "../Parsing/Nodes/Block.h"
 #include "../Parsing/Nodes/Input.h"
 #include "../Parsing/Nodes/Console.h"

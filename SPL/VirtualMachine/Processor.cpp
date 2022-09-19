@@ -66,8 +66,11 @@ void SPL::VirtualMachine::Processor::MoveCursor()
 	int _x = x->GetInt();
 	int _y = y->GetInt();
 
-	COORD pos = {static_cast<short>(_x), static_cast<short>(_y)};
-	SetConsoleCursorPosition(ch, pos);
+	if (!breakpoint)
+	{
+		COORD pos = { static_cast<short>(_x), static_cast<short>(_y) };
+		SetConsoleCursorPosition(ch, pos);
+	}
 
 	delete x;
 	delete y;
@@ -107,7 +110,10 @@ void SPL::VirtualMachine::Processor::SetColour()
 
 	int v = value->GetInt();
 
-	SetConsoleTextAttribute(ch, v);
+	if (!breakpoint)
+	{
+		SetConsoleTextAttribute(ch, v);
+	}
 
 	delete value;
 	value = nullptr;
@@ -733,6 +739,12 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x29:
 				SetColour();
 				break;
+			case 0x2a:
+			{
+				int i = ReadInt();
+				Sleep(i);
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};

@@ -335,6 +335,9 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Console.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Sleep.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

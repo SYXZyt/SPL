@@ -237,6 +237,22 @@ SPL::Compiler::Parser::Nodes::Console* SPL::Compiler::Parser::Parser::ParseConso
     return new Console(consoleOp, t);
 }
 
+SPL::Compiler::Parser::Nodes::Sleep* SPL::Compiler::Parser::Parser::ParseSleepStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* delay = ParseExpression();
+
+    //Make sure an integer was provided
+    if (delay->Type() != ValueType::INT)
+    {
+        Error(SPL_SLEEP_NO_INT, *delay, ErrorMessages[SPL_SLEEP_NO_INT], "Parser.cpp");
+    }
+
+    return new Nodes::Sleep(delay, t);
+}
+
 SPL::Compiler::Parser::Nodes::Equ* SPL::Compiler::Parser::Parser::ParseEquStatement()
 {
     Token t = PeekCurrent();
@@ -431,6 +447,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "input") return ParseInputStatement();
         else if (lex == "mod") return ParseModStatement();
         else if (lex == "console") return ParseConsoleStatement();
+        else if (lex == "sleep") return ParseSleepStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};
