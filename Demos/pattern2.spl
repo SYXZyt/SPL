@@ -1,0 +1,71 @@
+;These numbers may need to be different on your terminal. These just worked for me
+const WIDTH 120
+const HEIGHT 30
+
+let i 0
+
+call init
+goto main
+
+:randomise_i
+	random 240
+	push 16
+	add
+	setpop i
+	ret
+
+:init
+	let x 0
+	let y 0
+	ret
+
+:increment_i
+	push 255
+	push i
+	push 16
+	add
+	setpop i
+	push i
+
+	grt return
+	let i 16
+	:return
+	ret
+
+:main
+	call init
+
+	;Loop over every position
+	:for_y
+	let x 0
+	push HEIGHT
+	push y
+	lwr endloop_y
+
+		:for_x
+		push WIDTH
+		push x
+		lwr endloop_x
+			
+			push i
+			console setcolor
+
+			push x
+			push y
+			console setpos
+			print " "
+
+			push x
+			inc
+			setpop x
+			call randomise_i
+			goto for_x
+		:endloop_x
+
+		push y
+		inc
+		setpop y
+		goto for_y
+	:endloop_y
+
+	goto main

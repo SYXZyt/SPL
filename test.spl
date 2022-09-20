@@ -1,4 +1,2 @@
-random 10
-setpop i
-println i
-goto 1
+console title "Demo"
+console cursor 0
