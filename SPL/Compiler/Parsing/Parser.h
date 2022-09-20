@@ -22,6 +22,7 @@
 #include "Nodes\Maths\Mod.h"
 #include "Nodes\Stack\Pop.h"
 #include "Nodes\Stack\Push.h"
+#include "Nodes\RandomNode.h"
 #include "Nodes\Stack\SetPop.h"
 #include "Nodes\Maths\Concat.h"
 #include "Nodes\Output\Print.h"
@@ -107,6 +108,7 @@ namespace SPL
 				Nodes::Input* ParseInputStatement();
 				Nodes::Console* ParseConsoleStatement();
 				Nodes::Sleep* ParseSleepStatement();
+				Nodes::RandomNode* ParseRandomStatement();
 				
 #pragma region Comparisons
 				Nodes::Equ* ParseEquStatement();

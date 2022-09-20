@@ -511,6 +511,11 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			assembled.push_back(0x2a);
 			AddRange(assembled, AssembleValue(sleep->GetDelay()));
 		}
+		else if (SPL::Compiler::Parser::Nodes::RandomNode* randomNode = dynamic_cast<SPL::Compiler::Parser::Nodes::RandomNode*>(n))
+		{
+			assembled.push_back(0x2b);
+			AddRange(assembled, AssembleValue(randomNode->GetMax()));
+		}
 
 		else
 		{

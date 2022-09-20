@@ -494,6 +494,15 @@ SPL::Disassembling::Disassembled SPL::Disassembling::Disassembler::DisassembleIn
 			SETRESULT;
 		}
 		break;
+		case 0x2b:
+		{
+			INIT("random ");
+			int max = ReadInt(rom, bytes, addr);
+			spl += std::to_string(max);
+
+			SETRESULT;
+		}
+		break;
 		default:
 			SINGLEOP("??");
 			break;

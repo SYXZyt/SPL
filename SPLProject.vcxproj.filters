@@ -338,6 +338,12 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Sleep.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\RandomNode.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="RNG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

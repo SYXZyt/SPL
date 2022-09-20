@@ -68,6 +68,7 @@ SPL features various instructions all with different functions. Many of these in
 | `console clear` | Clears all text on the screen |
 | `console setcolor` | Using a value on the stack, set the foreground console colour. This is how colours are implemented. [ConsoleAttributes](https://learn.microsoft.com/en-us/windows/console/console-screen-buffers#span-idwin32characterattributesspanspan-idwin32characterattributesspancharacter-attributes) |
 | `sleep` [integer] | Sleep for a set amount of milliseconds |
+| `random [integer]` | Pick a random number from 0 (inclusive) to the provided int (exclusive) and push the result to the stack |
 
 It is very important that you remember to do all maths operations in reverse. Lets say you want to do `10 / 5`, the SPL would be
 ```

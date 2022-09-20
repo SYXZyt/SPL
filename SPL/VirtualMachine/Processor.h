@@ -5,6 +5,7 @@
 #include <iostream>
 #include <Windows.h>
 
+#include "../../RNG.h"
 #include "../../Int.h"
 #include "../../rom.h"
 #include "../../Stack.h"
@@ -32,6 +33,7 @@ namespace SPL
 
 			std::vector<std::string> identifiers;
 
+			RNG rng;
 			Accumulator accumulator;
 
 			void LoadConstants();

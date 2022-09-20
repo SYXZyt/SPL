@@ -279,5 +279,6 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 		"mod",
 		"console",
 		"sleep",
+		"random",
 	};
 }

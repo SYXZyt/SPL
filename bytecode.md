@@ -51,6 +51,7 @@ Something to note is that the disassembly may
 | 28 | `console clear` | Clears all text on the console |
 | 29 | `console setcolor` | Sets the foreground of the console |
 | 2A | `sleep` | Sleep for a specified amount of milliseconds |
+| 2B | `random` | Generates a random number between 0 and an int on the stack |
 
 ## Breakpoints
 Running a program with the -b flag will force a break point. The breakpoint system may look confusing, but it is simple to read once you understand it.

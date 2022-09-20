@@ -748,6 +748,15 @@ void SPL::VirtualMachine::Processor::Run()
 				Sleep(i);
 			}
 			break;
+			case 0x2b:
+			{
+				int i = ReadInt();
+				int r = rng.GetRandom(i);
+
+				VariableData* v = new VariableData(r);
+				stack.Push(v);
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};
