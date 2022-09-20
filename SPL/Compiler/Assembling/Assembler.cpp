@@ -58,6 +58,13 @@ static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
 				Error(SPL_CONST_OVERWRITE, l->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
 			}
 		}
+		else if (SetPop* s = dynamic_cast<SetPop*>(n))
+		{
+			if (std::count(consts.begin(), consts.end(), s->Name()->Token().GetLexeme()))
+			{
+				Error(SPL_CONST_OVERWRITE, s->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
+			}
+		}
 	}
 }
 
@@ -542,6 +549,10 @@ SPL::Compiler::Assembler::Assembler::Assembler(std::vector<Node*> nodes, const c
 		if (Let* l = dynamic_cast<Let*>(n))
 		{
 			if (!std::count(identifiers.begin(), identifiers.end(), l->Name().GetLexeme())) identifiers.push_back(l->Name().GetLexeme());
+		}
+		else if (SetPop* s = dynamic_cast<SetPop*>(n))
+		{
+			if (!std::count(identifiers.begin(), identifiers.end(), s->Name()->Token().GetLexeme())) identifiers.push_back(s->Name()->Token().GetLexeme());
 		}
 
 		if (Constant* c = dynamic_cast<Constant*>(n))
