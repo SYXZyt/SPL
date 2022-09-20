@@ -1,2 +1,5 @@
-console title "Demo"
-console cursor 0
+push "Demo"
+console title
+
+push 0
+console cursor

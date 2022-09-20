@@ -60,16 +60,18 @@ void SPL::VirtualMachine::Processor::MoveCursor()
 	{
 		ErrorNoExit(SPL_SETPOS_EXPECTED_INT, ErrorMessages[SPL_SETPOS_EXPECTED_INT]);
 		KILL;
-		return;
 	}
-
-	int _x = x->GetInt();
-	int _y = y->GetInt();
-
-	if (!breakpoint)
+	else
 	{
-		COORD pos = { static_cast<short>(_x), static_cast<short>(_y) };
-		SetConsoleCursorPosition(ch, pos);
+
+		int _x = x->GetInt();
+		int _y = y->GetInt();
+
+		if (!breakpoint)
+		{
+			COORD pos = { static_cast<short>(_x), static_cast<short>(_y) };
+			SetConsoleCursorPosition(ch, pos);
+		}
 	}
 
 	delete x;
@@ -105,18 +107,48 @@ void SPL::VirtualMachine::Processor::SetColour()
 	{
 		ErrorNoExit(SPL_COLOUR_EXPECTED_INT, ErrorMessages[SPL_COLOUR_EXPECTED_INT]);
 		KILL;
-		return;
 	}
-
-	int v = value->GetInt();
-
-	if (!breakpoint)
+	else
 	{
-		SetConsoleTextAttribute(ch, v);
+		int v = value->GetInt();
+
+		if (!breakpoint)
+		{
+			SetConsoleTextAttribute(ch, v);
+		}
 	}
 
 	delete value;
 	value = nullptr;
+}
+
+void SPL::VirtualMachine::Processor::CursorMode()
+{
+	//Check if the stack has a value on it
+	if (stack.Size() < 1)
+	{
+		ErrorNoExit(SPL_CURSOR_MODE_NO_INT, ErrorMessages[SPL_CURSOR_MODE_NO_INT]);
+		KILL;
+		return;
+	}
+
+	VariableData* v = stack.Pop();
+
+	if (v->GetType() != VariableType::INT) 
+	{
+		ErrorNoExit(SPL_CURSOR_MODE_NO_INT, ErrorMessages[SPL_CURSOR_MODE_NO_INT]);
+		KILL;
+	}
+	else
+	{
+		bool newMode = v->GetInt() != 0;
+		CONSOLE_CURSOR_INFO cursorInfo;
+		GetConsoleCursorInfo(ch, &cursorInfo);
+		cursorInfo.bVisible = newMode;
+		SetConsoleCursorInfo(ch, &cursorInfo);
+	}
+
+	delete v;
 }
 
 void SPL::VirtualMachine::Processor::LoadConstants()
@@ -757,6 +789,24 @@ void SPL::VirtualMachine::Processor::Run()
 				stack.Push(v);
 			}
 			break;
+			case 0x2c:
+			{
+				//We want a string to set the title, so use the built in to_string converter
+				accumulator.CastToString();
+
+				//Now we have the string, we can set the title to its value
+				VariableData* v = stack.Pop();
+
+				std::string s = v->GetString();
+				std::wstring w = std::wstring(s.begin(), s.end());
+				SetConsoleTitle(w.c_str());
+
+				delete v;
+			}
+			break;
+			case 0x2d:
+				CursorMode();
+				break;
 			default:
 			{
 				std::string params[1]{};

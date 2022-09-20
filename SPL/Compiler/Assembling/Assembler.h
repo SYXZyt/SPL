@@ -115,6 +115,8 @@ namespace SPL
 				{"setpos", 0x27},
 				{"clear", 0x28},
 				{"setcolor", 0x29},
+				{"title", 0x2c},
+				{"cursor", 0x2d},
 			};
 		}
 	}

@@ -45,6 +45,7 @@ namespace SPL
 			void MoveCursor();
 			void ClearConsole();
 			void SetColour();
+			void CursorMode();
 #pragma endregion
 
 			/// <summary>
