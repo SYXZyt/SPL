@@ -141,7 +141,7 @@ std::string GetStdioInput()
 	std::string line;
 	std::string output = "";
 
-	std::cout << "SPL v1.2.0 (DD Month YYYY ~ hh:mm) [X64]\nEnter a blank line to execute" << std::endl;
+	std::cout << "SPL v1.2.0 EOL (DD Month YYYY ~ hh:mm) [X64]\nEnter a blank line to execute" << std::endl;
 
 	while (true)
 	{
