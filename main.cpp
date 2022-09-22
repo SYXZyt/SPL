@@ -28,6 +28,8 @@
 const char* hashName = "_spl_cache_\\checksum.hash"; //Stores a hash unique to each script, to check if the program needs to compile again
 const char* binaryName = "_spl_cache_\\out.bin"; //The name of the binary spat out by the compiler
 
+const char* versionInfo = "SPL v1.2.0 (DD Month YYYY ~ hh:mm) [X64]\nEnter a blank line to execute";
+
 bool disassemble = false;
 bool breakpoint = false;
 
@@ -52,7 +54,7 @@ inline bool FileExists(const char* filename)
 long long int GenerateCheckSum(std::string s)
 {
 	long long k = 7;
-	
+
 	for (int i = 0; i < s.length(); i++)
 	{
 		k *= 23;
@@ -104,7 +106,7 @@ rom LoadRom(const char* filename)
 	v.reserve(filesize);
 
 	v.insert(v.begin(), std::istream_iterator<byte>(in), std::istream_iterator<byte>());
-	rom r = {new byte[v.size()], v.size()};
+	rom r = { new byte[v.size()], v.size() };
 	byte* bytes = v.data();
 
 	//If we did r.bytes = v.data() then all the data in the rom would be lost when v is deleted, so we must create new memory and handle the deletion ourselves-
@@ -141,8 +143,6 @@ std::string GetStdioInput()
 	std::string line;
 	std::string output = "";
 
-	std::cout << "SPL v1.2.0 (DD Month YYYY ~ hh:mm) [X64]\nEnter a blank line to execute" << std::endl;
-
 	while (true)
 	{
 		std::cout << ">>>";
@@ -172,12 +172,8 @@ std::string GetFileInput(std::string filename)
 	return buffer.str();
 }
 
-int main(int argc, char** argv)
+void ExecuteCode(std::string input, std::string inputName)
 {
-#ifdef _DEBUG
-	std::cout << "DEBUG BUILD. CHANGE FLAG TO RELEASE BEFORE DISTRIBUTING" << std::endl;
-#endif
-
 	using namespace SPL::Disassembling;
 	using namespace SPL::VirtualMachine;
 	using namespace SPL::Compiler::Parser;
@@ -186,78 +182,15 @@ int main(int argc, char** argv)
 	using namespace SPL::Compiler::Parser::Nodes;
 	using namespace SPL::Compiler::PreProcessing;
 
-	std::string inputName = "<stdio>";
-	std::string input;
-
-	//If no file argument was provided, just get the code off of the console
-	if (argc <= 1)
-	{
-		input = GetStdioInput();
-	}
-	else if (argc == 2)
-	{
-		const char* file = argv[1];
-
-		if (std::string(file) == "-d")
-		{
-			disassemble = true;
-			input = GetStdioInput();
-		}
-		else if (std::string(file) == "-b")
-		{
-			breakpoint = true;
-			input = GetStdioInput();
-		}
-		else
-		{
-			if (!FileExists(file))
-			{
-				std::cerr << file << " does not exist" << std::endl;
-				return 1;
-			}
-
-			inputName = file;
-			input = GetFileInput(inputName);
-		}
-	}
-	else
-	{
-		std::vector<std::string> args;
-		for (int i = 1; i < argc; i++)
-		{
-			args.push_back(argv[i]);
-		}
-
-		for (std::string s : args)
-		{
-			if (s == "-d") disassemble = true;
-			else if (s == "-b") breakpoint = true;
-			else
-			{
-				const char* file = s.c_str();
-
-				if (!FileExists(file))
-				{
-					std::cerr << file << "does not exist" << std::endl;
-					return 1;
-				}
-
-				inputName = file;
-				input = GetFileInput(inputName);
-			}
-		}
-	}
-
 	bool reCompile = !CheckSumIdentical(input);
 
-	//Another check we can do is by compiling anywhere if no rom was found
+	//We also need to check if there is no rom to run, if so, recompile
 	if (!FileExists(binaryName)) reCompile = true;
 
 #if defined ALWAYSCOMPILE || _DEBUG
 	reCompile = true;
 #endif
 
-	//If the saved binary is the same as the code we have here, then we don't need to recompile the program
 	if (reCompile)
 	{
 		Lexer lexer = Lexer(input, inputName);
@@ -296,7 +229,11 @@ int main(int argc, char** argv)
 		Assembler assembler = Assembler(nodes, binaryName);
 		assembler.Assemble();
 
-		if (nodes.size() == 0) Error("No SPL code provided");
+		if (nodes.size() == 0)
+		{
+			ErrorNoExit("No SPL code provided");
+			return;
+		}
 
 		//Now the binary has been written, we can write the correct checksum
 		WriteCheckSum(input);
@@ -334,4 +271,95 @@ int main(int argc, char** argv)
 		cpu.Run();
 		std::cout << "Program exited with code " << cpu.GetExitCode() << std::endl;
 	}
+}
+
+int main(int argc, char** argv)
+{
+#ifdef _DEBUG
+	std::cout << "DEBUG BUILD. CHANGE FLAG TO RELEASE BEFORE DISTRIBUTING" << std::endl;
+#endif
+
+	using namespace SPL::Disassembling;
+	using namespace SPL::VirtualMachine;
+	using namespace SPL::Compiler::Parser;
+	using namespace SPL::Compiler::Assembler;
+	using namespace SPL::Compiler::Tokenisation;
+	using namespace SPL::Compiler::Parser::Nodes;
+	using namespace SPL::Compiler::PreProcessing;
+
+	std::string inputName = "<stdio>";
+	std::string input;
+
+	//If no file argument was provided, just get the code off of the console
+	if (argc <= 1)
+	{
+		std::cout << versionInfo << std::endl;
+
+		while (true)
+		{
+			input = GetStdioInput();
+			ExecuteCode(input, inputName);
+		}
+	}
+	else if (argc == 2)
+	{
+		const char* file = argv[1];
+
+		if (std::string(file) == "-d")
+		{
+			disassemble = true;
+		}
+		else if (std::string(file) == "-b")
+		{
+			breakpoint = true;
+		}
+		else
+		{
+			std::cout << versionInfo << std::endl;
+		}
+
+		while (true)
+		{
+			input = GetStdioInput();
+			ExecuteCode(input, inputName);
+		}
+
+		if (!FileExists(file))
+		{
+			std::cerr << file << " does not exist" << std::endl;
+			return 1;
+		}
+
+		inputName = file;
+		input = GetFileInput(inputName);
+	}
+	else
+	{
+		std::vector<std::string> args;
+		for (int i = 1; i < argc; i++)
+		{
+			args.push_back(argv[i]);
+		}
+
+		for (std::string s : args)
+		{
+			if (s == "-d") disassemble = true;
+			else if (s == "-b") breakpoint = true;
+			else
+			{
+				const char* file = s.c_str();
+
+				if (!FileExists(file))
+				{
+					std::cerr << file << "does not exist" << std::endl;
+					return 1;
+				}
+
+				inputName = file;
+				input = GetFileInput(inputName);
+			}
+		}
+	}
+
+	ExecuteCode(input, inputName);
 }
