@@ -64,11 +64,6 @@ SPL features various instructions all with different functions. Many of these in
 | `lwrequ` [`line_num` or `label_name`] | Check if the current two values on the stack are lower or equal (<=), and jump to the line or label if not |
 | `input` | Get the users input, and store it to the stack |
 | `mod` | Calculates the mod of two numbers |
-| `console setpos` | Using two values on the stack (note x is pushed first), move the cursor to a set position |
-| `console clear` | Clears all text on the screen |
-| `console setcolor` | Using a value on the stack, set the foreground console colour. This is how colours are implemented. [ConsoleAttributes](https://learn.microsoft.com/en-us/windows/console/console-screen-buffers#span-idwin32characterattributesspanspan-idwin32characterattributesspancharacter-attributes) |
-| `sleep` [integer] | Sleep for a set amount of milliseconds |
-| `random [integer]` | Pick a random number from 0 (inclusive) to the provided int (exclusive) and push the result to the stack |
 
 It is very important that you remember to do all maths operations in reverse. Lets say you want to do `10 / 5`, the SPL would be
 ```
@@ -77,13 +72,6 @@ push 10
 div
 ```
 Note that the right hand number is pushed first. This can be confusing at first and takes a little while to remember.
-
-When moving the cursor, this is reversed with X being pushed first. So to move to x: 6, y: 2
-```
-push 6
-push 2
-console setpos
-```
 
 ## Known Issues
 It is possible to execute unwanted code if a label is not at the start of the line
@@ -101,6 +89,6 @@ E.g.
 10: ;"I should execute"
 ```
 
-## Future plans
-SPL has reached end of life. No official updates are planned, unless to patch major bugs.
-If you wish to make any changes, feel free to do so. If deemed worthy, I'll happily accept a fork pull request.
+## Future Plans
+**SPL 1.2** plans to add more advanced to more advanced console control, such as moving the cursor and coloured text. Both _British_ and _American_ spellings of "Colour" will be supported\
+**SPL 1.2** is planned to be the final officially supported version of SPL, as my focus will move onto a much larger and more advanced language framework. The code will remain open source if anyone wants to update the language

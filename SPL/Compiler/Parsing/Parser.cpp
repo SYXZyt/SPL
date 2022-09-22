@@ -222,53 +222,6 @@ SPL::Compiler::Parser::Nodes::Input* SPL::Compiler::Parser::Parser::ParseInputSt
     return input;
 }
 
-SPL::Compiler::Parser::Nodes::Console* SPL::Compiler::Parser::Parser::ParseConsoleStatement()
-{
-    Token t = PeekCurrent();
-    Advance();
-    Value* consoleOp = ParseExpression();
-
-    //Check we have an identifier
-    if (consoleOp->Type() != ValueType::IDENTIFIER)
-    {
-        Error(SPL_INVALID_CONSOLE_OP, *consoleOp, ErrorMessages[SPL_INVALID_CONSOLE_OP], "Parser.cpp");
-    }
-
-    return new Console(consoleOp, t);
-}
-
-SPL::Compiler::Parser::Nodes::Sleep* SPL::Compiler::Parser::Parser::ParseSleepStatement()
-{
-    Token t = PeekCurrent();
-    Advance();
-
-    Value* delay = ParseExpression();
-
-    //Make sure an integer was provided
-    if (delay->Type() != ValueType::INT)
-    {
-        Error(SPL_SLEEP_NO_INT, *delay, ErrorMessages[SPL_SLEEP_NO_INT], "Parser.cpp");
-    }
-
-    return new Nodes::Sleep(delay, t);
-}
-
-SPL::Compiler::Parser::Nodes::RandomNode* SPL::Compiler::Parser::Parser::ParseRandomStatement()
-{
-    Token t = PeekCurrent();
-    Advance();
-
-    Value* max = ParseExpression();
-
-    //Make sure an integer was provided
-    if (max->Type() != ValueType::INT)
-    {
-        Error(SPL_RANDOM_NO_INT, *max, ErrorMessages[SPL_RANDOM_NO_INT], "Parser.cpp");
-    }
-
-    return new Nodes::RandomNode(max, t);
-}
-
 SPL::Compiler::Parser::Nodes::Equ* SPL::Compiler::Parser::Parser::ParseEquStatement()
 {
     Token t = PeekCurrent();
@@ -462,9 +415,6 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "lwrequ") return ParseLwrEquStatement();
         else if (lex == "input") return ParseInputStatement();
         else if (lex == "mod") return ParseModStatement();
-        else if (lex == "console") return ParseConsoleStatement();
-        else if (lex == "sleep") return ParseSleepStatement();
-        else if (lex == "random") return ParseRandomStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};

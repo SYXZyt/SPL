@@ -58,13 +58,6 @@ static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
 				Error(SPL_CONST_OVERWRITE, l->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
 			}
 		}
-		else if (SetPop* s = dynamic_cast<SetPop*>(n))
-		{
-			if (std::count(consts.begin(), consts.end(), s->Name()->Token().GetLexeme()))
-			{
-				Error(SPL_CONST_OVERWRITE, s->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
-			}
-		}
 	}
 }
 
@@ -500,29 +493,6 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		{
 			assembled.push_back(0x26);
 		}
-		else if (Console* console = dynamic_cast<Console*>(n))
-		{
-			const std::string subop = console->GetConsoleOp()->Token().GetLexeme();
-
-			//Check we have a valid subop
-			if (!ConsoleSubOps.count(subop))
-			{
-				std::string params[]{subop};
-				Error(SPL_UNKNOWN_CONSOLE_OP, *n, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_CONSOLE_OP], 1, params), "Assembler.cpp");
-			}
-
-			assembled.push_back(ConsoleSubOps[subop]);
-		}
-		else if (SPL::Compiler::Parser::Nodes::Sleep* sleep = dynamic_cast<SPL::Compiler::Parser::Nodes::Sleep*>(n))
-		{
-			assembled.push_back(0x2a);
-			AddRange(assembled, AssembleValue(sleep->GetDelay()));
-		}
-		else if (SPL::Compiler::Parser::Nodes::RandomNode* randomNode = dynamic_cast<SPL::Compiler::Parser::Nodes::RandomNode*>(n))
-		{
-			assembled.push_back(0x2b);
-			AddRange(assembled, AssembleValue(randomNode->GetMax()));
-		}
 
 		else
 		{
@@ -549,10 +519,6 @@ SPL::Compiler::Assembler::Assembler::Assembler(std::vector<Node*> nodes, const c
 		if (Let* l = dynamic_cast<Let*>(n))
 		{
 			if (!std::count(identifiers.begin(), identifiers.end(), l->Name().GetLexeme())) identifiers.push_back(l->Name().GetLexeme());
-		}
-		else if (SetPop* s = dynamic_cast<SetPop*>(n))
-		{
-			if (!std::count(identifiers.begin(), identifiers.end(), s->Name()->Token().GetLexeme())) identifiers.push_back(s->Name()->Token().GetLexeme());
 		}
 
 		if (Constant* c = dynamic_cast<Constant*>(n))
