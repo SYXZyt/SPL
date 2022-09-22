@@ -176,295 +176,346 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 
 void SPL::Disassembling::Disassembler::Disassemble()
 {
-	int addr = 0;
-	byte* rom = &_rom.bytes[0];
-
-	ReadConstants(rom, addr);
-	ReadIdentifiers(rom, addr);
-
-	//Remove the constant data, so we can display correct addresses
-	_rom = TrimRom(addr, _rom);
-	rom = &_rom.bytes[0];
-	addr = 0;
-
 	std::vector<Disassembled> results;
+	int addr = 0;
 
-	for (; addr < _rom.size;)
+	//Put rom in another scope as we don't need it after reading constants and such
 	{
-		Disassembled result{};
-		result.addr = addr;
-		byte opcode = ReadByte(rom, addr);
+		byte* rom = &_rom.bytes[0];
+		ReadConstants(rom, addr);
+		ReadIdentifiers(rom, addr);
+	}
 
-		result.opcode = opcode;
+	//Remove constant and identifier data so we can display correct addresses
+	_rom = TrimRom(addr, _rom);
 
-		//Check if this is a known opcode
-		switch (opcode)
-		{
-			case 0x00:	//NULL
-				SINGLEOP("nop");
-				break;
-			case 0x01:	//SETPOP
-			{
-				INIT("setpop [");
-
-				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
-				SETRESULT;
-			}
-			break;
-			case 0x02: //LET STRING
-			{
-				INIT("str [");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				spl += "] \"";
-				spl += Escape(ReadString(rom, bytes, addr));
-				spl += '"';
-
-				SETRESULT;
-			}
-			break;
-			case 0x03: //LET FLOAT
-			{
-				INIT("flt [");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				spl += "] " +  std::to_string(ReadFloat(rom, bytes, addr));
-				SETRESULT;
-			}
-			break;
-			case 0x04: //LET INT
-			{
-				INIT("int [");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				spl += "] " + std::to_string(ReadInt(rom, bytes, addr));
-				SETRESULT;
-			}
-			break;
-			case 0x05: //LET VAR
-			{
-				INIT("cpy [");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				spl += "] [";
-				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
-				SETRESULT;
-			}
-			break;
-			case 0x06: //PRINT STRING
-			{
-				INIT("strout \"");
-				spl += Escape(ReadString(rom, bytes, addr) + '"');
-				SETRESULT;
-			}
-			break;
-			case 0x07: //PRINT FLOAT
-			{
-				INIT("fltout ");
-				spl += ReadString(rom, bytes, addr);
-				SETRESULT;
-			}
-			break;
-			case 0x08: //PRINT INT
-			{
-				INIT("intout");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				SETRESULT;
-			}
-			break;
-			case 0x09:
-			{
-				INIT("varout [");
-				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
-				SETRESULT;
-			}
-			break;
-			case 0x0a:
-			{
-				INIT("free [");
-				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
-				SETRESULT;
-			}
-			break;
-			case 0x0b:
-			{
-				INIT("exit ");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				SETRESULT;
-			}
-			break;
-			case 0x0c:
-			{
-				INIT("goto ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x0d:
-			{
-				INIT("call ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x0e:
-			{
-				SINGLEOP("ret");
-			}
-			break;
-			case 0x0f:
-			{
-				INIT("strpush \"");
-				spl += Escape(ReadString(rom, bytes, addr) + '"');
-				SETRESULT;
-			}
-			break;
-			case 0x10:
-			{
-				INIT("fltpush ");
-				spl += std::to_string(ReadFloat(rom, bytes, addr));
-				SETRESULT;
-			}
-			break;
-			case 0x11:
-			{
-				INIT("intpush ");
-				spl += std::to_string(ReadInt(rom, bytes, addr));
-				SETRESULT;
-			}
-			break;
-			case 0x12:
-			{
-				INIT("varpush [");
-				spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
-				SETRESULT;
-			}
-			break;
-			case 0x13:
-			{
-				SINGLEOP("pop");
-			}
-			break;
-			case 0x14:
-			{
-				SINGLEOP("add");
-			}
-			break;
-			case 0x15:
-			{
-				SINGLEOP("sub");
-			}
-			break;
-			case 0x16:
-			{
-				SINGLEOP("mul");
-			}
-			break;
-			case 0x17:
-			{
-				SINGLEOP("div");
-			}
-			break;
-			case 0x18:
-			{
-				SINGLEOP("pow");
-			}
-			break;
-			case 0x19:
-			{
-				SINGLEOP("concat");
-			}
-			break;
-			case 0x1a:
-			{
-				SINGLEOP("strcast");
-			}
-			break;
-			case 0x1b:
-			{
-				SINGLEOP("fltcast");
-			}
-			break;
-			case 0x1c:
-			{
-				SINGLEOP("intcast");
-			}
-			break;
-			case 0x1d:
-			{
-				INIT("equ ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x1e:
-			{
-				INIT("neq ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x1f:
-			{
-				INIT("grt ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x20:
-			{
-				INIT("grtequ ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x21:
-			{
-				INIT("lwr ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x22:
-			{
-				INIT("lwrequ ");
-				int offset = ReadInt(rom, bytes, addr);
-				spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
-				SETRESULT;
-			}
-			break;
-			case 0x23:
-			{
-				SINGLEOP("inc");
-			}
-			break;
-			case 0x24:
-			{
-				SINGLEOP("dec");
-			}
-			break;
-			case 0x25:
-			{
-				SINGLEOP("input");
-			}
-			break;
-			case 0x26:
-			{
-				SINGLEOP("mod");
-			}
-			break;
-			default:
-				SINGLEOP("??");
-				break;
-		}
-
+	//We manually iterate addr, so we can skip `addr++` in this for loop
+	for (addr = 0; addr < _rom.size;)
+	{
+		int bytesRead = 0;
+		Disassembled result = DisassembleInstruction(_rom, addr, bytesRead);
+		addr += bytesRead;
 		results.push_back(result);
 	}
 
 	DumpDisassembly(results);
+}
+
+SPL::Disassembling::Disassembled SPL::Disassembling::Disassembler::DisassembleInstruction(rom _rom, const int& startAddr, int& bytesRead)
+{
+	int addr = startAddr;
+	byte* rom = &_rom.bytes[0];
+
+	Disassembled result{};
+	result.addr = addr;
+
+	byte opcode = ReadByte(rom, addr);
+	result.opcode = opcode;
+
+	switch (opcode)
+	{
+		case 0x00:	//NULL
+			SINGLEOP("nop");
+			break;
+		case 0x01:	//SETPOP
+		{
+			INIT("setpop [");
+
+			spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
+			SETRESULT;
+		}
+		break;
+		case 0x02: //LET STRING
+		{
+			INIT("str [");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			spl += "] \"";
+			spl += Escape(ReadString(rom, bytes, addr));
+			spl += '"';
+
+			SETRESULT;
+		}
+		break;
+		case 0x03: //LET FLOAT
+		{
+			INIT("flt [");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			spl += "] " + std::to_string(ReadFloat(rom, bytes, addr));
+			SETRESULT;
+		}
+		break;
+		case 0x04: //LET INT
+		{
+			INIT("int [");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			spl += "] " + std::to_string(ReadInt(rom, bytes, addr));
+			SETRESULT;
+		}
+		break;
+		case 0x05: //LET VAR
+		{
+			INIT("cpy [");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			spl += "] [";
+			spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
+			SETRESULT;
+		}
+		break;
+		case 0x06: //PRINT STRING
+		{
+			INIT("strout \"");
+			spl += Escape(ReadString(rom, bytes, addr) + '"');
+			SETRESULT;
+		}
+		break;
+		case 0x07: //PRINT FLOAT
+		{
+			INIT("fltout ");
+			spl += ReadString(rom, bytes, addr);
+			SETRESULT;
+		}
+		break;
+		case 0x08: //PRINT INT
+		{
+			INIT("intout");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			SETRESULT;
+		}
+		break;
+		case 0x09:
+		{
+			INIT("varout [");
+			spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
+			SETRESULT;
+		}
+		break;
+		case 0x0a:
+		{
+			INIT("free [");
+			spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
+			SETRESULT;
+		}
+		break;
+		case 0x0b:
+		{
+			INIT("exit ");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			SETRESULT;
+		}
+		break;
+		case 0x0c:
+		{
+			INIT("goto ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x0d:
+		{
+			INIT("call ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x0e:
+		{
+			SINGLEOP("ret");
+		}
+		break;
+		case 0x0f:
+		{
+			INIT("strpush \"");
+			spl += Escape(ReadString(rom, bytes, addr) + '"');
+			SETRESULT;
+		}
+		break;
+		case 0x10:
+		{
+			INIT("fltpush ");
+			spl += std::to_string(ReadFloat(rom, bytes, addr));
+			SETRESULT;
+		}
+		break;
+		case 0x11:
+		{
+			INIT("intpush ");
+			spl += std::to_string(ReadInt(rom, bytes, addr));
+			SETRESULT;
+		}
+		break;
+		case 0x12:
+		{
+			INIT("varpush [");
+			spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
+			SETRESULT;
+		}
+		break;
+		case 0x13:
+		{
+			SINGLEOP("pop");
+		}
+		break;
+		case 0x14:
+		{
+			SINGLEOP("add");
+		}
+		break;
+		case 0x15:
+		{
+			SINGLEOP("sub");
+		}
+		break;
+		case 0x16:
+		{
+			SINGLEOP("mul");
+		}
+		break;
+		case 0x17:
+		{
+			SINGLEOP("div");
+		}
+		break;
+		case 0x18:
+		{
+			SINGLEOP("pow");
+		}
+		break;
+		case 0x19:
+		{
+			SINGLEOP("concat");
+		}
+		break;
+		case 0x1a:
+		{
+			SINGLEOP("strcast");
+		}
+		break;
+		case 0x1b:
+		{
+			SINGLEOP("fltcast");
+		}
+		break;
+		case 0x1c:
+		{
+			SINGLEOP("intcast");
+		}
+		break;
+		case 0x1d:
+		{
+			INIT("equ ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x1e:
+		{
+			INIT("neq ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x1f:
+		{
+			INIT("grt ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x20:
+		{
+			INIT("grtequ ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x21:
+		{
+			INIT("lwr ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x22:
+		{
+			INIT("lwrequ ");
+			int offset = ReadInt(rom, bytes, addr);
+			spl += std::to_string(offset) + " (0x" + GetHex(offset) + ')';
+			SETRESULT;
+		}
+		break;
+		case 0x23:
+		{
+			SINGLEOP("inc");
+		}
+		break;
+		case 0x24:
+		{
+			SINGLEOP("dec");
+		}
+		break;
+		case 0x25:
+		{
+			SINGLEOP("input");
+		}
+		break;
+		case 0x26:
+		{
+			SINGLEOP("mod");
+		}
+		break;
+		case 0x27:
+		{
+			SINGLEOP("console setpos");
+		}
+		break;
+		case 0x28:
+		{
+			SINGLEOP("console clear");
+		}
+		break;
+		case 0x29:
+		{
+			SINGLEOP("console setcolor");
+		}
+		break;
+		case 0x2a:
+		{
+			INIT("sleep ");
+			int delay = ReadInt(rom, bytes, addr);
+			spl += std::to_string(delay);
+
+			SETRESULT;
+		}
+		break;
+		case 0x2b:
+		{
+			INIT("random ");
+			int max = ReadInt(rom, bytes, addr);
+			spl += std::to_string(max);
+
+			SETRESULT;
+		}
+		break;
+		default:
+			SINGLEOP("??");
+			break;
+	}
+
+	bytesRead = addr - startAddr;
+	return result;
+}
+
+SPL::Disassembling::Disassembled SPL::Disassembling::Disassembler::DisassembleInstruction(rom _rom, const int& startAddr)
+{
+	int _ = 0;
+	return DisassembleInstruction(_rom, startAddr, _);
 }
 
 SPL::Disassembling::Disassembler::Disassembler(rom _rom)

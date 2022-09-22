@@ -5,10 +5,12 @@
 #include "Nodes\Let.h"
 #include "Nodes\Free.h"
 #include "Nodes\Node.h"
+#include "Nodes\Sleep.h"
 #include "Nodes\Value.h"
 #include "Nodes\Block.h"
 #include "Nodes\Input.h"
 #include "Nodes\Single.h"
+#include "Nodes\Console.h"
 #include "Nodes\Constant.h"
 #include "Nodes\Maths\Add.h"
 #include "Nodes\Maths\Div.h"
@@ -20,6 +22,7 @@
 #include "Nodes\Maths\Mod.h"
 #include "Nodes\Stack\Pop.h"
 #include "Nodes\Stack\Push.h"
+#include "Nodes\RandomNode.h"
 #include "Nodes\Stack\SetPop.h"
 #include "Nodes\Maths\Concat.h"
 #include "Nodes\Output\Print.h"
@@ -103,6 +106,9 @@ namespace SPL
 				Nodes::Call* ParseCallStatement();
 				Nodes::Ret* ParseRetStatement();
 				Nodes::Input* ParseInputStatement();
+				Nodes::Console* ParseConsoleStatement();
+				Nodes::Sleep* ParseSleepStatement();
+				Nodes::RandomNode* ParseRandomStatement();
 				
 #pragma region Comparisons
 				Nodes::Equ* ParseEquStatement();

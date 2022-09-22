@@ -39,6 +39,16 @@ namespace SPL
 			void Disassemble();
 			
 			/// <summary>
+			/// Disassemble a set of bytes to the screen
+			/// </summary>
+			/// <param name="_rom">The rom to get the bytes from</param>
+			/// <param name="startAddr">Where to disassemble from</param>
+			/// <param name="bytesRead">How many bytes were read</param>
+			/// <returns>Disassemble results</returns>
+			static Disassembled DisassembleInstruction(rom _rom, const int& startAddr, int& bytesRead);
+			static Disassembled DisassembleInstruction(rom _rom, const int& startAddr);
+
+			/// <summary>
 			/// Create a new disassembler
 			/// </summary>
 			/// <param name="_rom">The rom to disassemble</param>

@@ -3,7 +3,9 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
+#include <Windows.h>
 
+#include "../../RNG.h"
 #include "../../Int.h"
 #include "../../rom.h"
 #include "../../Stack.h"
@@ -13,6 +15,7 @@
 #include "SPLExitCodes.h"
 #include "../../SPLErrors.h"
 #include "../../ErrorStream.h"
+#include "../Disassembling/Disassembler.h"
 
 namespace SPL
 {
@@ -26,13 +29,23 @@ namespace SPL
 			int ptr;
 			int code;
 			bool terminate;
+			bool breakpoint;
 
 			std::vector<std::string> identifiers;
 
+			RNG rng;
 			Accumulator accumulator;
 
 			void LoadConstants();
 			void LoadIdentifiers();
+
+			const HANDLE ch = GetStdHandle(STD_OUTPUT_HANDLE);
+
+#pragma region Console_Stuff
+			void MoveCursor();
+			void ClearConsole();
+			void SetColour();
+#pragma endregion
 
 			/// <summary>
 			/// Read a string from rom
@@ -57,6 +70,8 @@ namespace SPL
 			/// </summary>
 			void Advance();
 
+			void Breakpoint();
+
 			std::map<std::string, VariableData*> vstack;
 			Stack<int> cstack;
 			Stack<VariableData*> stack;
@@ -80,7 +95,7 @@ namespace SPL
 			/// Create a new processor with a given rom
 			/// </summary>
 			/// <param name="_rom">The rom to load</param>
-			Processor(rom _rom);
+			Processor(rom _rom, bool breakpoint = false);
 			~Processor();
 		};
 	}
