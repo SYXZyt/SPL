@@ -134,7 +134,7 @@ void SPL::VirtualMachine::Processor::CursorMode()
 
 	VariableData* v = stack.Pop();
 
-	if (v->GetType() != VariableType::INT) 
+	if (v->GetType() != VariableType::INT)
 	{
 		ErrorNoExit(SPL_CURSOR_MODE_NO_INT, ErrorMessages[SPL_CURSOR_MODE_NO_INT]);
 		KILL;
@@ -180,7 +180,7 @@ void SPL::VirtualMachine::Processor::LoadConstants()
 				break;
 			default:
 				vstack[constName] = new VariableData(ReadString());
-			break;
+				break;
 		}
 	}
 
@@ -250,7 +250,7 @@ void SPL::VirtualMachine::Processor::Run()
 		{
 			SPL::Disassembling::Disassembled results = SPL::Disassembling::Disassembler::DisassembleInstruction(_rom, ptr);
 			ClearConsole();
-			
+
 			std::cout << "Breakpoint Disassembly (see bytecode.md for help reading)" << std::endl;
 			std::cout << "Stored Identifiers:" << std::endl;
 			for (int i = 0; i < identifiers.size(); i++)
@@ -474,7 +474,7 @@ void SPL::VirtualMachine::Processor::Run()
 				//Check that the variable exists
 				if (!vstack.count(name))
 				{
-					std::string params[]{name};
+					std::string params[]{ name };
 					ErrorNoExit(SPL_UNKNOWN_VAR, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_VAR], 1, params));
 					KILL;
 					break;
@@ -569,7 +569,7 @@ void SPL::VirtualMachine::Processor::Run()
 
 				if (!accumulator.CastToFloat())
 				{
-					std::string params[]{"float"};
+					std::string params[]{ "float" };
 					ErrorNoExit(SPL_CONVERSION_ERROR, GetMessageWithParams(ErrorMessages[SPL_CONVERSION_ERROR], 1, params));
 					KILL;
 				}
@@ -600,7 +600,7 @@ void SPL::VirtualMachine::Processor::Run()
 
 				if (stack.Size() < 2)
 				{
-					std::string params[]{"equ"};
+					std::string params[]{ "equ" };
 					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
 					KILL;
 					break;
@@ -732,7 +732,7 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				if (stack.Size() == 0)
 				{
-					std::string params[]{"dec"};
+					std::string params[]{ "dec" };
 					ErrorNoExit(SPL_NOT_ENOUGH_ITEMS, GetMessageWithParams(ErrorMessages[SPL_NOT_ENOUGH_ITEMS], 1, params));
 					KILL;
 					break;
@@ -849,9 +849,9 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x30:
 				CursorMode();
 				break;
-      case 0x31:
-      {
-        //We want a string to set the title, so use the built in to_string converter
+			case 0x31:
+			{
+				//We want a string to set the title, so use the built in to_string converter
 				accumulator.CastToString();
 
 				//Now we have the string, we can set the title to its value
@@ -859,9 +859,10 @@ void SPL::VirtualMachine::Processor::Run()
 
 				std::string s = v->GetString();
 				std::wstring w = std::wstring(s.begin(), s.end());
-				SetConsoleTitle(w.c_str()); 
-        delete v;
-      }
+				SetConsoleTitle(w.c_str());
+				delete v;
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};
