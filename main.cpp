@@ -142,7 +142,6 @@ std::string GetStdioInput()
 {
 	std::string line;
 	std::string output = "";
-
 	while (true)
 	{
 		std::cout << ">>>";
