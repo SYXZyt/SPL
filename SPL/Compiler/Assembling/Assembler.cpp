@@ -58,11 +58,11 @@ static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
 				Error(SPL_CONST_OVERWRITE, l->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
 			}
 		}
-		else if (SetPop* s = dynamic_cast<SetPop*>(n))
+		else if (SetPop* sp = dynamic_cast<SetPop*>(n))
 		{
-			if (std::count(consts.begin(), consts.end(), s->Name()->Token().GetLexeme()))
+			if (std::count(consts.begin(), consts.end(), sp->Name()->Token().GetLexeme()))
 			{
-				Error(SPL_CONST_OVERWRITE, s->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
+				Error(SPL_CONST_OVERWRITE, sp->Token(), ErrorMessages[SPL_CONST_OVERWRITE], "Assembler.cpp");
 			}
 		}
 	}
@@ -522,6 +522,63 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		{
 			assembled.push_back(0x2b);
 			AddRange(assembled, AssembleValue(randomNode->GetMax()));
+		}
+		else if (SPL::Compiler::Parser::Nodes::Raise* raise = dynamic_cast<SPL::Compiler::Parser::Nodes::Raise*>(n))
+		{
+			unsigned char opcode;
+			
+			switch (raise->GetErrorMessage()->Type())
+			{
+				case ValueType::STRING:
+					opcode = 0x2c;
+					break;
+				case ValueType::INT:
+					opcode = 0x2d;
+					break;
+				case ValueType::FLOAT:
+					opcode = 0x2e;
+					break;
+				case ValueType::IDENTIFIER:
+					opcode = 0x2f;
+					break;
+			}
+
+			assembled.push_back(opcode);
+
+			switch (opcode)
+			{
+				case 0x2c:
+				{
+					std::string s = raise->GetErrorMessage()->Token().GetValueString();
+					AddRange(assembled, GetAscii(Terminate(s)));
+				}
+				break;
+				case 0x2d:
+				{
+					int i = raise->GetErrorMessage()->Token().GetValueInt();
+					AddRange(assembled, IntToBytes(i));
+				}
+				break;
+				case 0x2e:
+				{
+					float f = raise->GetErrorMessage()->Token().GetValueFloat();
+					AddRange(assembled, FloatToBytes(f));
+				}
+				break;
+				case 0x2f:
+				{
+					int nameOff = GetIndex(identifiers, raise->GetErrorMessage()->Token().GetLexeme());
+					if (nameOff == -1)
+					{
+						std::string param[]{ raise->GetErrorMessage()->Token().GetLexeme() };
+						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
+					}
+
+					std::string s = raise->GetErrorMessage()->Token().GetValueString();
+					AddRange(assembled, IntToBytes(nameOff));
+				}
+				break;
+			}
 		}
 
 		else

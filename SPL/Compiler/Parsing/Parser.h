@@ -9,6 +9,7 @@
 #include "Nodes\Value.h"
 #include "Nodes\Block.h"
 #include "Nodes\Input.h"
+#include "Nodes\Raise.h"
 #include "Nodes\Single.h"
 #include "Nodes\Console.h"
 #include "Nodes\Constant.h"
@@ -109,6 +110,7 @@ namespace SPL
 				Nodes::Console* ParseConsoleStatement();
 				Nodes::Sleep* ParseSleepStatement();
 				Nodes::RandomNode* ParseRandomStatement();
+				Nodes::Raise* ParseRaiseStatement();
 				
 #pragma region Comparisons
 				Nodes::Equ* ParseEquStatement();

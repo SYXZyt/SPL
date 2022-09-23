@@ -52,6 +52,10 @@ Something to note is that the disassembly may
 | 29 | `console setcolor` | Sets the foreground of the console |
 | 2A | `sleep` | Sleep for a specified amount of milliseconds |
 | 2B | `random` | Generates a random number between 0 and an int on the stack |
+| 2C | `strraise` | Raise a string as an error message |
+| 2D | `intraise` | Raise an int as an error message |
+| 2E | `fltraise` | Raise a float as an error message |
+| 2F | `varraise` | Raise a variable as an error message |
 
 ## Breakpoints
 Running a program with the -b flag will force a break point. The breakpoint system may look confusing, but it is simple to read once you understand it.

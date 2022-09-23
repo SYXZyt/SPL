@@ -344,6 +344,9 @@
     <ClInclude Include="RNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Raise.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

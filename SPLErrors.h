@@ -10,6 +10,7 @@ enum SPL_ERROR_CODE : unsigned short
 	//Generic errors
 	SPL_STACKOVERFLOW = 9001,
 	SPL_ERROR_INVALID = 9002,
+	SPL_USER_ERROR = 9003,
 
 	//Lexer errors
 	SPL_UNTERMINATED_STRING = 1001,
@@ -71,6 +72,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 {
 	{SPL_STACKOVERFLOW, "Stack overflow!"},
 	{SPL_ERROR_INVALID, "Error code &SPL_0 does not exist"},
+	{SPL_USER_ERROR, "User threw error '&SPL_0'"},
 
 	{SPL_UNTERMINATED_STRING, "Unterminated string. Did you forget an end quote?"},
 	{SPL_UNRECOGNISED_ESCAPE, "'&SPL_0' is not a recognised escape sequence"},

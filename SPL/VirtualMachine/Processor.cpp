@@ -791,7 +791,67 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x2c:
 			{
-				//We want a string to set the title, so use the built in to_string converter
+				std::string s = ReadString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+			}
+			break;
+			case 0x2d:
+			{
+				int i = ReadInt();
+				VariableData* v = new VariableData(i);
+				stack.Push(v);
+				accumulator.CastToString();
+				v = stack.Pop(); //v should be deleted by the cast, so we can re-write it, without worrying about it's memory
+
+				std::string s = v->GetString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+
+				delete v;
+			}
+			break;
+			case 0x2e:
+			{
+				float f = ReadFloat();
+				VariableData* v = new VariableData(f);
+				stack.Push(v);
+				accumulator.CastToString();
+				v = stack.Pop();
+
+				std::string s = v->GetString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+
+				delete v;
+			}
+			break;
+			case 0x2f:
+			{
+				std::string name = identifiers[ReadInt()];
+				stack.Push(vstack[name]);
+				accumulator.CastToString();
+				VariableData* v = stack.Pop();
+
+				std::string s = v->GetString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+			}
+			break;
+			case 0x30:
+				CursorMode();
+				break;
+      case 0x31:
+      {
+        //We want a string to set the title, so use the built in to_string converter
 				accumulator.CastToString();
 
 				//Now we have the string, we can set the title to its value
@@ -799,14 +859,9 @@ void SPL::VirtualMachine::Processor::Run()
 
 				std::string s = v->GetString();
 				std::wstring w = std::wstring(s.begin(), s.end());
-				SetConsoleTitle(w.c_str());
-
-				delete v;
-			}
-			break;
-			case 0x2d:
-				CursorMode();
-				break;
+				SetConsoleTitle(w.c_str()); 
+        delete v;
+      }
 			default:
 			{
 				std::string params[1]{};

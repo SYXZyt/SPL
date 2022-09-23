@@ -269,6 +269,16 @@ SPL::Compiler::Parser::Nodes::RandomNode* SPL::Compiler::Parser::Parser::ParseRa
     return new Nodes::RandomNode(max, t);
 }
 
+SPL::Compiler::Parser::Nodes::Raise* SPL::Compiler::Parser::Parser::ParseRaiseStatement()
+{
+    Token t = PeekCurrent();
+    Advance();
+
+    Value* value = ParseExpression();
+
+    return new Raise(value, t);
+}
+
 SPL::Compiler::Parser::Nodes::Equ* SPL::Compiler::Parser::Parser::ParseEquStatement()
 {
     Token t = PeekCurrent();
@@ -465,6 +475,7 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == "console") return ParseConsoleStatement();
         else if (lex == "sleep") return ParseSleepStatement();
         else if (lex == "random") return ParseRandomStatement();
+        else if (lex == "raise") return ParseRaiseStatement();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};
