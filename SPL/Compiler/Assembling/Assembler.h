@@ -15,6 +15,7 @@
 #include "../Parsing/Nodes/Sleep.h"
 #include "../Parsing/Nodes/Block.h"
 #include "../Parsing/Nodes/Input.h"
+#include "../Parsing/Nodes/Raise.h"
 #include "../Parsing/Nodes/Console.h"
 #include "../Parsing/Nodes/Constant.h"
 #include "../Parsing/Nodes/Stack/Pop.h"

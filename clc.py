@@ -1,4 +1,3 @@
-
 import os
 
 #https://pythonexamples.org/python-get-list-of-all-files-in-directory-and-sub-directories/

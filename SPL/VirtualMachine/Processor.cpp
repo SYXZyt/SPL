@@ -757,6 +757,63 @@ void SPL::VirtualMachine::Processor::Run()
 				stack.Push(v);
 			}
 			break;
+			case 0x2c:
+			{
+				std::string s = ReadString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+			}
+			break;
+			case 0x2d:
+			{
+				int i = ReadInt();
+				VariableData* v = new VariableData(i);
+				stack.Push(v);
+				accumulator.CastToString();
+				v = stack.Pop(); //v should be deleted by the cast, so we can re-write it, without worrying about it's memory
+
+				std::string s = v->GetString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+
+				delete v;
+			}
+			break;
+			case 0x2e:
+			{
+				float f = ReadFloat();
+				VariableData* v = new VariableData(f);
+				stack.Push(v);
+				accumulator.CastToString();
+				v = stack.Pop();
+
+				std::string s = v->GetString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+
+				delete v;
+			}
+			break;
+			case 0x2f:
+			{
+				std::string name = identifiers[ReadInt()];
+				stack.Push(vstack[name]);
+				accumulator.CastToString();
+				VariableData* v = stack.Pop();
+
+				std::string s = v->GetString();
+				std::string params[1]{};
+				params[0] = s;
+				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
+				KILL;
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};

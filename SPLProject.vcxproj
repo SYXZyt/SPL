@@ -178,6 +178,7 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\Raise.h" />
     <ClInclude Include="RNG.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\RandomNode.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Sleep.h" />

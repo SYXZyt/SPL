@@ -304,24 +304,27 @@ int main(int argc, char** argv)
 	else if (argc == 2)
 	{
 		const char* file = argv[1];
+		bool getOffConsole = false;
 
 		if (std::string(file) == "-d")
 		{
 			disassemble = true;
+			getOffConsole = true;
 		}
 		else if (std::string(file) == "-b")
 		{
 			breakpoint = true;
-		}
-		else
-		{
-			std::cout << versionInfo << std::endl;
+			getOffConsole = true;
 		}
 
-		while (true)
+		if (getOffConsole)
 		{
-			input = GetStdioInput();
-			ExecuteCode(input, inputName);
+			std::cout << versionInfo << std::endl;
+			while (true)
+			{
+				input = GetStdioInput();
+				ExecuteCode(input, inputName);
+			}
 		}
 
 		if (!FileExists(file))
