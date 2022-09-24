@@ -56,6 +56,8 @@ Something to note is that the disassembly may
 | 2D | `intraise` | Raise an int as an error message |
 | 2E | `fltraise` | Raise a float as an error message |
 | 2F | `varraise` | Raise a variable as an error message |
+| 30 | `console cursor` ||
+| 31 | `console title` ||
 
 ## Breakpoints
 Running a program with the -b flag will force a break point. The breakpoint system may look confusing, but it is simple to read once you understand it.

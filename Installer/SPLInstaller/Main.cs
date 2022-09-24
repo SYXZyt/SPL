@@ -11,10 +11,7 @@ namespace SPLInstaller
         private static bool isAlreadyBeenInstalled = false;
         private static readonly byte[] content = Properties.Resources.content;
 
-        private static readonly ProgressBar progressBar;
         private static DirectoryInfo path;
-
-        private static (int left, int top) consolePosition;
 
         private static void CheckRegistry()
         {
@@ -25,22 +22,11 @@ namespace SPLInstaller
 
         private static void WriteRegistry()
         {
-            progressBar.Draw((consolePosition.left, consolePosition.top));
-
             Registry.SetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\SYXZ\\SPL", "path", $"{path.FullName}");
-
-            progressBar.UpdateProgress(3);
-            progressBar.Draw((consolePosition.left, consolePosition.top));
         }
 
-        private static void WriteProgramFiles(bool hideProgress = false)
+        private static void WriteProgramFiles()
         {
-            //In order to extract the data, we must copy the zip to a temp file
-            if (!hideProgress)
-            {
-                progressBar.Draw((consolePosition.left, consolePosition.top));
-            }
-
             if (File.Exists("temp.zip")) File.Delete("temp.zip");
 
             FileStream fs = new("temp.zip", FileMode.CreateNew);
@@ -50,12 +36,6 @@ namespace SPLInstaller
             }
             fs.Close();
 
-            if (!hideProgress)
-            {
-                progressBar.UpdateProgress(1);
-                progressBar.Draw((consolePosition.left, consolePosition.top));
-            }
-
             //Now we have extracted the zip file from memory into a file, we can then extract it before cleaning up our temp file
             string prefix = "C:/Program Files/SYXZ/SPL/";
             string[] files = new string[]
@@ -64,6 +44,7 @@ namespace SPLInstaller
                 "bytecode.md",
                 "SPL.exe",
             };
+
             foreach (string file in files)
             {
                 string fPath = prefix + file;
@@ -74,39 +55,22 @@ namespace SPLInstaller
             }
 
             ZipFile.ExtractToDirectory("temp.zip", path.FullName);
-            
             File.Delete("temp.zip");
-
-            if (!hideProgress)
-            {
-                progressBar.UpdateProgress(2);
-                progressBar.Draw((consolePosition.left, consolePosition.top));
-            }
         }
 
         private static void WritePath()
         {
-            progressBar.Draw((consolePosition.left, consolePosition.top));
-
             string name = "PATH";
             EnvironmentVariableTarget scope = EnvironmentVariableTarget.Machine;
             string oldValue = Environment.GetEnvironmentVariable(name, scope);
             string newValue = $"{oldValue};{path.FullName}";
             Environment.SetEnvironmentVariable(name, newValue, scope);
-
-            progressBar.UpdateProgress(4);
-            progressBar.Draw((consolePosition.left, consolePosition.top));
         }
 
         private static void CreateShortcut()
         {
-            progressBar.Draw((consolePosition.left, consolePosition.top));
-
             string shortcutFolder = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu).Replace("\\", "/");
             Shortcut.CreateShortcut(shortcutFolder + "/SPL.lnk", path.FullName + "/SPL.exe", path.FullName, "Launch SPL terminal");
-
-            progressBar.UpdateProgress(5);
-            progressBar.Draw((consolePosition.left, consolePosition.top));
         }
 
         private static void GetInstalledPath()
@@ -125,34 +89,37 @@ namespace SPLInstaller
 
         private static void Main()
         {
+            InstallationProcess process = new();
             CheckRegistry();
 
             if (!ConfirmationAndInput.ConfirmInstall()) return;
 
             if (!isAlreadyBeenInstalled)
             {
+                //Now we know that we are installing from scratch, we can load up our installer with the required functions
+                InstallTask writeProgramFiles = new(WriteProgramFiles);
+                InstallTask writeRegistry = new(WriteRegistry);
+                InstallTask writePath = new(WritePath);
+                InstallTask writeShortcut = new(CreateShortcut);
+
+                process.AddTask(writeProgramFiles);
+                process.AddTask(writeRegistry);
+                process.AddTask(writePath);
+                process.AddTask(writeShortcut);
+
                 path = Directory.CreateDirectory(ConfirmationAndInput.GetInstallPath());
-
                 Console.CursorVisible = false;
-                Console.WriteLine("Installing");
-                consolePosition = Console.GetCursorPosition();
-                WriteProgramFiles();
-                WriteRegistry();
-                WritePath();
-                CreateShortcut();
 
-                progressBar.UpdateProgress(5);
-                progressBar.Draw((consolePosition.left, consolePosition.top));
-                Console.SetCursorPosition(consolePosition.left, consolePosition.top + 2);
-                Console.WriteLine("Install complete. It is recommended to run SPL through command prompt, using the SPL command");
+                process.ExecuteProcess();
                 Console.WriteLine(@"Docs available at https:\SYXZyt.github.io\SPL\docs\index.html");
-                Console.CursorVisible = false;
+                Console.CursorVisible = true;
                 Console.ReadKey();
             }
             else
             {
                 Console.WriteLine("SPL has already been installed. Would you like to update/repair the install?");
                 if (!ConfirmationAndInput.ConfirmInstall()) return;
+
                 GetInstalledPath();
                 if (path is null)
                 {
@@ -160,15 +127,15 @@ namespace SPLInstaller
                     return;
                 }
 
-                WriteProgramFiles(true);
+                InstallTask writeProgramFiles = new(WriteProgramFiles);
+                process.AddTask(writeProgramFiles);
+
+                Console.CursorVisible = false;
+                process.ExecuteProcess();
+                Console.CursorVisible = true;
+
+                if (File.Exists("temp.zip")) File.Delete("temp.zip");
             }
-
-            if (File.Exists("temp.zip")) File.Delete("temp.zip");
-        }
-
-        static Program()
-        {
-            progressBar = new(5);
         }
     }
 }
