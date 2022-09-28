@@ -8,6 +8,7 @@
 #include "TokenType.h"
 #include "../../../String.h"
 #include "../../../Vector2.h"
+#include "../../../Keyword.h"
 #include "../../../SPLErrors.h"
 #include "../../../ErrorStream.h"
 
