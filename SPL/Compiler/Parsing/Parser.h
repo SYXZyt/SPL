@@ -22,6 +22,7 @@
 #include "Nodes\Maths\Dec.h"
 #include "Nodes\Maths\Mod.h"
 #include "Nodes\Stack\Pop.h"
+#include "../../../Keyword.h"
 #include "Nodes\Stack\Push.h"
 #include "Nodes\RandomNode.h"
 #include "Nodes\Stack\SetPop.h"

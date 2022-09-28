@@ -835,15 +835,19 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x2f:
 			{
 				std::string name = identifiers[ReadInt()];
-				stack.Push(vstack[name]);
+				VariableData* v = new VariableData(*vstack[name]);
+
+				stack.Push(v);
 				accumulator.CastToString();
-				VariableData* v = stack.Pop();
+				v = stack.Pop();
 
 				std::string s = v->GetString();
 				std::string params[1]{};
 				params[0] = s;
 				ErrorNoExit(SPL_USER_ERROR, GetMessageWithParams(ErrorMessages[SPL_USER_ERROR], 1, params));
 				KILL;
+
+				delete v;
 			}
 			break;
 			case 0x30:

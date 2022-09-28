@@ -8,6 +8,7 @@
 #include "../../../Int.h"
 #include "../../../Float.h"
 #include "../../../String.h"
+#include "../../../Keyword.h"
 #include "../../../ErrorStream.h"
 #include "../Parsing/Nodes/Let.h"
 #include "../Parsing/Nodes/Free.h"
@@ -113,11 +114,11 @@ namespace SPL
 
 			static std::map<const std::string, unsigned char> ConsoleSubOps
 			{
-				{"setpos", 0x27},
-				{"clear", 0x28},
-				{"setcolor", 0x29},
-				{"title", 0x2c},
-				{"cursor", 0x2d},
+				{Keywords[CNS_SETPOS], 0x27},
+				{Keywords[CNS_CLEAR], 0x28},
+				{Keywords[CNS_SETCOLOR], 0x29},
+				{Keywords[CNS_TITLE], 0x2c},
+				{Keywords[CNS_CURSOR], 0x2d},
 			};
 		}
 	}
