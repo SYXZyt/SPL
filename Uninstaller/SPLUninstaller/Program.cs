@@ -32,6 +32,7 @@ namespace SPLUninstaller
             if (File.Exists(path + "readme.md")) File.Delete(path + "readme.md");
             if (File.Exists(path + "bytecode.md")) File.Delete(path + "bytecode.md");
             if (File.Exists(path + "spl.exe")) File.Delete(path + "spl.exe");
+            if (Directory.Exists(path)) Directory.Delete(path);
         }
     }
 }
