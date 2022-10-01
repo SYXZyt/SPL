@@ -10,7 +10,7 @@ The compiler and virtual machine are all included into one visual studio solutio
 As of right now, SPL has no way to code using multiple SPL files.
 
 You can use the `-d` flag to disassemble any input the virtual machine is given
-You can use the `-b` flag to use breakpoints. See [bytecode.md][https://github.com/SYXZyt/SPL/blob/master/README.md] for help with breakpoints
+You can use the `-b` flag to use breakpoints. See [https://github.com/SYXZyt/SPL/blob/master/README.md] for help with breakpoints
 
 ## Variables
 Variables can be updated using the `Let` keyword. This keyword will tell the virtual machine that we are wanting to assign a value in memory.
