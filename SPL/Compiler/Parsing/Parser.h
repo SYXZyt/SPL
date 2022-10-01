@@ -5,12 +5,14 @@
 #include "Nodes\Let.h"
 #include "Nodes\Free.h"
 #include "Nodes\Node.h"
+#include "Nodes\IsInt.h"
 #include "Nodes\Sleep.h"
 #include "Nodes\Value.h"
 #include "Nodes\Block.h"
 #include "Nodes\Input.h"
 #include "Nodes\Raise.h"
 #include "Nodes\Single.h"
+#include "Nodes\IsFloat.h"
 #include "Nodes\Console.h"
 #include "Nodes\Constant.h"
 #include "Nodes\Maths\Add.h"
@@ -136,6 +138,8 @@ namespace SPL
 				Nodes::Casting::ToFloat* ParseToFloatStatement();
 				Nodes::Casting::ToInt* ParseToIntStatement();
 				Nodes::Casting::ToString* ParseToStringStatement();
+				Nodes::IsInt* ParseIsInt();
+				Nodes::IsFloat* ParseIsFloat();
 #pragma endregion
 
 				Nodes::Value* ParseExpression();

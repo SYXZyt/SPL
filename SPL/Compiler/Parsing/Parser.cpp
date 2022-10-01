@@ -410,6 +410,20 @@ SPL::Compiler::Parser::Nodes::Casting::ToString* SPL::Compiler::Parser::Parser::
     return toString;
 }
 
+SPL::Compiler::Parser::Nodes::IsInt* SPL::Compiler::Parser::Parser::ParseIsInt()
+{
+    IsInt* isInt = new IsInt(PeekCurrent());
+    Advance();
+    return isInt;
+}
+
+SPL::Compiler::Parser::Nodes::IsFloat* SPL::Compiler::Parser::Parser::ParseIsFloat()
+{
+    IsFloat* isFloat = new IsFloat(PeekCurrent());
+    Advance();
+    return isFloat;
+}
+
 SPL::Compiler::Parser::Nodes::Value* SPL::Compiler::Parser::Parser::ParseExpression()
 {
     //All valid types that an expression can be. In the future we need to check for comparisons.
@@ -476,6 +490,8 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         else if (lex == Keywords[KWD_SLEEP]) return ParseSleepStatement();
         else if (lex == Keywords[KWD_RANDOM]) return ParseRandomStatement();
         else if (lex == Keywords[KWD_RAISE]) return ParseRaiseStatement();
+        else if (lex == Keywords[KWD_TYPECHECK_INT]) return ParseIsInt();
+        else if (lex == Keywords[KWD_TYPECHECK_FLT]) return ParseIsFloat();
         else
         {
             std::string params[]{ PeekCurrent().GetLexeme()};

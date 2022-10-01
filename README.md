@@ -70,6 +70,8 @@ SPL features various instructions all with different functions. Many of these in
 | `sleep` [integer] | Sleep for a set amount of milliseconds |
 | `random [integer]` | Pick a random number from 0 (inclusive) to the provided int (exclusive) and push the result to the stack |
 | `raise` [value] | Throw a user error |
+| `is_int` | Checks the current value, on the stack, can be converted to an integer, and pushes 1 onto the stack if it can be, 0 otherwise
+| `is_float` | Checks the current value, on the stack, can be converted to a floating point number, and pushes 1 onto the stack if it can be, 0 otherwise
 
 It is very important that you remember to do all maths operations in reverse. Lets say you want to do `10 / 5`, the SPL would be
 ```

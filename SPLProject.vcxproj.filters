@@ -275,9 +275,6 @@
     <ClInclude Include="SPL\VirtualMachine\Processor.h">
       <Filter>Header Files\SPL\VirtualMachine</Filter>
     </ClInclude>
-    <ClInclude Include="SPL\VirtualMachine\SPLExitCodes.h">
-      <Filter>Header Files\SPL\VirtualMachine</Filter>
-    </ClInclude>
     <ClInclude Include="SPL\VirtualMachine\VariableData.h">
       <Filter>Header Files\SPL\VirtualMachine</Filter>
     </ClInclude>
@@ -348,6 +345,15 @@
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="Keyword.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\IsInt.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\IsFloat.h">
+      <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

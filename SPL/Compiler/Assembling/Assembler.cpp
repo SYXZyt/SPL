@@ -174,13 +174,15 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 
 	for (Node* n : nodes.nodes)
 	{
+		if (n == nullptr) continue;
+
 		//Now we need to check what type of node this is, to properly assemble it
 		if (Let* let = dynamic_cast<Let*>(n))
 		{
 			int nameOff = GetIndex(identifiers, let->Name().GetLexeme());
 			if (nameOff == -1)
 			{
-				std::string param[]{let->Name().GetLexeme()};
+				std::string param[]{ let->Name().GetLexeme() };
 				Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
 			}
 
@@ -282,7 +284,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 					int nameOff = GetIndex(identifiers, print->ToPrint()->Token().GetLexeme());
 					if (nameOff == -1)
 					{
-						std::string param[]{ print->ToPrint()->Token().GetLexeme()};
+						std::string param[]{ print->ToPrint()->Token().GetLexeme() };
 						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
 					}
 					AddRange(data, IntToBytes(nameOff));
@@ -378,7 +380,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 					int nameOff = GetIndex(identifiers, push->GetValue()->Token().GetLexeme());
 					if (nameOff == -1)
 					{
-						std::string param[]{ push->GetValue()->Token().GetLexeme()};
+						std::string param[]{ push->GetValue()->Token().GetLexeme() };
 						Error(SPL_IDENTIFIER_NOT_FOUND, *n, GetMessageWithParams(ErrorMessages[SPL_IDENTIFIER_NOT_FOUND], 1, param), "Assembler.cpp");
 					}
 					AddRange(data, IntToBytes(nameOff));
@@ -507,7 +509,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			//Check we have a valid subop
 			if (!ConsoleSubOps.count(subop))
 			{
-				std::string params[]{subop};
+				std::string params[]{ subop };
 				Error(SPL_UNKNOWN_CONSOLE_OP, *n, GetMessageWithParams(ErrorMessages[SPL_UNKNOWN_CONSOLE_OP], 1, params), "Assembler.cpp");
 			}
 
@@ -526,7 +528,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 		else if (SPL::Compiler::Parser::Nodes::Raise* raise = dynamic_cast<SPL::Compiler::Parser::Nodes::Raise*>(n))
 		{
 			unsigned char opcode;
-			
+
 			switch (raise->GetErrorMessage()->Type())
 			{
 				case ValueType::STRING:
@@ -580,14 +582,18 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 				break;
 			}
 		}
+		else if (IsInt* isInt = dynamic_cast<IsInt*>(n))
+		{
+			assembled.push_back(0x32);
+		}
+		else if (IsFloat* isFloat = dynamic_cast<IsFloat*>(n))
+		{
+			assembled.push_back(0x33);
+		}
 
 		else
 		{
-			//C28182 is a false positive in this scenario, so it can just be disabled
-#pragma warning( push )
-#pragma warning( disable : 28182 )
 			Error(*n, "Node does not have an assemble function available. This is a dev error and cannot be resolved by changing SPL input", "Assembler.cpp");
-#pragma warning( pop )
 		}
 
 	} //End of loop

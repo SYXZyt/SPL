@@ -12,7 +12,7 @@
 #include "../../Float.h"
 #include "Accumulator.h"
 #include "VariableData.h"
-#include "SPLExitCodes.h"
+#include "../../Keyword.h"
 #include "../../SPLErrors.h"
 #include "../../ErrorStream.h"
 #include "../Disassembling/Disassembler.h"

@@ -244,42 +244,10 @@ SPL::Compiler::Tokenisation::Lexer::Lexer(std::string input, std::string inputNa
 
 	Advance();
 
-	keywords =
+	//Move all strings from keyword map, into a list member, as we don't need to worry about the SPL_KEYWORDS value, just the string
+	std::map<SPL_KEYWORDS, std::string>::iterator it;
+	for (it = Keywords.begin(); it != Keywords.end(); it++)
 	{
-		Keywords[KWD_PRINT],
-		Keywords[KWD_PRINTLN],
-		Keywords[KWD_LET],
-		Keywords[KWD_CONST],
-		Keywords[KWD_GOTO],
-		Keywords[KWD_EXIT],
-		Keywords[KWD_PUSH],
-		Keywords[KWD_POP],
-		Keywords[KWD_SETPOP],
-		Keywords[KWD_ADD],
-		Keywords[KWD_SUB],
-		Keywords[KWD_MUL],
-		Keywords[KWD_DIV],
-		Keywords[KWD_POW],
-		Keywords[KWD_CAST_FLOAT],
-		Keywords[KWD_CAST_INT],
-		Keywords[KWD_CAST_STRING],
-		Keywords[KWD_FREE],
-		Keywords[KWD_CONCAT],
-		Keywords[KWD_CALL],
-		Keywords[KWD_RET],
-		Keywords[KWD_EQU],
-		Keywords[KWD_NEQ],
-		Keywords[KWD_GRT],
-		Keywords[KWD_GRT_EQU],
-		Keywords[KWD_LWR],
-		Keywords[KWD_LWR_EQU],
-		Keywords[KWD_INC],
-		Keywords[KWD_DEC],
-		Keywords[KWD_INPUT],
-		Keywords[KWD_MOD],
-		Keywords[KWD_CONSOLE],
-		Keywords[KWD_SLEEP],
-		Keywords[KWD_RANDOM],
-		Keywords[KWD_RAISE],
-	};
+		keywords.push_back(it->second);
+	}
 }

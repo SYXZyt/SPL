@@ -440,6 +440,75 @@ bool SPL::VirtualMachine::Accumulator::CastToInt()
 	return true;
 }
 
+void SPL::VirtualMachine::Accumulator::IsInt()
+{
+	VariableData* v = stack->Pop();
+
+	if (v->GetType() == VariableType::INT || v->GetType() == VariableType::FLOAT)
+	{
+		//If the provided type is an int or a float, we can automatically just push 1, as this will always be an int, and a float can be rounded
+		delete v;
+		v = new VariableData(1);
+		stack->Push(v);
+	}
+	else
+	{
+		bool nonNumeric = false;
+
+		std::string s = v->GetString();
+
+		for (char s : s)
+		{
+			//Make sure that all characters are numeric
+			if (!(s <= '9' && s >= '0'))
+			{
+				nonNumeric = true;
+				break;
+			}
+		}
+
+		int res = !nonNumeric;
+
+		delete v;
+		v = new VariableData(res);
+		stack->Push(v);
+	}
+}
+
+void SPL::VirtualMachine::Accumulator::IsFloat()
+{
+	//Basically the isInt function, but with a few extra checks
+	VariableData* v = stack->Pop();
+
+	if (v->GetType() == VariableType::INT || v->GetType() == VariableType::FLOAT)
+	{
+		delete v;
+		v = new VariableData(1);
+		stack->Push(v);
+	}
+	else
+	{
+		bool nonNumeric = false;
+
+		std::string s = v->GetString();
+
+		for (char s : s)
+		{
+			if (!((s <= '9' && s >= '0') || s == '.'))
+			{
+				nonNumeric = true;
+				break;
+			}
+		}
+
+		int res = !nonNumeric;
+
+		delete v;
+		v = new VariableData(res);
+		stack->Push(v);
+	}
+}
+
 bool SPL::VirtualMachine::Accumulator::EqualComparison()
 {
 	COMPARISON(== );

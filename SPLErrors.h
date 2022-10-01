@@ -59,6 +59,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_COLOUR_EXPECTED_INT = 1409,
 	SPL_CONDITION_WRONG_PARAMS = 1410,
 	SPL_CURSOR_MODE_NO_INT = 1411,
+	SPL_NO_ITEM = 1412,
 };
 
 static std::ostream& operator<<(std::ostream& os, SPL_ERROR_CODE code)
@@ -92,7 +93,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_FREE_NOT_VAR, "'free' keyword expected a variable name to follow"},
 	{SPL_EXPRESSION, "Expected an expression"},
 	{SPL_UNEXPECTED_KEYWORD, "Keyword '&SPL_0' was unexpected at this time"},
-	{SPL_UNEXPECTED_TOKEN, "'&SPL_0' was unexpected at this time"},
+	{SPL_UNEXPECTED_TOKEN, "Identifier '&SPL_0' was unexpected at this time"},
 	{SPL_CONST_NOT_LITERAL, "Constant value could not be parsed at compile time"},
 	{SPL_INVALID_CONSOLE_OP, "Console sub-operation must be a valid keyword"},
 	{SPL_SLEEP_NO_INT, "'sleep' expected an integer to follow"},
@@ -112,6 +113,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_CONVERSION_ERROR, "Cannot convert value to &SPL_0"},
 	{SPL_UNKNOWN_OPCODE, "Unknown opcode '0x&SPL_0'"},
 	{SPL_NOT_ENOUGH_ITEMS, "Calculation '&SPL_0' expected items on the stack"},
+	{SPL_NO_ITEM, "Calculation '&SPL_0' expected an item on the stack"},
 	{SPL_SETPOS_EXPECTED_INT, "Console sub-operation 'setpos' expected two int values"},
 	{SPL_COLOUR_EXPECTED_INT, "Console sub-operation 'setcolor' expected an int values"},
 	{SPL_CONDITION_WRONG_PARAMS, "Conditional '&SPL_0' expected two values on the stack"},

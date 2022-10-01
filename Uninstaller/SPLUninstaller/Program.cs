@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System.Diagnostics;
 
 namespace SPLUninstaller
 {
@@ -29,14 +28,10 @@ namespace SPLUninstaller
             if (File.Exists(path + "\\SPL.lnk")) File.Delete(path + "\\SPL.lnk");
             if (File.Exists(path + "\\UninstallSPL.lnk") )File.Delete(path + "\\UninstallSPL.lnk");
 
-            path = @"c:\Program Files\SYXZ\SPL";
+            path = @"c:\Program Files\SYXZ\SPL\";
             if (File.Exists(path + "readme.md")) File.Delete(path + "readme.md");
             if (File.Exists(path + "bytecode.md")) File.Delete(path + "bytecode.md");
             if (File.Exists(path + "spl.exe")) File.Delete(path + "spl.exe");
-            if (File.Exists(path + "vc.bat")) File.Delete(path + "vc.bat");
-            if (File.Exists(path + "VersionController.exe")) File.Delete(path + "VersionController.exe");
-
-            Process.Start("cmd.exe", "/C choice /C Y /N /D Y /T 3 & del UninstallSPL.exe");
         }
     }
 }

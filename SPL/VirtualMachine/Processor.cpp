@@ -867,6 +867,36 @@ void SPL::VirtualMachine::Processor::Run()
 				delete v;
 			}
 			break;
+			case 0x32:
+			{
+				//Check that there is a value
+				if (stack.Size() == 0)
+				{
+					std::string params[1]{};
+					params[0] = Keywords[KWD_TYPECHECK_INT];
+					ErrorNoExit(SPL_NO_ITEM, GetMessageWithParams(ErrorMessages[SPL_NO_ITEM], 1, params));
+					KILL;
+					break;
+				}
+
+				accumulator.IsInt();
+			}
+			break;
+			case 0x33:
+			{
+				//Check that there is a value
+				if (stack.Size() == 0)
+				{
+					std::string params[1]{};
+					params[0] = Keywords[KWD_TYPECHECK_INT];
+					ErrorNoExit(SPL_NO_ITEM, GetMessageWithParams(ErrorMessages[SPL_NO_ITEM], 1, params));
+					KILL;
+					break;
+				}
+
+				accumulator.IsFloat();
+			}
+			break;
 			default:
 			{
 				std::string params[1]{};
@@ -893,7 +923,7 @@ SPL::VirtualMachine::Processor::Processor(rom _rom, bool breakpoint)
 	terminate = false;
 	ptr = -1;
 	Advance();
-	code = SPL_EXIT_SUCCESS;
+	code = 0;
 	accumulator = Accumulator(stack);
 	LoadConstants();
 	LoadIdentifiers();

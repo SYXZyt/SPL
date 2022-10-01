@@ -40,6 +40,8 @@ enum SPL_KEYWORDS
 	KWD_SLEEP,
 	KWD_RANDOM,
 	KWD_RAISE,
+	KWD_TYPECHECK_INT,
+	KWD_TYPECHECK_FLT,
 
 	CNS_SETPOS,
 	CNS_CLEAR,
@@ -85,6 +87,8 @@ static std::map<const SPL_KEYWORDS, std::string> Keywords
 	{KWD_SLEEP, "sleep"},
 	{KWD_RANDOM, "random"},
 	{KWD_RAISE, "raise"},
+	{KWD_TYPECHECK_INT, "is_int"},
+	{KWD_TYPECHECK_FLT, "is_float"},
 	
 	{CNS_SETPOS, "setpos"},
 	{CNS_CLEAR, "clear"},

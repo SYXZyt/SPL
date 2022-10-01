@@ -1,2 +1,23 @@
-const pi 3.1415926
-raise pi
+:main
+	;Get the users input, and store it to a variable
+	println "Please enter an expression"
+	input
+	setpop userInput
+
+	push userInput
+	is_int
+	push 0
+	neq notInt
+	println "Input is an int"
+	exit 0
+	:notInt
+
+	push userInput
+	is_float
+	push 0
+	neq notFloat
+	println "Input is a float"
+	exit 0
+
+	:notFloat
+	println "Input is a string"

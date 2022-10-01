@@ -68,6 +68,16 @@ namespace SPL
 			/// <returns>False if the cast failed</returns>
 			bool CastToInt();
 
+			/// <summary>
+			/// Check if a value can be cast to an int
+			/// </summary>
+			void IsInt();
+			
+			/// <summary>
+			/// Check if a value can be cast to a float
+			/// </summary>
+			void IsFloat();
+
 			bool EqualComparison();
 			bool NotEqualComparison();
 			bool GreaterComparison();

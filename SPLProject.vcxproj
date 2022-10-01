@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
-    <TargetName>spl</TargetName>
+    <TargetName>SPL</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
-    <TargetName>spl</TargetName>
+    <TargetName>SPL</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
-    <TargetName>spl</TargetName>
+    <TargetName>SPL</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
-    <TargetName>spl</TargetName>
+    <TargetName>SPL</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -178,6 +178,9 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dynamic.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\IsFloat.h" />
+    <ClInclude Include="SPL\Compiler\Parsing\Nodes\IsInt.h" />
     <ClInclude Include="Keyword.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Raise.h" />
     <ClInclude Include="RNG.h" />
@@ -199,7 +202,6 @@
     <ClInclude Include="SPLErrors.h" />
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\Comparisons\Equ.h" />
     <ClInclude Include="SPL\VirtualMachine\Accumulator.h" />
-    <ClInclude Include="SPL\VirtualMachine\SPLExitCodes.h" />
     <ClInclude Include="SPL\Disassembling\Disassembler.h" />
     <ClInclude Include="Float.h" />
     <ClInclude Include="Int.h" />
