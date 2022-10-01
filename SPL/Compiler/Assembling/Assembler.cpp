@@ -613,10 +613,6 @@ SPL::Compiler::Assembler::Assembler::Assembler(std::vector<Node*> nodes, const c
 		{
 			if (!std::count(identifiers.begin(), identifiers.end(), l->Name().GetLexeme())) identifiers.push_back(l->Name().GetLexeme());
 		}
-		else if (SetPop* s = dynamic_cast<SetPop*>(n))
-		{
-			if (!std::count(identifiers.begin(), identifiers.end(), s->Name()->Token().GetLexeme())) identifiers.push_back(s->Name()->Token().GetLexeme());
-		}
 
 		if (Constant* c = dynamic_cast<Constant*>(n))
 		{

@@ -3,10 +3,6 @@
 #pragma region Defines
 #define KILL terminate = true
 
-#define CLRSS(ss) \
-ss.str("");\
-ss.clear()
-
 #define LOCKSTRINGFROMCALC(calcName) \
 std::string params[] {std::string(calcName)}; \
 ErrorNoExit(SPL_STRING_UNEXPECTED, GetMessageWithParams(ErrorMessages[SPL_STRING_UNEXPECTED], 1, params)); \
@@ -226,12 +222,6 @@ void SPL::VirtualMachine::Processor::Advance()
 	ptr++;
 }
 
-void SPL::VirtualMachine::Processor::Breakpoint()
-{
-	ClearConsole();
-	std::cout << "Variables:" << std::endl;
-}
-
 void SPL::VirtualMachine::Processor::Run()
 {
 	while (true)
@@ -431,9 +421,8 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x0d: //call
 			{
-				int temp = ReadInt();
-				cstack.Push(ptr);
-				ptr = temp;
+				cstack.Push(ptr + 1);
+				ptr = ReadInt();
 			}
 			break;
 			case 0x0e: //ret
@@ -479,7 +468,6 @@ void SPL::VirtualMachine::Processor::Run()
 					KILL;
 					break;
 				}
-
 				stack.Push(new VariableData(*vstack[name]));
 			}
 			break;
@@ -617,14 +605,6 @@ void SPL::VirtualMachine::Processor::Run()
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
 
-				if (stack.Size() < 2)
-				{
-					std::string params[]{ "neq" };
-					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
-					KILL;
-					break;
-				}
-
 				if (!accumulator.NotEqualComparison())
 				{
 					ptr = failOffset;
@@ -635,14 +615,6 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
-
-				if (stack.Size() < 2)
-				{
-					std::string params[]{ "grt" };
-					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
-					KILL;
-					break;
-				}
 
 				if (!accumulator.GreaterComparison())
 				{
@@ -655,14 +627,6 @@ void SPL::VirtualMachine::Processor::Run()
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
 
-				if (stack.Size() < 2)
-				{
-					std::string params[]{ "grtequ" };
-					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
-					KILL;
-					break;
-				}
-
 				if (!accumulator.GreaterEqualComparison())
 				{
 					ptr = failOffset;
@@ -674,14 +638,6 @@ void SPL::VirtualMachine::Processor::Run()
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
 
-				if (stack.Size() < 2)
-				{
-					std::string params[]{ "lwr" };
-					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
-					KILL;
-					break;
-				}
-
 				if (!accumulator.LessComparison())
 				{
 					ptr = failOffset;
@@ -692,14 +648,6 @@ void SPL::VirtualMachine::Processor::Run()
 			{
 				//Read the int offset to jump to if the comparison fails
 				int failOffset = ReadInt();
-
-				if (stack.Size() < 2)
-				{
-					std::string params[]{ "lwrequ" };
-					ErrorNoExit(SPL_CONDITION_WRONG_PARAMS, GetMessageWithParams(ErrorMessages[SPL_CONDITION_WRONG_PARAMS], 1, params));
-					KILL;
-					break;
-				}
 
 				if (!accumulator.LessEqualComparison())
 				{
@@ -752,7 +700,7 @@ void SPL::VirtualMachine::Processor::Run()
 			case 0x25:
 			{
 				std::string input;
-				std::getline(std::cin, input);
+				std::cin >> input;
 				stack.Push(new VariableData(input));
 			}
 			break;
@@ -916,10 +864,9 @@ const int SPL::VirtualMachine::Processor::GetExitCode() const
 	return code;
 }
 
-SPL::VirtualMachine::Processor::Processor(rom _rom, bool breakpoint)
+SPL::VirtualMachine::Processor::Processor(rom _rom)
 {
 	this->_rom = _rom;
-	this->breakpoint = breakpoint;
 	terminate = false;
 	ptr = -1;
 	Advance();

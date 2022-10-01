@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -13,7 +12,6 @@
 #include "../Parsing/Nodes/Let.h"
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
-#include "../Parsing/Nodes/Sleep.h"
 #include "../Parsing/Nodes/Block.h"
 #include "../Parsing/Nodes/Input.h"
 #include "../Parsing/Nodes/Raise.h"
@@ -30,7 +28,6 @@
 #include "../Parsing/Nodes/Maths/Inc.h"
 #include "../Parsing/Nodes/Maths/Dec.h"
 #include "../Parsing/Nodes/Maths/Mod.h"
-#include "../Parsing/Nodes/RandomNode.h"
 #include "../Parsing/Nodes/Stack/Push.h"
 #include "../Parsing/Nodes/Maths/Concat.h"
 #include "../Parsing/Nodes/Output/Print.h"
@@ -82,8 +79,6 @@ namespace SPL
 			private:
 				FinalNodes nodes;
 				const char* outputfile;
-
-				
 
 				std::vector<std::string> identifiers;
 

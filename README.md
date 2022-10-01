@@ -82,13 +82,6 @@ div
 ```
 Note that the right hand number is pushed first. This can be confusing at first and takes a little while to remember.
 
-When moving the cursor, this is reversed with X being pushed first. So to move to x: 6, y: 2
-```
-push 6
-push 2
-console setpos
-```
-
 ## Known Issues
 It is possible to execute unwanted code if a label is not at the start of the line
 E.g.
@@ -105,6 +98,6 @@ E.g.
 10: ;"I should execute"
 ```
 
-## Future plans
-SPL has reached end of life. No official updates are planned, unless to patch major bugs.
-If you wish to make any changes, feel free to do so. If deemed worthy, I'll happily accept a fork pull request.
+## Future Plans
+**SPL 1.2** plans to add more advanced to more advanced console control, such as moving the cursor and coloured text. Both _British_ and _American_ spellings of "Colour" will be supported\
+**SPL 1.2** is planned to be the final officially supported version of SPL, as my focus will move onto a much larger and more advanced language framework. The code will remain open source if anyone wants to update the language
