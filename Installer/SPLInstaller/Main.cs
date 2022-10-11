@@ -111,7 +111,7 @@ namespace SPLInstaller
                 Console.CursorVisible = false;
 
                 process.ExecuteProcess();
-                Console.WriteLine(@"Docs available at https:\SYXZyt.github.io\SPL\docs\index.html");
+                Console.WriteLine(@"Docs available at https:\\SYXZyt.github.io\SPL\docs\index.html\r\nPress any key");
                 Console.CursorVisible = true;
                 Console.ReadKey();
             }
