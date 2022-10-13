@@ -1,5 +1,5 @@
 # SPL
-![spl_logo](https://github.com/SYXZyt/SPL/blob/master/Ico/ico.png)
+![spl_logo](https://github.com/SYXZyt/SPL/blob/v1.2/Ico/ico.png)
 ## _Introduction_
 SPL is a scripting language developed as a first custom programming language project.
 - It's syntax was mainly inspired from BASIC and X86.
