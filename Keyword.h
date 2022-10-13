@@ -42,12 +42,6 @@ enum SPL_KEYWORDS
 	KWD_RAISE,
 	KWD_TYPECHECK_INT,
 	KWD_TYPECHECK_FLT,
-
-	CNS_SETPOS,
-	CNS_CLEAR,
-	CNS_SETCOLOR,
-	CNS_TITLE,
-	CNS_CURSOR,
 };
 
 static std::map<const SPL_KEYWORDS, std::string> Keywords
@@ -89,10 +83,5 @@ static std::map<const SPL_KEYWORDS, std::string> Keywords
 	{KWD_RAISE, "raise"},
 	{KWD_TYPECHECK_INT, "is_int"},
 	{KWD_TYPECHECK_FLT, "is_float"},
-	
-	{CNS_SETPOS, "setpos"},
-	{CNS_CLEAR, "clear"},
-	{CNS_SETCOLOR, "setcolor"},
-	{CNS_TITLE, "title"},
-	{CNS_CURSOR, "cursor"},
+
 };

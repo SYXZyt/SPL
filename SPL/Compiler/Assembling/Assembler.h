@@ -11,6 +11,7 @@
 #include "../../../Keyword.h"
 #include "../../../ErrorStream.h"
 #include "../Parsing/Nodes/Let.h"
+#include "../../../ConsoleSubOp.h"
 #include "../Parsing/Nodes/Free.h"
 #include "../Parsing/Nodes/Node.h"
 #include "../Parsing/Nodes/Sleep.h"
@@ -82,9 +83,6 @@ namespace SPL
 			private:
 				FinalNodes nodes;
 				const char* outputfile;
-
-				
-
 				std::vector<std::string> identifiers;
 
 				/// <summary>
@@ -116,11 +114,11 @@ namespace SPL
 
 			static std::map<const std::string, unsigned char> ConsoleSubOps
 			{
-				{Keywords[CNS_SETPOS], 0x27},
-				{Keywords[CNS_CLEAR], 0x28},
-				{Keywords[CNS_SETCOLOR], 0x29},
-				{Keywords[CNS_TITLE], 0x2c},
-				{Keywords[CNS_CURSOR], 0x2d},
+				{ConsoleSubOp[CNS_SETPOS], 0x27},
+				{ConsoleSubOp[CNS_CLEAR], 0x28},
+				{ConsoleSubOp[CNS_SETCOLOR], 0x29},
+				{ConsoleSubOp[CNS_TITLE], 0x31},
+				{ConsoleSubOp[CNS_CURSOR], 0x30},
 			};
 		}
 	}

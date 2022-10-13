@@ -353,6 +353,9 @@
     <ClInclude Include="SPL\Compiler\Parsing\Nodes\IsFloat.h">
       <Filter>Header Files\SPL\Compiler\Parser\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="ConsoleSubOp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

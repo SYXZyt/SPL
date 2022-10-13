@@ -503,6 +503,60 @@ SPL::Disassembling::Disassembled SPL::Disassembling::Disassembler::DisassembleIn
 			SETRESULT;
 		}
 		break;
+		case 0x2c:
+		{
+			INIT("strraise ");
+			std::string str = ReadString(rom, bytes, addr);
+			spl += str;
+
+			SETRESULT;
+		}
+		break;
+		case 0x2d:
+		{
+			INIT("intraise ");
+			int value = ReadInt(rom, bytes, addr);
+			spl += std::to_string(value);
+
+			SETRESULT;
+		}
+		break;
+		case 0x2e:
+		{
+			INIT("fltraise ");
+			float value = ReadFloat(rom, bytes, addr);
+			spl += std::to_string(value);
+
+			SETRESULT;
+		}
+		break;
+		case 0x2f:
+		{
+			INIT("varraise [");
+			spl += std::to_string(ReadInt(rom, bytes, addr)) + ']';
+			SETRESULT;
+		}
+		break;
+		case 0x30:
+		{
+			SINGLEOP("console cursor");
+		}
+		break;
+		case 0x31:
+		{
+			SINGLEOP("console title");
+		}
+		break;
+		case 0x32:
+		{
+			SINGLEOP("is_int");
+		}
+		break;
+		case 0x33:
+		{
+			SINGLEOP("is_float");
+		}
+		break;
 		default:
 			SINGLEOP("??");
 			break;

@@ -7,11 +7,13 @@ goto main
 
 :init
 	let xsp 1
-	let ysp -2
+	let ysp -1
 	let x 2
 	let y 5
 	let prevX 1
 	let prevY 4
+	push 0
+	console cursor
 	ret
 	
 :flipxsp
@@ -96,18 +98,5 @@ goto main
 	call move
 	call collision
 	call draw
+	sleep 100
 	goto loop
-
-:sleep
-	let wait 0
-	:sleepLoop
-	push 500 ;This is not a timer, it just runs this code alot of times
-	push wait
-	lwr end
-	push wait
-	inc
-	setpop wait
-	goto sleepLoop
-	:end
-	free wait
-	ret
