@@ -337,7 +337,7 @@ void SPL::Compiler::Assembler::Assembler::Assemble()
 			}
 			else
 			{
-				Error(*exit, "The provided expression cannot be used to exit", "Assembler.cpp");
+				Error(SPL_EXIT_NO_INT, *exit, ErrorMessages[SPL_EXIT_NO_INT], "Assembler.cpp");
 			}
 
 		}
