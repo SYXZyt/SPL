@@ -25,6 +25,7 @@ enum SPL_ERROR_CODE : unsigned short
 	SPL_CALL_INVALID_ADDRESS = 1104,
 	SPL_GOTO_INVALID_ADDRESS = 1105,
 	SPL_LABEL_CANNOT_BE_KEYWORD = 1106,
+	SPL_LABEL_NO_START = 1107,
 
 	//Parser errors
 	SPL_MISSING_ACCESS_MODIFIER = 1201,
@@ -87,6 +88,7 @@ static std::map<const SPL_ERROR_CODE, std::string> ErrorMessages
 	{SPL_CALL_INVALID_ADDRESS, "'call' expects a label name"},
 	{SPL_GOTO_INVALID_ADDRESS, "'&SPL_0' expects a line number or label name"},
 	{SPL_LABEL_CANNOT_BE_KEYWORD, "Label name cannot be a keyword"},
+	{SPL_LABEL_NO_START, "Label must come first on a line"},
 
 	{SPL_MISSING_ACCESS_MODIFIER, "Expected 'const' or 'mut' keyword"},
 	{SPL_VARNAME_NOT_IDEN, "Expected a variable name"},

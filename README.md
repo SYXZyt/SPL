@@ -89,22 +89,6 @@ push 2
 console setpos
 ```
 
-## Known Issues
-It is possible to execute unwanted code if a label is not at the start of the line
-E.g.
-```
-1:  goto label ;<- Since the preprocessor converts this to 'goto 2', the code on line 2 before the label, will execute
-2:  println "I shouldn't execute'" :label println "I should execute"
-3:  exit
-4:
-5:  ;Expected output
-6:  ;"I should execute"
-7:
-8:  ;Actual output
-9:  ;"I shouldn't execute"
-10: ;"I should execute"
-```
-
 ## Future plans
 SPL has reached end of life. No official updates are planned, unless to patch major bugs.
 If you wish to make any changes, feel free to do so. If deemed worthy, I'll happily accept a fork pull request.
