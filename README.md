@@ -22,14 +22,13 @@ Variables can be created using the following syntax
 let [NAME] [VALUE]
 ```
 
-There is no way to create a null variable.
-You also can't easily copy variables.
-This is how copying variables would work
+Variables can not be defined as null.
+Variables can be created at compile time using the const keyword.
 ```
-let dog "Woof!" ;This is the value we want to copy
-let cat 0       ;This is where we want to copy into
-push dog
-setpop cat      ;This will take the first value on the stack, and store it to a variable called cat
+const PI 3.1415
+free PI ;If this is deleted, it cannot be redefined as constant
+const X PI  ;Since all variables are created at compile time, constants must be able to be parsed at compile time
+;Currently, this does not allow const [NAME] [ANOTHER CONST NAME] but may be added in the future
 ```
 
 ## Instructions
