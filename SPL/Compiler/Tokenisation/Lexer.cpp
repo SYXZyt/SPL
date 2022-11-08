@@ -36,7 +36,7 @@ SPL::Compiler::Tokenisation::Token SPL::Compiler::Tokenisation::Lexer::BuildIden
 	{
 		name += currentChar;
 		Advance();
-	} Advance();
+	}
 
 	if (std::count(keywords.begin(), keywords.end(), name)) type = TokenType::KEYWORD;
 

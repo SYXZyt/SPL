@@ -1,1 +1,1 @@
-print "" :line print ""
+x"Hello, World"println""

@@ -506,6 +506,13 @@ SPL::Compiler::Parser::Nodes::Node* SPL::Compiler::Parser::Parser::Statement()
         Advance(2);
         return nullptr;
     }
+    else if (PeekCurrent().GetTokenType() == Tokenisation::TokenType::IDENTIFIER)
+    {
+        std::string params[] { PeekCurrent().GetLexeme() };
+        std::string message = GetMessageWithParams(ErrorMessages[SPL_UNEXPECTED_IDEN], 1, params);
+        Error(SPL_UNEXPECTED_IDEN, PeekCurrent(), message, "Parser.cpp");
+        return nullptr;
+    }
     else
     {
         std::string params[]{ PeekCurrent().GetLexeme() };

@@ -28,18 +28,18 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             {
                 Error(SPL_LABEL_NAME_MISSING, Peek(i), ErrorMessages[SPL_LABEL_NAME_MISSING], "PreProcessor.cpp");
             }
-        }
 
-        //Now that we know the label was correct, we need to check that it the first element on the line
-        //If the label is the first thing in the file, then we can just skip this check
-        //If it is not, we need to check the line number of the previous token
-        if (i != 0)
-        {
-            //Get the line num of the last token
-            int prevLine = preParsed[static_cast<size_t>(i - 1)].GetPosition().Y();
-            if (prevLine == preParsed[i].GetPosition().Y())
+            //Now that we know the label was correct, we need to check that it the first element on the line
+            //If the label is the first thing in the file, then we can just skip this check
+            //If it is not, we need to check the line number of the previous token
+            if (i != 0)
             {
-                Error(SPL_LABEL_NO_START, preParsed[static_cast<size_t>(i - 1)], ErrorMessages[SPL_LABEL_NO_START], "PreProcessor.cpp");
+                //Get the line num of the last token
+                int prevLine = preParsed[static_cast<size_t>(i - 1)].GetPosition().Y();
+                if (prevLine == preParsed[i].GetPosition().Y())
+                {
+                    Error(SPL_LABEL_NO_START, preParsed[static_cast<size_t>(i - 1)], ErrorMessages[SPL_LABEL_NO_START], "PreProcessor.cpp");
+                }
             }
         }
     }
