@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Stack.h"
 #include "VariableData.h"
+#include "ProcessorStack.h"
 
 namespace SPL
 {
@@ -12,7 +12,7 @@ namespace SPL
 		class Accumulator final
 		{
 		private:
-			Stack<VariableData*>* stack;
+			ProcessorStack* stack;
 
 		public:
 			/// <summary>
@@ -95,7 +95,7 @@ namespace SPL
 			/// Create a new accumulator
 			/// </summary>
 			/// <param name="stack">The stack to push and pop from</param>
-			Accumulator(Stack<VariableData*>& stack);
+			Accumulator(ProcessorStack& stack);
 		};
 	}
 }

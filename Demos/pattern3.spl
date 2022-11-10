@@ -1,8 +1,5 @@
-;These numbers may need to be different on your terminal. These just worked for me
 const WIDTH 119
 const HEIGHT 30
-
-let i 0
 
 call init
 goto main
@@ -10,26 +7,9 @@ goto main
 :init
 	let x 0
 	let y 0
-	call increment_i
 	ret
-
-:increment_i
-	push 255
-	push i
-	push 16
-	add
-	setpop i
-	push i
-
-	grt return
-	let i 16
-	:return
-	ret
-
+	
 :main
-	call init
-
-	;Loop over every position
 	:for_y
 	let x 0
 	push HEIGHT
@@ -40,19 +20,19 @@ goto main
 		push WIDTH
 		push x
 		lwr endloop_x
-			
-			push i
-			console setcolor
 
 			push x
 			push y
 			console setpos
-			print " "
+			random 10
+			to_string
+			setpop i
+			
+			print i
 
 			push x
 			inc
 			setpop x
-			;call increment_i
 			goto for_x
 		:endloop_x
 

@@ -1,1 +1,8 @@
-x"Hello, World"println""
+let count 0
+
+:x
+	push count
+	inc
+	setpop count
+	push count
+	goto x

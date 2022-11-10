@@ -240,7 +240,7 @@ void SPL::VirtualMachine::Processor::Run()
 
 		byte opcode = _rom[ptr];
 
-		if (cstack.Size() >= callstackMaxSize)
+		if (cstack.Size() >= CallStackMaxSize)
 		{
 			ErrorNoExit(SPL_STACKOVERFLOW, ErrorMessages[SPL_STACKOVERFLOW]);
 			KILL;
@@ -277,7 +277,11 @@ void SPL::VirtualMachine::Processor::Run()
 			}
 			else
 			{
-				std::cout << "\nStack (" << stack.Size() << ") Bottom Value : " << stack.Peek()->ToString() << std::endl;
+				std::cout << "\nStack (" << stack.Size() << ")\n";
+				for (VariableData* v : stack)
+				{
+					std::cout << v->ToString() << '\n';
+				} std::cout << "(Top value are bottom)\n";
 			}
 
 			std::cout << "\nAddress: ";

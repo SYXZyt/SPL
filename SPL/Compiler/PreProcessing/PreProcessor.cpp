@@ -35,7 +35,7 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             if (i != 0)
             {
                 //Get the line num of the last token
-                int prevLine = preParsed[static_cast<size_t>(i - 1)].GetPosition().Y();
+                int prevLine = preParsed[static_cast<size_t>(i - 2)].GetPosition().Y();
                 if (prevLine == preParsed[i].GetPosition().Y())
                 {
                     Error(SPL_LABEL_NO_START, preParsed[static_cast<size_t>(i - 1)], ErrorMessages[SPL_LABEL_NO_START], "PreProcessor.cpp");

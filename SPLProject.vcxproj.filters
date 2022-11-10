@@ -356,6 +356,9 @@
     <ClInclude Include="ConsoleSubOp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SPL\VirtualMachine\ProcessorStack.h">
+      <Filter>Header Files\SPL\VirtualMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="clc.py" />

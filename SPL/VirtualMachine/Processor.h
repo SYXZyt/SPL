@@ -13,6 +13,7 @@
 #include "Accumulator.h"
 #include "VariableData.h"
 #include "../../Keyword.h"
+#include "ProcessorStack.h"
 #include "../../SPLErrors.h"
 #include "../../ErrorStream.h"
 #include "../Disassembling/Disassembler.h"
@@ -21,10 +22,11 @@ namespace SPL
 {
 	namespace VirtualMachine
 	{
-
 		class Processor final
 		{
 		private:
+			static constexpr int CallStackMaxSize = 65536;
+
 			rom _rom;
 			int ptr;
 			int code;
@@ -75,7 +77,7 @@ namespace SPL
 
 			std::map<std::string, VariableData*> vstack;
 			Stack<int> cstack;
-			Stack<VariableData*> stack;
+			ProcessorStack stack;
 
 		public:
 			/// <summary>

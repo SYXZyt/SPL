@@ -2,9 +2,6 @@
 #include <stack>
 #include <iostream>
 
-//The max amount of values the processors callstack can store
-const int callstackMaxSize = static_cast<int>(pow(2, 16));
-
 //I don't like the fact that pop doesn't return a value in the normal stack, so I just created my own wrapper class
 /// <summary>
 /// Class representing a stack collection
