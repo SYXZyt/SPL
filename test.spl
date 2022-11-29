@@ -5,7 +5,7 @@ goto main
 	
 	push 1
 	push n
-	neq calc_fac
+	equ calc_fac
 	push 1
 	ret
 
@@ -20,10 +20,14 @@ goto main
 	ret
 
 :main
-	let base 5
+	let base 100
 	let out 0
+
+	;Call the factorial function
+	push base
 	call factorial
 	setpop out
+
 	goto output
 	
 :output
@@ -31,4 +35,4 @@ goto main
 	print base
 	print " is "
 	println out
-	exit
+	exit 0
