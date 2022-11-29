@@ -1,1 +1,34 @@
-x"Hello, World"println""
+goto main
+
+:factorial
+	setpop n
+	
+	push 1
+	push n
+	neq calc_fac
+	push 1
+	ret
+
+	:calc_fac
+	push n	; Push once as a backup
+
+	push n	; Push twice as param
+	dec	; Decrement so we are not stuck in an infinite loop
+	call factorial
+	
+	mul
+	ret
+
+:main
+	let base 5
+	let out 0
+	call factorial
+	setpop out
+	goto output
+	
+:output
+	print "Factorial of "
+	print base
+	print " is "
+	println out
+	exit
