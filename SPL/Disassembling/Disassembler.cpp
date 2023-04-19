@@ -92,10 +92,10 @@ static byte ReadByte(const byte* rom, int& offset)
 static void ReadIdentifiers(const byte* rom, int& addr)
 {
 	int iCount = ReadInt(rom, addr);
-	std::cout << "===|Identifiers " << iCount << "|===" << std::endl;
+	std::cout << "===|Identifiers " << iCount << "|===\n";
 	for (int i = 0; i < iCount; i++)
 	{
-		std::cout << i << " ~ " << ReadString(rom, addr) << std::endl;
+		std::cout << i << " ~ " << ReadString(rom, addr) << '\n';
 	}
 }
 
@@ -103,7 +103,7 @@ static void ReadConstants(const byte* rom, int& addr)
 {
 	//Print constant values
 	int cCount = ReadInt(rom, addr);
-	std::cout << "===|CONSTS " << cCount << "|===" << std::endl;
+	std::cout << "===|CONSTS " << cCount << "|===\n";
 	for (int i = 0; i < cCount; i++)
 	{
 		std::string name = ReadString(rom, addr);
@@ -117,19 +117,19 @@ static void ReadConstants(const byte* rom, int& addr)
 			case 0x00:
 			{
 				int _int = ReadInt(rom, addr);
-				std::cout << _int << std::endl;
+				std::cout << _int << '\n';
 			}
 			break;
 			case 0x01:
 			{
 				float flt = ReadFloat(rom, addr);
-				std::cout << flt << std::endl;
+				std::cout << flt << '\n';
 			}
 			break;
 			default:
 			{
 				std::string str = ReadString(rom, addr);
-				std::cout << str << std::endl;
+				std::cout << str << '\n';
 			}
 		}
 	}
@@ -151,11 +151,11 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 		if (longestSPL < d.disassembled.size()) longestSPL = static_cast<int>(d.disassembled.size());
 	}
 
-	std::cout << "\n===|Disassembly|===" << std::endl;
+	std::cout << "\n===|Disassembly|===\n";
 	int offset = sizeof("ADDR|OP||ASM");
 
-	std::cout << "ADDR|OP||ASM|" << std::string(longestLine-4, ' ') << "SPL" << std::endl;
-	std::cout << std::string(longestLine + longestSPL + offset, '-') << std::endl;
+	std::cout << "ADDR|OP||ASM|" << std::string(longestLine-4, ' ') << "SPL\n";
+	std::cout << std::string(longestLine + longestSPL + offset, '-') << '\n';
 
 	//Now we can print the disassembly
 	for (Disassembled d : results)
@@ -170,7 +170,7 @@ static void DumpDisassembly(std::vector<SPL::Disassembling::Disassembled> result
 		ss << std::string(len, ' ');
 		ss << d.disassembled;
 
-		std::cout << ss.str() << std::endl;
+		std::cout << ss.str() << '\n';
 	}
 }
 

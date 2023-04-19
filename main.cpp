@@ -88,7 +88,7 @@ rom LoadRom(const char* filename)
 {
 	if (!FileExists(filename))
 	{
-		std::cerr << "File '" << filename << "' does not exist" << std::endl;
+		std::cerr << "File '" << filename << "' does not exist\n";
 		exit(0);
 	}
 
@@ -202,7 +202,7 @@ void ExecuteCode()
 	{
 		Processor cpu = Processor(_rom, breakpoint);
 		cpu.Run();
-		std::cout << "Program exited with code " << cpu.GetExitCode() << std::endl;
+		std::cout << "Program exited with code " << cpu.GetExitCode() << '\n';
 	}
 }
 
@@ -233,7 +233,7 @@ void Assemble(std::string input, std::string inputName)
 #ifdef DUMPLEXER
 		for (Token t : tokens)
 		{
-			std::cout << t << std::endl;
+			std::cout << t << '\n';
 		}
 #endif
 
@@ -243,7 +243,7 @@ void Assemble(std::string input, std::string inputName)
 #ifdef DUMPPRE
 		for (Token t : tokens)
 		{
-			std::cout << t << std::endl;
+			std::cout << t << '\n';
 		}
 #endif
 
@@ -254,10 +254,10 @@ void Assemble(std::string input, std::string inputName)
 		int size = 0;
 		for (Node* n : nodes)
 		{
-			std::cout << n->_ToString() << std::endl;
+			std::cout << n->_ToString() << '\n';
 			size += n->Size();
 		}
-		std::cout << "Total Size: " << size << " bytes" << std::endl;
+		std::cout << "Total Size: " << size << " bytes\n";
 #endif
 
 		Assembler assembler = Assembler(nodes, binaryName);
@@ -286,7 +286,7 @@ void Assemble(std::string input, std::string inputName)
 int main(int argc, char** argv)
 {
 #ifdef _DEBUG
-	std::cout << "DEBUG BUILD. CHANGE FLAG TO RELEASE BEFORE DISTRIBUTING" << std::endl;
+	std::cout << "DEBUG BUILD. CHANGE FLAG TO RELEASE BEFORE DISTRIBUTING\n";
 #endif
 
 	using namespace SPL::Disassembling;
@@ -303,7 +303,7 @@ int main(int argc, char** argv)
 	//If no file argument was provided, just get the code off of the console
 	if (argc <= 1)
 	{
-		std::cout << versionInfo << std::endl;
+		std::cout << versionInfo << '\n';
 
 		while (true)
 		{
@@ -340,7 +340,7 @@ int main(int argc, char** argv)
 
 		if (getOffConsole)
 		{
-			std::cout << versionInfo << std::endl;
+			std::cout << versionInfo << '\n';
 			while (true)
 			{
 				input = GetStdioInput();
@@ -350,7 +350,7 @@ int main(int argc, char** argv)
 
 		if (!FileExists(file))
 		{
-			std::cerr << file << " does not exist" << std::endl;
+			std::cerr << file << " does not exist\n";
 			return 1;
 		}
 
@@ -375,7 +375,7 @@ int main(int argc, char** argv)
 
 				if (!FileExists(file))
 				{
-					std::cerr << file << "does not exist" << std::endl;
+					std::cerr << file << "does not exist\n";
 					return 1;
 				}
 
