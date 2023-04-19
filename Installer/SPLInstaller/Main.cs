@@ -40,7 +40,7 @@ namespace SPLInstaller
             string prefix = "C:/Program Files/SYXZ/SPL/";
             string[] files = new string[]
             {
-                "readme.md",
+                "README.md",
                 "bytecode.md",
                 "SPL.exe",
             };

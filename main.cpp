@@ -26,7 +26,7 @@
 const char* hashName = "_spl_cache_\\checksum.hash"; //Stores a hash unique to each script, to check if the program needs to compile again
 const char* binaryName = "_spl_cache_\\out.bin"; //The name of the binary spat out by the compiler
 
-const char* versionInfo = "SPL v1.2.4 (10 11 22 ~ 18:51) [X64]\nEnter a blank line to execute";
+const char* versionInfo = "SPL v1.2.4 (19 04 23 ~ 18:55) [X64]\nEnter a blank line to execute";
 
 bool disassemble = false;
 bool breakpoint = false;
