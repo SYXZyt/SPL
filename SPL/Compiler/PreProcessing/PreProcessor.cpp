@@ -32,11 +32,13 @@ std::vector<SPL::Compiler::Tokenisation::Token> SPL::Compiler::PreProcessing::Pr
             //Now that we know the label was correct, we need to check that it the first element on the line
             //If the label is the first thing in the file, then we can just skip this check
             //If it is not, we need to check the line number of the previous token
-            if (i != 0)
+            if (i > 1)
             {
                 //Get the line num of the last token
                 int prevLine = preParsed[static_cast<size_t>(i - 2)].GetPosition().Y();
-                if (prevLine == preParsed[i].GetPosition().Y())
+                int thisLine = preParsed[i].GetPosition().Y();
+
+                if (prevLine == thisLine)
                 {
                     Error(SPL_LABEL_NO_START, preParsed[static_cast<size_t>(i - 1)], ErrorMessages[SPL_LABEL_NO_START], "PreProcessor.cpp");
                 }

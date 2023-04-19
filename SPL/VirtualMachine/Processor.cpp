@@ -400,7 +400,7 @@ void SPL::VirtualMachine::Processor::Run()
 			break;
 			case 0x08: //print int
 			{
-				std::cout << ReadInt();
+				std::cout << std::fixed << ReadInt();
 			}
 			break;
 			case 0x09: //print var
