@@ -94,9 +94,11 @@ goto main
 	ret
 	
 :main
+	console clear
+
 	:loop
 	call move
 	call collision
 	call draw
-	sleep 100
+	sleep 10
 	goto loop

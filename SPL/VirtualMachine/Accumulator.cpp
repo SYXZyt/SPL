@@ -57,7 +57,7 @@ SPL::VirtualMachine::Accumulator::Accumulator()
 	stack = nullptr;
 }
 
-SPL::VirtualMachine::Accumulator::Accumulator(Stack<VariableData*>& stack)
+SPL::VirtualMachine::Accumulator::Accumulator(ProcessorStack& stack)
 {
 	this->stack = &stack;
 }

@@ -1,38 +1,8 @@
-goto main
+let count 0
 
-:factorial
-	setpop n
-	
-	push 1
-	push n
-	equ calc_fac
-	push 1
-	ret
-
-	:calc_fac
-	push n	; Push once as a backup
-
-	push n	; Push twice as param
-	dec	; Decrement so we are not stuck in an infinite loop
-	call factorial
-	
-	mul
-	ret
-
-:main
-	let base 100
-	let out 0
-
-	;Call the factorial function
-	push base
-	call factorial
-	setpop out
-
-	goto output
-	
-:output
-	print "Factorial of "
-	print base
-	print " is "
-	println out
-	exit 0
+:x
+	push count
+	inc
+	setpop count
+	push count
+	goto x

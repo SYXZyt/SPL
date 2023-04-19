@@ -57,7 +57,7 @@ static void ErrorNoExit(std::string message)
 #ifdef _WIN32
 	SetConsoleColour(ConsoleColour::RED);
 #endif
-	std::cerr << message << std::endl;
+	std::cerr << message << '\n';
 
 #ifdef _WIN32
 	ResetConsoleColour();
@@ -90,7 +90,7 @@ static void Error(std::string message)
 static void Error(Token token, std::string message, std::string filename = "")
 {
 	std::stringstream ss;
-	ss << message << "\nAt position " << token.GetPosition().X() + 1 << ", Line " << token.GetPosition().Y() + 1 << ", In '" << token.GetInputName() << "', at '" << token.GetLexeme() << '\'' << std::endl;
+	ss << message << "\nAt position " << token.GetPosition().X() + 1 << ", Line " << token.GetPosition().Y() + 1 << ", In '" << token.GetInputName() << "', at '" << token.GetLexeme() << "'\n";
 
 #ifdef _DEBUG
 	ss << filename;
@@ -119,7 +119,7 @@ static void Warning(std::string message)
 #ifdef _WIN32
 	SetConsoleColour(ConsoleColour::DARK_YELLOW);
 #endif
-	std::cout << message << std::endl;
+	std::cout << message << '\n';
 #ifdef _WIN32
 	ResetConsoleColour();
 #endif
@@ -134,7 +134,7 @@ static void Warning(std::string message)
 static void Warning(Token token, std::string message, std::string filename = "")
 {
 	std::stringstream ss;
-	ss << message << "\nAt position " << token.GetPosition().X() + 1 << ", Line " << token.GetPosition().Y() + 1 << ", In '" << token.GetInputName() << "', at '" << token.GetLexeme() << '\'' << std::endl;
+	ss << message << "\nAt position " << token.GetPosition().X() + 1 << ", Line " << token.GetPosition().Y() + 1 << ", In '" << token.GetInputName() << "', at '" << token.GetLexeme() << "'\n";
 
 #ifdef _DEBUG
 	ss << filename;

@@ -229,7 +229,7 @@ void SPL::VirtualMachine::Processor::Advance()
 void SPL::VirtualMachine::Processor::Breakpoint()
 {
 	ClearConsole();
-	std::cout << "Variables:" << std::endl;
+	std::cout << "Variables:\n";
 }
 
 void SPL::VirtualMachine::Processor::Run()
@@ -240,7 +240,7 @@ void SPL::VirtualMachine::Processor::Run()
 
 		byte opcode = _rom[ptr];
 
-		if (cstack.Size() >= callstackMaxSize)
+		if (cstack.Size() >= CallStackMaxSize)
 		{
 			ErrorNoExit(SPL_STACKOVERFLOW, ErrorMessages[SPL_STACKOVERFLOW]);
 			KILL;
@@ -251,54 +251,58 @@ void SPL::VirtualMachine::Processor::Run()
 			SPL::Disassembling::Disassembled results = SPL::Disassembling::Disassembler::DisassembleInstruction(_rom, ptr);
 			ClearConsole();
 
-			std::cout << "Breakpoint Disassembly (see bytecode.md for help reading)" << std::endl;
-			std::cout << "Stored Identifiers:" << std::endl;
+			std::cout << "Breakpoint Disassembly (see bytecode.md for help reading)\n";
+			std::cout << "Stored Identifiers:\n";
 			for (int i = 0; i < identifiers.size(); i++)
 			{
-				std::cout << '[' << i << "] | " << identifiers[i] << std::endl;
+				std::cout << '[' << i << "] | " << identifiers[i] << '\n';
 			}
 
-			std::cout << "\nStored Variables:" << std::endl;
+			std::cout << "\nStored Variables:\n";
 			if (vstack.size() != 0)
 			{
 				for (auto const& [key, value] : vstack)
 				{
-					std::cout << key << " | " << value->ToString() << std::endl;
+					std::cout << key << " | " << value->ToString() << '\n';
 				}
 			}
 			else
 			{
-				std::cout << "VStack Empty" << std::endl;
+				std::cout << "VStack Empty\n";
 			}
 
 			if (stack.IsEmpty())
 			{
-				std::cout << "\nStack Empty" << std::endl;
+				std::cout << "\nStack Empty\n";
 			}
 			else
 			{
-				std::cout << "\nStack (" << stack.Size() << ") Bottom Value : " << stack.Peek()->ToString() << std::endl;
+				std::cout << "\nStack (" << stack.Size() << ")\n";
+				for (VariableData* v : stack)
+				{
+					std::cout << v->ToString() << '\n';
+				} std::cout << "(Top value are bottom)\n";
 			}
 
 			std::cout << "\nAddress: ";
 			std::stringstream ss;
-			ss << std::hex << std::setw(4) << std::setfill('0') << results.addr << std::endl;
+			ss << std::hex << std::setw(4) << std::setfill('0') << results.addr << '\n';
 			std::cout << ss.str();
 
 			CLRSS(ss);
 
-			std::cout << "\nVM Code:" << std::endl;
+			std::cout << "\nVM Code:\n";
 			ss << std::hex << std::setw(2) << std::setfill('0') << (unsigned)results.opcode << " |  ";
 			for (int i = 0; i < results.assembled.size(); i++)
 			{
 				ss << std::hex << std::setw(2) << std::setfill('0') << (unsigned)results.assembled[i] << ' ';
-			} ss << std::endl;
+			} ss << '\n';
 			std::cout << ss.str();
 
-			std::cout << "\nDisassembled SPL:" << std::endl;
-			std::cout << results.disassembled << std::endl;
+			std::cout << "\nDisassembled SPL:\n";
+			std::cout << results.disassembled << '\n';
 
-			std::cout << "Press [ENTER] to step through" << std::endl;
+			std::cout << "Press [ENTER] to step through\n";
 
 			std::cin.get();
 		}
