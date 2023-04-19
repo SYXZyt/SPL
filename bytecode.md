@@ -1,6 +1,6 @@
 # Byte Code Instructions and the Virtual Machine
 ## Introduction
-In order to keep speed higher, SPL will compiler into a bytecode. The bytes will be loaded into a virtual machine which will read the bytes and execute instructions. Like a CPU but much higher level.
+In order to keep speed higher, SPL will compile into a bytecode. The bytes will be loaded into a virtual machine which will read the bytes and execute instructions. Like a CPU but much higher level.
 The virtual machine has little information to throw errors so all of the errors it does throw are rather basic. `Unknown Opcode 0x45` for example.
 ## Opcodes
 Opcodes are the bytes that tell the VM what instruction to execute. Opcodes may be similar to each other, but their value denotes additional information. For example `0x01` could be print string, but `0x02` could be print a variable
