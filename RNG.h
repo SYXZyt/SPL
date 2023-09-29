@@ -12,7 +12,7 @@ private:
 public:
 	int GetRandom(int exclusiveMax)
 	{
-		std::uniform_int<> distr(0, exclusiveMax-1);
+		std::uniform_int_distribution<> distr(0, exclusiveMax-1);
 		return distr(gen);
 	}
 

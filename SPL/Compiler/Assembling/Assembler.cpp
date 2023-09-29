@@ -39,7 +39,7 @@ static std::vector<unsigned char> AssembleValue(Value* v)
 static void VerifyVariables(SPL::Compiler::Assembler::FinalNodes& nodes)
 {
 	//Run a quick pass and store any constants
-	std::list<std::string> consts;
+	std::vector<std::string> consts;
 	for (Constant* c : nodes.constants)
 	{
 		if (std::count(consts.begin(), consts.end(), c->GetName().GetLexeme()))

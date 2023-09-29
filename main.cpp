@@ -1,7 +1,9 @@
+#include <sys/stat.h>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <filesystem>
 
 #include "rom.h"
@@ -330,6 +332,10 @@ int main(int argc, char** argv)
 		else if (std::string(file) == "-bout")
 		{
 			breakpoint = true;
+			ExecuteCode();
+		}
+		else if (std::string(file) == "-out")
+		{
 			ExecuteCode();
 		}
 		else if (std::string(file) == "-b")

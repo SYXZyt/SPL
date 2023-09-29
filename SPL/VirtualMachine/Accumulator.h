@@ -1,4 +1,6 @@
 #pragma once
+#include <cmath>
+
 #include "VariableData.h"
 #include "ProcessorStack.h"
 

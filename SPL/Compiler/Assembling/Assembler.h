@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 #include <filesystem>
 
 #include "../../../Int.h"
